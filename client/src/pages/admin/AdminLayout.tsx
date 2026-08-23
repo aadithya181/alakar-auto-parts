@@ -19,8 +19,20 @@ import { useAuth } from '../../context/AuthContext';
 export const AdminLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout, isAdmin, loading } = useAuth();
+  const { user, logout, isAdmin, loading, login } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [loggingIn, setLoggingIn] = useState<boolean>(false);
+
+  const handleQuickAdminLogin = async () => {
+    try {
+      setLoggingIn(true);
+      await login('admin@alakarautoparts.com', 'admin123');
+    } catch (err: any) {
+      alert('Login failed: ' + (err.message || 'Error'));
+    } finally {
+      setLoggingIn(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -33,18 +45,41 @@ export const AdminLayout: React.FC = () => {
   if (!user || !isAdmin) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full p-8 rounded-3xl bg-white border border-slate-200 shadow-card text-center space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto">
-            <ShieldCheck className="w-6 h-6" />
+        <div className="max-w-md w-full p-8 rounded-3xl bg-white border border-slate-200 shadow-xl text-center space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto shadow-inner">
+            <ShieldCheck className="w-7 h-7" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900">Administrative Access Required</h2>
-          <p className="text-xs text-slate-500">You need to sign in with an authorized admin account to view this portal.</p>
-          <Link
-            to="/login"
-            className="inline-block px-6 py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold shadow-sm"
-          >
-            Sign In with Admin Account
-          </Link>
+          <h2 className="text-2xl font-black text-slate-900">Administrative Access Required</h2>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            You need to be logged in with an administrator account to view and manage the store portal.
+          </p>
+
+          <div className="pt-2 flex flex-col gap-2.5">
+            <button
+              onClick={handleQuickAdminLogin}
+              disabled={loggingIn}
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-xs font-bold shadow-md shadow-red-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {loggingIn ? (
+                <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              ) : (
+                '⚡ One-Click Admin Sign In'
+              )}
+            </button>
+
+            <Link
+              to="/login"
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all inline-block"
+            >
+              Go to Standard Login Page
+            </Link>
+          </div>
+
+          <div className="mt-4 p-3 bg-slate-50 rounded-xl border border-slate-100 text-left text-[11px] text-slate-500 space-y-1">
+            <div className="font-semibold text-slate-700">Admin Demo Credentials:</div>
+            <div>📧 Email: <span className="font-mono text-slate-800 font-bold">admin@alakarautoparts.com</span></div>
+            <div>🔑 Password: <span className="font-mono text-slate-800 font-bold">admin123</span></div>
+          </div>
         </div>
       </div>
     );

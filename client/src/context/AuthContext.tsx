@@ -16,9 +16,16 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const saved = localStorage.getItem('torq_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [token, setToken] = useState<string | null>(localStorage.getItem('torq_token') || null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(!localStorage.getItem('torq_token'));
 
   useEffect(() => {
     if (token) {
@@ -30,14 +37,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const fetchUserProfile = async () => {
     try {
-      setLoading(true);
       const res: any = await api.get('/auth/profile');
-      if (res.success) {
+      if (res.success && res.user) {
         setUser(res.user);
+        localStorage.setItem('torq_user', JSON.stringify(res.user));
       }
     } catch (err: any) {
-      console.warn('Failed to load user profile, clearing stale token', err.message);
-      logout();
+      console.warn('Profile refresh fallback:', err.message);
+      // Don't log out if we already have a cached valid user
+      const saved = localStorage.getItem('torq_user');
+      if (!saved) {
+        logout();
+      }
     } finally {
       setLoading(false);
     }
@@ -47,8 +58,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const res: any = await api.post('/auth/login', { email, password });
     if (res.success && res.token) {
       localStorage.setItem('torq_token', res.token);
+      if (res.user) {
+        localStorage.setItem('torq_user', JSON.stringify(res.user));
+        setUser(res.user);
+      }
       setToken(res.token);
-      setUser(res.user);
       return res.user;
     }
     throw new Error(res.message || 'Login failed');
@@ -58,8 +72,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const res: any = await api.post('/auth/register', { name, email, password, phone });
     if (res.success && res.token) {
       localStorage.setItem('torq_token', res.token);
+      if (res.user) {
+        localStorage.setItem('torq_user', JSON.stringify(res.user));
+        setUser(res.user);
+      }
       setToken(res.token);
-      setUser(res.user);
       return res.user;
     }
     throw new Error(res.message || 'Registration failed');
@@ -67,6 +84,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = () => {
     localStorage.removeItem('torq_token');
+    localStorage.removeItem('torq_user');
     setToken(null);
     setUser(null);
   };
