@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom crisp light scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Crisp Light Glassmorphism */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(8px);
+  border: 1px solid #e2e8f0;
+}
+
+/* Subtle clean mesh pattern */
+.bg-mesh-light {
+  background-color: #f8fafc;
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Safe area bottom padding for mobile sticky navigation */
+.pb-mobile-nav {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+}
+
+/* ─── Auth page animations ─── */
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.animate-pulse-subtle {
+  animation: pulse-subtle 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Fade in + slide up */
+@keyframes auth-fade-up {
+  0%   { opacity: 0; transform: translateY(32px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+.animate-auth-card {
+  animation: auth-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Logo bounce-in */
+@keyframes logo-pop {
+  0%   { transform: scale(0.5) rotate(-15deg); opacity: 0; }
+  65%  { transform: scale(1.15) rotate(4deg);  opacity: 1; }
+  100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
+.animate-logo-pop {
+  animation: logo-pop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: 0.1s;
+}
+
+/* Heading slide-in */
+@keyframes heading-in {
+  0%   { opacity: 0; transform: translateY(14px); }
+  100% { opacity: 1; transform: translateY(0);    }
+}
+.animate-heading {
+  animation: heading-in 0.5s ease both;
+  animation-delay: 0.25s;
+}
+
+/* Staggered field animations */
+@keyframes field-in {
+  0%   { opacity: 0; transform: translateX(-16px); }
+  100% { opacity: 1; transform: translateX(0);     }
+}
+.animate-field-1 { animation: field-in 0.4s ease both; animation-delay: 0.3s;  }
+.animate-field-2 { animation: field-in 0.4s ease both; animation-delay: 0.4s;  }
+.animate-field-3 { animation: field-in 0.4s ease both; animation-delay: 0.5s;  }
+.animate-field-4 { animation: field-in 0.4s ease both; animation-delay: 0.6s;  }
+
+/* Demo badge pop */
+@keyframes badge-pop {
+  0%   { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1);    }
+}
+.animate-badge { animation: badge-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) both; animation-delay: 0.35s; }
+
+/* Button slide up */
+@keyframes btn-in {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0);    }
+}
+.animate-btn { animation: btn-in 0.4s ease both; animation-delay: 0.55s; }
+.animate-btn-long { animation: btn-in 0.4s ease both; animation-delay: 0.75s; }
+
+/* Spinning loader ring */
+@keyframes spin-ring {
+  to { transform: rotate(360deg); }
+}
+.spin-ring {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin-ring 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* Floating background orbs */
+@keyframes float-orb1 {
+  0%,100% { transform: translate(0,0)    scale(1);   }
+  33%      { transform: translate(30px,-20px) scale(1.05); }
+  66%      { transform: translate(-20px,15px) scale(0.95); }
+}
+@keyframes float-orb2 {
+  0%,100% { transform: translate(0,0)   scale(1);   }
+  33%     { transform: translate(-25px,20px) scale(1.08); }
+  66%     { transform: translate(15px,-15px) scale(0.92); }
+}
+.orb1 { animation: float-orb1 8s ease-in-out infinite; }
+.orb2 { animation: float-orb2 10s ease-in-out infinite; }
+
+/* Input focus glow ring */
+.auth-input {
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+.auth-input:focus {
+  outline: none;
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.12);
+  background-color: #fff;
+}
+
+/* Submit button shine sweep */
+.btn-primary-auth {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.btn-primary-auth::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+.btn-primary-auth:hover::after {
+  transform: translateX(100%);
+}
+.btn-primary-auth:hover {
+  background-color: #b91c1c;
+  box-shadow: 0 8px 24px rgba(220,38,38,0.35);
+  transform: translateY(-1px);
+}
+.btn-primary-auth:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Demo button hover */
+.demo-btn {
+  transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+.demo-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.demo-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Password strength indicator */
+@keyframes strength-grow {
+  from { width: 0; }
+}
+.strength-bar {
+  animation: strength-grow 0.3s ease;
+}
+
+/* Check mark success pulse */
+@keyframes success-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-success {
+  animation: success-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
