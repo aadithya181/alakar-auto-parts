@@ -6,13 +6,13 @@ import {
   ShieldCheck,
   Truck,
   RotateCcw,
-  Star,
   ChevronRight,
   ArrowRight,
   Sparkles,
   CheckCircle2,
   HelpCircle,
   Zap,
+  Wrench,
 } from 'lucide-react';
 import { VehicleSelector } from '../components/VehicleSelector';
 import { ProductCard } from '../components/ProductCard';
@@ -61,7 +61,7 @@ export const Home: React.FC = () => {
     },
     {
       q: 'Are all products sold on Alakar Auto Parts 100% genuine?',
-      a: 'Yes. We source directly from official OE suppliers and certified aftermarket distributors including Bosch, Brembo, Philips, NGK, Denso, Motul, and Uno Minda. Every part comes with the original manufacturer warranty and tamper-proof packaging.'
+      a: 'Yes. We source directly from official manufacturers and certified distributors including 5M Auto Care Products, WOW SONAL, LIU HJG, ProTaper, and Philips Automotive. Every item comes with manufacturer warranty and authentic packaging.'
     },
     {
       q: 'What is your shipping time and return policy?',
@@ -109,104 +109,275 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. Shop by Vehicle Category Hub */}
+      {/* 2. Shop by Vehicle Quick Cards (Bike, Auto, Car, Van) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          {/* Car Parts Banner Card */}
-          <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-red-50 via-white to-red-100/50 border border-red-200 p-6 sm:p-8 flex flex-col justify-between shadow-card hover:shadow-card-hover group transition-all duration-300">
-            <div className="relative z-10">
-              <span className="inline-block px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-red-600 text-white mb-3 shadow-sm">
-                Cars & SUVs
-              </span>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900 font-display mb-2">
-                Automobile Spare Parts & Upgrades
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-md mb-6 leading-relaxed">
-                Brake pads, rotors, cabin AC filters, suspension struts, and high-intensity LED headlamps for Maruti Suzuki, Hyundai, Tata, Mahindra & Honda.
-              </p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Bike */}
+          <Link
+            to="/products?type=bike"
+            className="group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-slate-900 border border-slate-800 hover:border-amber-500/50 transition-all duration-300 shadow-md flex flex-col justify-between min-h-[140px]"
+          >
+            <div>
+              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500 w-fit border border-amber-500/20 mb-3 group-hover:scale-110 transition-transform">
+                <Bike className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-black text-slate-900 font-display">Bike / 2 Wheeler</h3>
+              <p className="text-[11px] text-slate-500 mt-1">Horns, Fog Lights, LED bulbs, Grips & Spares</p>
             </div>
-            <div className="relative z-10">
-              <Link
-                to="/car-parts"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-sm"
-              >
-                <span>Browse Car Spares</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-            <Car className="absolute -bottom-6 -right-6 w-44 h-44 text-red-600/5 group-hover:scale-110 group-hover:text-red-600/10 transition-all duration-500 pointer-events-none" />
-          </div>
+            <span className="text-[11px] font-bold text-amber-600 flex items-center gap-1 mt-3">
+              Explore Bike Spares →
+            </span>
+          </Link>
 
-          {/* Bike Parts Banner Card */}
-          <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-amber-50 via-white to-amber-100/50 border border-amber-200 p-6 sm:p-8 flex flex-col justify-between shadow-card hover:shadow-card-hover group transition-all duration-300">
-            <div className="relative z-10">
-              <span className="inline-block px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 mb-3 shadow-sm">
-                Motorcycles & Superbikes
-              </span>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900 font-display mb-2">
-                Bike Performance Parts & Care
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-md mb-6 leading-relaxed">
-                Ceramic sintered brake pads, brass X-Ring drive chains, Motul 300V racing lubricants & Iridium spark plugs for Yamaha R15, Royal Enfield, KTM & Bajaj.
-              </p>
+          {/* Auto */}
+          <Link
+            to="/products?type=auto"
+            className="group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-slate-900 border border-slate-800 hover:border-yellow-500/50 transition-all duration-300 shadow-md flex flex-col justify-between min-h-[140px]"
+          >
+            <div>
+              <div className="p-2.5 rounded-xl bg-yellow-500/10 text-yellow-500 w-fit border border-yellow-500/20 mb-3 group-hover:scale-110 transition-transform">
+                <Zap className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-black text-slate-900 font-display">Auto / 3 Wheeler</h3>
+              <p className="text-[11px] text-slate-500 mt-1">AC/DC Horns, Fog Lights, Headlamp Bulbs & Fancy LEDs</p>
             </div>
-            <div className="relative z-10">
-              <Link
-                to="/bike-parts"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black uppercase tracking-wider transition-all shadow-sm"
-              >
-                <span>Browse Bike Spares</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+            <span className="text-[11px] font-bold text-yellow-600 flex items-center gap-1 mt-3">
+              Explore Auto Spares →
+            </span>
+          </Link>
+
+          {/* Car */}
+          <Link
+            to="/products?type=car"
+            className="group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-red-600/10 via-red-600/5 to-slate-900 border border-slate-800 hover:border-red-500/50 transition-all duration-300 shadow-md flex flex-col justify-between min-h-[140px]"
+          >
+            <div>
+              <div className="p-2.5 rounded-xl bg-red-600/10 text-red-500 w-fit border border-red-600/20 mb-3 group-hover:scale-110 transition-transform">
+                <Car className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-black text-slate-900 font-display">Car Parts</h3>
+              <p className="text-[11px] text-slate-500 mt-1">Windtone Horns, Projector Fog Lights & Plate Frames</p>
             </div>
-            <Bike className="absolute -bottom-6 -right-6 w-44 h-44 text-amber-500/5 group-hover:scale-110 group-hover:text-amber-500/10 transition-all duration-500 pointer-events-none" />
-          </div>
+            <span className="text-[11px] font-bold text-red-600 flex items-center gap-1 mt-3">
+              Explore Car Parts →
+            </span>
+          </Link>
+
+          {/* Van */}
+          <Link
+            to="/products?type=van"
+            className="group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-blue-600/10 via-blue-600/5 to-slate-900 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 shadow-md flex flex-col justify-between min-h-[140px]"
+          >
+            <div>
+              <div className="p-2.5 rounded-xl bg-blue-600/10 text-blue-500 w-fit border border-blue-600/20 mb-3 group-hover:scale-110 transition-transform">
+                <Truck className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-black text-slate-900 font-display">Van / Commercial</h3>
+              <p className="text-[11px] text-slate-500 mt-1">3-Pipe Musical Air Horns, Coach Lights & Heavy Brackets</p>
+            </div>
+            <span className="text-[11px] font-bold text-blue-600 flex items-center gap-1 mt-3">
+              Explore Van Spares →
+            </span>
+          </Link>
         </div>
       </section>
 
-      {/* 3. Shop by Category Grid */}
+      {/* 3. Product Departments Matrix (LIGHTS, ACCESSORIES, HORN) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6 sm:mb-8">
           <div>
             <h2 className="text-xl sm:text-2xl font-black font-display text-slate-900 tracking-tight">
-              Shop by Category
+              Product Categories
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-              Explore essential automotive maintenance & performance components
+              Browse by Lights, Horns and Accessories tailored for Bike, Auto, Car & Van
             </p>
           </div>
           <Link
             to="/products"
             className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1"
           >
-            <span>View All</span>
+            <span>View All Catalog</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {categories.map((cat) => (
-            <Link
-              key={cat.id}
-              to={`/products?category_slug=${cat.slug}`}
-              className="group p-3 sm:p-4 rounded-2xl bg-white hover:bg-white border border-slate-200 hover:border-red-400 text-center flex flex-col items-center transition-all duration-300 shadow-card hover:shadow-card-hover"
-            >
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-slate-50 overflow-hidden mb-2.5 group-hover:scale-105 transition-transform flex items-center justify-center p-1 border border-slate-100">
-                <img
-                  src={cat.image_url || 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=120'}
-                  alt={cat.name}
-                  className="w-full h-full object-cover rounded-lg"
-                  loading="lazy"
-                />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Department 1: LIGHTS */}
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-card hover:border-amber-400 transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-200">
+                    <Zap className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-black font-display text-slate-900">LIGHTS</h3>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                  4 Subgroups
+                </span>
               </div>
-              <h4 className="text-xs font-bold text-slate-800 group-hover:text-red-600 transition-colors line-clamp-1">
-                {cat.name}
-              </h4>
-              <span className="text-[10px] text-slate-400 mt-1 uppercase font-semibold">
-                Explore
-              </span>
-            </Link>
-          ))}
+
+              <div className="space-y-3 mt-4">
+                {/* 1. Fog Lights */}
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                  <span className="text-xs font-bold text-slate-800 block mb-1.5">1. Fog Lights</span>
+                  <div className="grid grid-cols-4 gap-1">
+                    <Link to="/products?category_slug=bike-fog-lights" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Bike</Link>
+                    <Link to="/products?category_slug=auto-fog-lights" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Auto</Link>
+                    <Link to="/products?category_slug=car-fog-lights" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Car</Link>
+                    <Link to="/products?category_slug=van-fog-lights" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Van</Link>
+                  </div>
+                </div>
+
+                {/* 2. Head Light Bulbs */}
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                  <span className="text-xs font-bold text-slate-800 block mb-1.5">2. Head Light Bulbs</span>
+                  <div className="grid grid-cols-4 gap-1">
+                    <Link to="/products?category_slug=bike-head-light-bulbs" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Bike</Link>
+                    <Link to="/products?category_slug=auto-head-light-bulbs" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Auto</Link>
+                    <Link to="/products?category_slug=car-head-light-bulbs" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Car</Link>
+                    <Link to="/products?category_slug=van-head-light-bulbs" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Van</Link>
+                  </div>
+                </div>
+
+                {/* 3. Fancy LED */}
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                  <span className="text-xs font-bold text-slate-800 block mb-1.5">3. Fancy LED</span>
+                  <div className="grid grid-cols-4 gap-1">
+                    <Link to="/products?category_slug=bike-fancy-led" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Bike</Link>
+                    <Link to="/products?category_slug=auto-fancy-led" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Auto</Link>
+                    <Link to="/products?category_slug=car-fancy-led" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Car</Link>
+                    <Link to="/products?category_slug=van-fancy-led" className="px-2 py-1 rounded-lg bg-white hover:bg-red-600 hover:text-white text-[11px] font-semibold text-center border border-slate-200 transition-colors">Van</Link>
+                  </div>
+                </div>
+
+                {/* 4. Coach Lights */}
+                <Link
+                  to="/products?category_slug=coach-lights"
+                  className="flex items-center justify-between p-3 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-200 transition-colors"
+                >
+                  <span className="text-xs font-bold text-amber-900">4. Coach Lights (Van / Coach / Bus)</span>
+                  <ChevronRight className="w-4 h-4 text-amber-700" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Department 2: ACCESSORIES */}
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-card hover:border-blue-400 transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-200">
+                    <Wrench className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-black font-display text-slate-900">ACCESSORIES</h3>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                  3 Subgroups
+                </span>
+              </div>
+
+              <div className="space-y-3 mt-4">
+                <Link
+                  to="/products?category_slug=bike-accessories"
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-blue-50 hover:border-blue-200 border border-slate-100 transition-all group"
+                >
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 group-hover:text-blue-700 block">1. Bike Accessories</span>
+                    <span className="text-[10px] text-slate-500">ProTaper grips, handlebar controls & styling</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600" />
+                </Link>
+
+                <Link
+                  to="/products?category_slug=car-accessories"
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-blue-50 hover:border-blue-200 border border-slate-100 transition-all group"
+                >
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 group-hover:text-blue-700 block">2. Car Accessories</span>
+                    <span className="text-[10px] text-slate-500">HSRP number plate frames & utility items</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600" />
+                </Link>
+
+                <Link
+                  to="/products?category_slug=van-accessories"
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-blue-50 hover:border-blue-200 border border-slate-100 transition-all group"
+                >
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 group-hover:text-blue-700 block">3. Van Accessories</span>
+                    <span className="text-[10px] text-slate-500">Commercial brackets, plate frames & utility</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Department 3: HORN */}
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-card hover:border-red-400 transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-red-50 text-red-600 border border-red-200">
+                    <Zap className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-black font-display text-slate-900">HORN</h3>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-700 border border-red-200">
+                  4 Subgroups
+                </span>
+              </div>
+
+              <div className="space-y-3 mt-4">
+                <Link
+                  to="/products?category_slug=bike-horns"
+                  className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 hover:bg-red-50 hover:border-red-200 border border-slate-100 transition-all group"
+                >
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 group-hover:text-red-700 block">1. Bike Horns</span>
+                    <span className="text-[10px] text-slate-500">5M Single 110dB, WOW SONAL XL AC/DC</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-red-600" />
+                </Link>
+
+                <Link
+                  to="/products?category_slug=auto-horns"
+                  className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 hover:bg-red-50 hover:border-red-200 border border-slate-100 transition-all group"
+                >
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 group-hover:text-red-700 block">2. Auto Horns</span>
+                    <span className="text-[10px] text-slate-500">12V loud disc horns for 3-Wheelers</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-red-600" />
+                </Link>
+
+                <Link
+                  to="/products?category_slug=car-horns"
+                  className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 hover:bg-red-50 hover:border-red-200 border border-slate-100 transition-all group"
+                >
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 group-hover:text-red-700 block">3. Car Horns</span>
+                    <span className="text-[10px] text-slate-500">5M Windtone 112dB German tech horn pairs</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-red-600" />
+                </Link>
+
+                <Link
+                  to="/products?category_slug=van-horns"
+                  className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 hover:bg-red-50 hover:border-red-200 border border-slate-100 transition-all group"
+                >
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 group-hover:text-red-700 block">4. Van Horns</span>
+                    <span className="text-[10px] text-slate-500">5M 3-Pipe musical air horn with compressor</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-red-600" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -352,79 +523,7 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 8. Customer Reviews */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
-          <span className="text-xs font-black uppercase tracking-wider text-red-600">Verified Testimonials</span>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-black font-display text-slate-900 mt-1">
-            Loved by Drivers & Riders Across India
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-card">
-            <div className="flex items-center gap-1 text-amber-500 mb-3">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3.5 h-3.5 fill-current" />
-              ))}
-            </div>
-            <p className="text-xs text-slate-700 leading-relaxed mb-4">
-              "Finding the right brake pads for my 2022 Swift VXI was effortless with the vehicle selector. Received genuine Bosch pads in 2 days. Braking bite is phenomenal!"
-            </p>
-            <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
-              <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
-                RS
-              </div>
-              <div>
-                <h5 className="text-xs font-bold text-slate-900">Rajesh Sharma</h5>
-                <p className="text-[10px] text-slate-500">Verified Buyer • Swift 2022 VXI</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-card">
-            <div className="flex items-center gap-1 text-amber-500 mb-3">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3.5 h-3.5 fill-current" />
-              ))}
-            </div>
-            <p className="text-xs text-slate-700 leading-relaxed mb-4">
-              "Purchased Brembo sintered race pads and Motul 300V oil for my Yamaha R15 V4. 100% authentic. Zero brake fade on track days. Highly recommended!"
-            </p>
-            <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
-              <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-xs font-bold text-slate-950 shrink-0">
-                AK
-              </div>
-              <div>
-                <h5 className="text-xs font-bold text-slate-900">Aditya Kapoor</h5>
-                <p className="text-[10px] text-slate-500">Verified Buyer • Yamaha R15 V4</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-card">
-            <div className="flex items-center gap-1 text-amber-500 mb-3">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3.5 h-3.5 fill-current" />
-              ))}
-            </div>
-            <p className="text-xs text-slate-700 leading-relaxed mb-4">
-              "Upgraded my Thar's headlamps to the Philips Ultinon LED bulbs. Highway night driving is now so much safer with the crisp cutoff beam. Seamless checkout!"
-            </p>
-            <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
-              <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
-                VS
-              </div>
-              <div>
-                <h5 className="text-xs font-bold text-slate-900">Vikram Singh</h5>
-                <p className="text-[10px] text-slate-500">Verified Buyer • Thar LX Diesel</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. FAQs */}
+      {/* FAQs */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-6 sm:mb-8">
           <h2 className="text-xl sm:text-2xl font-black font-display text-slate-900">

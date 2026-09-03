@@ -404,20 +404,145 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 py-2.5 border-t border-slate-100 text-xs font-bold uppercase tracking-wider">
-            {navLinks.map((link) => (
+          <nav className="hidden md:flex items-center gap-6 py-2 border-t border-slate-100 text-xs font-bold uppercase tracking-wider">
+            <Link
+              to="/"
+              className={`transition-colors flex items-center gap-1.5 py-1 ${
+                location.pathname === '/' ? 'text-red-600 border-b-2 border-red-600' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <span>Home</span>
+            </Link>
+
+            {/* LIGHTS Mega Dropdown */}
+            <div className="relative group">
               <Link
-                key={link.path}
-                to={link.path}
-                className={`transition-colors flex items-center gap-1.5 py-1 ${
-                  location.pathname === link.path ? 'text-red-600 border-b-2 border-red-600' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                to="/products?category_slug=car-fog-lights"
+                className="flex items-center gap-1 py-1 text-slate-700 group-hover:text-red-600 transition-colors"
               >
-                {link.label === 'Car Parts' && <Car className="w-3.5 h-3.5" />}
-                {link.label === 'Bike Parts' && <Bike className="w-3.5 h-3.5" />}
-                <span>{link.label}</span>
+                <Zap className="w-3.5 h-3.5 text-amber-500" />
+                <span>LIGHTS</span>
+                <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-red-600 transition-transform group-hover:rotate-180" />
               </Link>
-            ))}
+              <div className="absolute left-0 top-full hidden group-hover:block w-80 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50">
+                <div className="space-y-3">
+                  {/* 1. Fog Lights */}
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">1. Fog Lights</span>
+                    <div className="grid grid-cols-4 gap-1 mt-1">
+                      <Link to="/products?category_slug=bike-fog-lights" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Bike</Link>
+                      <Link to="/products?category_slug=auto-fog-lights" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Auto</Link>
+                      <Link to="/products?category_slug=car-fog-lights" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Car</Link>
+                      <Link to="/products?category_slug=van-fog-lights" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Van</Link>
+                    </div>
+                  </div>
+
+                  {/* 2. Head Light Bulbs */}
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">2. Head Light Bulbs</span>
+                    <div className="grid grid-cols-4 gap-1 mt-1">
+                      <Link to="/products?category_slug=bike-head-light-bulbs" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Bike</Link>
+                      <Link to="/products?category_slug=auto-head-light-bulbs" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Auto</Link>
+                      <Link to="/products?category_slug=car-head-light-bulbs" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Car</Link>
+                      <Link to="/products?category_slug=van-head-light-bulbs" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Van</Link>
+                    </div>
+                  </div>
+
+                  {/* 3. Fancy LED */}
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">3. Fancy LED</span>
+                    <div className="grid grid-cols-4 gap-1 mt-1">
+                      <Link to="/products?category_slug=bike-fancy-led" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Bike</Link>
+                      <Link to="/products?category_slug=auto-fancy-led" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Auto</Link>
+                      <Link to="/products?category_slug=car-fancy-led" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Car</Link>
+                      <Link to="/products?category_slug=van-fancy-led" className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-red-50 hover:text-red-700 text-[11px] font-semibold text-center border border-slate-100">Van</Link>
+                    </div>
+                  </div>
+
+                  {/* 4. Coach Lights */}
+                  <div className="pt-1 border-t border-slate-100">
+                    <Link
+                      to="/products?category_slug=coach-lights"
+                      className="flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-red-50 hover:text-red-700 text-xs font-bold text-slate-800"
+                    >
+                      <span>4. Coach Lights (Van / Bus)</span>
+                      <ChevronDown className="w-3.5 h-3.5 -rotate-90 text-slate-400" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ACCESSORIES Dropdown */}
+            <div className="relative group">
+              <Link
+                to="/products?category_slug=car-accessories"
+                className="flex items-center gap-1 py-1 text-slate-700 group-hover:text-red-600 transition-colors"
+              >
+                <Wrench className="w-3.5 h-3.5 text-blue-500" />
+                <span>ACCESSORIES</span>
+                <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-red-600 transition-transform group-hover:rotate-180" />
+              </Link>
+              <div className="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 z-50">
+                <div className="space-y-1">
+                  <Link to="/products?category_slug=bike-accessories" className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 transition-colors">
+                    1. Bike Accessories
+                  </Link>
+                  <Link to="/products?category_slug=car-accessories" className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 transition-colors">
+                    2. Car Accessories
+                  </Link>
+                  <Link to="/products?category_slug=van-accessories" className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 transition-colors">
+                    3. Van Accessories
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* HORN Dropdown */}
+            <div className="relative group">
+              <Link
+                to="/products?category_slug=car-horns"
+                className="flex items-center gap-1 py-1 text-slate-700 group-hover:text-red-600 transition-colors"
+              >
+                <Zap className="w-3.5 h-3.5 text-red-500" />
+                <span>HORN</span>
+                <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-red-600 transition-transform group-hover:rotate-180" />
+              </Link>
+              <div className="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 z-50">
+                <div className="space-y-1">
+                  <Link to="/products?category_slug=bike-horns" className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 transition-colors">
+                    1. Bike Horns
+                  </Link>
+                  <Link to="/products?category_slug=auto-horns" className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 transition-colors">
+                    2. Auto Horns
+                  </Link>
+                  <Link to="/products?category_slug=car-horns" className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 transition-colors">
+                    3. Car Horns
+                  </Link>
+                  <Link to="/products?category_slug=van-horns" className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 transition-colors">
+                    4. Van Horns
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="h-4 w-px bg-slate-200 mx-1" />
+
+            {/* Vehicle Type Quick Links */}
+            <div className="flex items-center gap-3 text-[11px]">
+              <Link to="/products?type=bike" className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-red-600 hover:text-white transition-colors">
+                Bike
+              </Link>
+              <Link to="/products?type=auto" className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-red-600 hover:text-white transition-colors">
+                Auto
+              </Link>
+              <Link to="/products?type=car" className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-red-600 hover:text-white transition-colors">
+                Car
+              </Link>
+              <Link to="/products?type=van" className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-red-600 hover:text-white transition-colors">
+                Van
+              </Link>
+            </div>
           </nav>
         </div>
       </header>

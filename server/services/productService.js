@@ -172,6 +172,7 @@ class ProductService {
         brand_slug: br ? br.slug : '',
         brand_logo_url: br ? br.logo_url : '',
         primary_image: primaryImg ? primaryImg.image_url : 'https://images.unsplash.com/photo-1600705722908-bab1e61c0b4d?w=800',
+        images: pImages,
         avg_rating: avg,
         total_reviews: pReviews.length,
         discount_percentage: Math.round(((p.mrp - p.selling_price) / p.mrp) * 100),

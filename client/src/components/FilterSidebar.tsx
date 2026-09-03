@@ -81,21 +81,41 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       )}
 
-      {/* Vehicle Type (Car vs Bike) */}
+      {/* Vehicle Type (Bike, Auto, Car, Van) */}
       <div>
         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
           Vehicle Type
         </h4>
-        <div className="grid grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
           <button
             onClick={() => onTypeChange('')}
-            className={`py-1.5 text-xs font-bold rounded-lg border transition-colors ${
+            className={`py-1.5 text-xs font-bold rounded-lg border transition-colors col-span-2 sm:col-span-1 ${
               !selectedType
                 ? 'bg-red-600 border-red-600 text-white shadow-sm'
                 : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
             All
+          </button>
+          <button
+            onClick={() => onTypeChange('bike')}
+            className={`py-1.5 text-xs font-bold rounded-lg border transition-colors flex items-center justify-center gap-1 ${
+              selectedType === 'bike'
+                ? 'bg-red-600 border-red-600 text-white shadow-sm'
+                : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            <Bike className="w-3 h-3" /> Bike
+          </button>
+          <button
+            onClick={() => onTypeChange('auto')}
+            className={`py-1.5 text-xs font-bold rounded-lg border transition-colors flex items-center justify-center gap-1 ${
+              selectedType === 'auto'
+                ? 'bg-red-600 border-red-600 text-white shadow-sm'
+                : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            Auto
           </button>
           <button
             onClick={() => onTypeChange('car')}
@@ -108,14 +128,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <Car className="w-3 h-3" /> Car
           </button>
           <button
-            onClick={() => onTypeChange('bike')}
+            onClick={() => onTypeChange('van')}
             className={`py-1.5 text-xs font-bold rounded-lg border transition-colors flex items-center justify-center gap-1 ${
-              selectedType === 'bike'
+              selectedType === 'van'
                 ? 'bg-red-600 border-red-600 text-white shadow-sm'
                 : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
-            <Bike className="w-3 h-3" /> Bike
+            Van
           </button>
         </div>
       </div>
@@ -125,7 +145,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
           Categories
         </h4>
-        <div className="space-y-1 max-h-56 overflow-y-auto pr-1">
+        <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
           {categories.map((cat: any) => {
             const isSelected = selectedCategory === cat.slug;
             return (
@@ -138,10 +158,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     : 'text-slate-700 hover:bg-slate-100'
                 }`}
               >
-                <span className="truncate">{cat.name}</span>
-                {cat.product_count !== undefined && (
-                  <span className="text-[10px] text-slate-400 shrink-0 ml-1">({cat.product_count})</span>
-                )}
+                <div className="flex items-center gap-2 truncate">
+                  {cat.main_group && (
+                    <span className="px-1 py-0.5 rounded text-[9px] font-bold uppercase bg-slate-100 text-slate-600">
+                      {cat.main_group}
+                    </span>
+                  )}
+                  <span className="truncate">{cat.name}</span>
+                </div>
               </button>
             );
           })}

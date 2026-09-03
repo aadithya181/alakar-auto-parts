@@ -360,14 +360,25 @@ export const AdminProducts: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Primary Image URL</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Primary Image Path / URL</label>
                 <input
-                  type="url"
+                  type="text"
                   value={formData.image_url}
                   onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  placeholder="https://..."
+                  placeholder="/images/products/... or https://..."
                   className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900"
                 />
+                {formData.image_url && (
+                  <div className="mt-2 flex items-center gap-3">
+                    <img
+                      src={formData.image_url}
+                      alt="Preview"
+                      className="w-16 h-16 object-cover rounded-lg border border-slate-200"
+                      onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
+                    />
+                    <span className="text-[11px] text-slate-500">Live image preview</span>
+                  </div>
+                )}
               </div>
 
               <div>

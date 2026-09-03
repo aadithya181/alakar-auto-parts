@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Car, Bike, Search, ChevronRight, Bookmark } from 'lucide-react';
+import { Car, Bike, Truck, Zap, Search, ChevronRight, Bookmark } from 'lucide-react';
 import api from '../services/api';
 import { useVehicle, ActiveVehicleData } from '../context/VehicleContext';
 import { useAuth } from '../context/AuthContext';
@@ -188,31 +188,55 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
             </p>
           </div>
 
-          {/* Vehicle Type Tabs (Car / Bike) */}
-          <div className="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200 self-start">
-            <button
-              type="button"
-              onClick={() => setVehicleType('car')}
-              className={`flex items-center gap-1.5 px-3 sm:px-5 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
-                vehicleType === 'car'
-                  ? 'bg-red-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Car className="w-3.5 h-3.5" />
-              <span>CAR PARTS</span>
-            </button>
+          {/* Vehicle Type Tabs (Bike, Auto, Car, Van) */}
+          <div className="grid grid-cols-2 sm:flex p-1 rounded-xl bg-slate-100 border border-slate-200 self-start gap-1">
             <button
               type="button"
               onClick={() => setVehicleType('bike')}
-              className={`flex items-center gap-1.5 px-3 sm:px-5 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
                 vehicleType === 'bike'
                   ? 'bg-red-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Bike className="w-3.5 h-3.5" />
-              <span>BIKE PARTS</span>
+              <span>BIKE</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setVehicleType('auto')}
+              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+                vehicleType === 'auto'
+                  ? 'bg-red-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>AUTO</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setVehicleType('car')}
+              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+                vehicleType === 'car'
+                  ? 'bg-red-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Car className="w-3.5 h-3.5" />
+              <span>CAR</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setVehicleType('van')}
+              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+                vehicleType === 'van'
+                  ? 'bg-red-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Truck className="w-3.5 h-3.5" />
+              <span>VAN / COMM</span>
             </button>
           </div>
         </div>

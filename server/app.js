@@ -17,7 +17,11 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
+const path = require('path');
 const app = express();
+
+// Serve static images (both /images and /public/images)
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 // Middlewares
 app.use(cors({
