@@ -6,7 +6,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 4000,
+  timeout: 10000,
 });
 
 // Request interceptor to attach JWT token
@@ -28,11 +28,18 @@ api.interceptors.response.use(
     // If backend is unavailable or endpoint returned error, attempt fallback
     const config = error.config;
     if (config && config.url) {
+      let parsedBody: any = {};
+      try {
+        parsedBody = typeof config.data === 'string' ? JSON.parse(config.data || '{}') : (config.data || {});
+      } catch (e) {
+        parsedBody = config.data || {};
+      }
+
       const fallbackResult = handleFallbackApi(
         config.method || 'GET',
         config.url,
         config.params,
-        config.data ? JSON.parse(config.data || '{}') : {}
+        parsedBody
       );
       if (fallbackResult && fallbackResult.success) {
         return fallbackResult;

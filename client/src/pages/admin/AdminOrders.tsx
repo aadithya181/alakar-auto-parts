@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ExternalLink, X } from 'lucide-react';
+import { Search, ExternalLink, X, RefreshCw } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 import api from '../../services/api';
 import { Order } from '../../types';
@@ -9,6 +9,8 @@ export const AdminOrders: React.FC = () => {
   const { showSuccess, showError } = useToast();
   const [orders, setOrders] = useState<Order[] | any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [lastSyncedTime, setLastSyncedTime] = useState<string>('Just now');
   const [search, setSearch] = useState<string>('');
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
@@ -18,22 +20,46 @@ export const AdminOrders: React.FC = () => {
   const [courierName, setCourierName] = useState<string>('');
   const [trackingNumber, setTrackingNumber] = useState<string>('');
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (isManual = false) => {
     try {
-      setLoading(true);
+      if (isManual) setRefreshing(true);
+
+      const startTime = Date.now();
       const res: any = await api.get('/admin/orders');
+
+      if (isManual) {
+        const elapsed = Date.now() - startTime;
+        if (elapsed < 400) {
+          await new Promise((r) => setTimeout(r, 400 - elapsed));
+        }
+      }
+
       if (res.success) {
         setOrders(res.orders || []);
+        const now = new Date();
+        setLastSyncedTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+        if (isManual) {
+          showSuccess('Orders synchronized with live database');
+        }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching admin orders:', err);
+      if (isManual) {
+        showError(err.message || 'Failed to sync orders');
+      }
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
+  // Initial fetch and automatic background sync every 8 seconds
   useEffect(() => {
-    fetchOrders();
+    fetchOrders(false);
+    const interval = setInterval(() => {
+      fetchOrders(false);
+    }, 8000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleOpenStatusModal = (ord: any) => {
@@ -71,13 +97,34 @@ export const AdminOrders: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-black font-display text-slate-900 tracking-tight">
-          Customer Orders & Logistics Fulfillment
-        </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Monitor incoming customer orders, verify payment status, update courier tracking, and transition fulfillment status.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-black font-display text-slate-900 tracking-tight">
+            Customer Orders & Logistics Fulfillment
+          </h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Monitor incoming customer orders, verify payment status, update courier tracking, and transition fulfillment status.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 text-[11px] text-emerald-800 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-bold">Live Auto-Sync</span>
+            <span className="text-emerald-300">•</span>
+            <span className="text-emerald-700 font-mono text-[10px]">{lastSyncedTime}</span>
+          </div>
+
+          <button
+            onClick={() => fetchOrders(true)}
+            disabled={refreshing}
+            className="px-4 py-2.5 rounded-2xl bg-white hover:bg-slate-50 active:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-bold flex items-center gap-2 transition-all shadow-2xs cursor-pointer active:scale-95"
+            title="Refresh Orders"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-red-600' : 'text-slate-500'}`} />
+            <span>{refreshing ? 'Syncing...' : 'Refresh & Sync'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Search Filter */}
@@ -107,7 +154,15 @@ export const AdminOrders: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredOrders.map((ord) => (
+              {filteredOrders.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="p-12 text-center text-slate-400">
+                    <p className="text-sm font-bold text-slate-700">No orders found</p>
+                    <p className="text-xs text-slate-400 mt-1">Live customer purchases will appear here with instant verified payment amounts.</p>
+                  </td>
+                </tr>
+              ) : (
+                filteredOrders.map((ord) => (
                 <tr key={ord.id} className="hover:bg-slate-50/70 transition-colors">
                   <td className="p-4">
                     <span className="font-mono font-bold text-red-600">#{ord.order_number}</span>
@@ -157,7 +212,7 @@ export const AdminOrders: React.FC = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

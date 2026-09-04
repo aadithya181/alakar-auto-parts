@@ -106,6 +106,13 @@ function loadState() {
     try {
       const data = JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
       state = { ...state, ...data };
+      // Strip any dummy sample data so only live orders and revenue are counted
+      if (Array.isArray(state.orders)) {
+        state.orders = state.orders.filter(o => !o.id.includes('sample'));
+      }
+      if (Array.isArray(state.order_items)) {
+        state.order_items = state.order_items.filter(oi => !oi.order_id.includes('sample'));
+      }
     } catch (e) {
       console.error('Error reading db file, re-initializing...', e);
       seedInitialData();
@@ -117,7 +124,12 @@ function loadState() {
 
 function saveState() {
   try {
-    fs.writeFileSync(dataFilePath, JSON.stringify(state, null, 2), 'utf8');
+    const jsonStr = JSON.stringify(state, null, 2);
+    fs.writeFileSync(dataFilePath, jsonStr, 'utf8');
+    const clientDataPath = path.join(__dirname, '..', '..', 'client', 'src', 'data', 'torqspares_data.json');
+    if (fs.existsSync(path.dirname(clientDataPath))) {
+      fs.writeFileSync(clientDataPath, jsonStr, 'utf8');
+    }
   } catch (e) {
     console.error('Error persisting database state:', e);
   }
@@ -710,90 +722,12 @@ function seedInitialData() {
     { id: 'cp-3', code: 'SUPERDRIVE', discount_type: 'percentage', discount_value: 15.00, minimum_order: 2999.00, maximum_discount: 750.00, start_date: new Date().toISOString(), expiry_date: new Date(Date.now() + 86400000 * 90).toISOString(), usage_limit: 1000, used_count: 5, status: 'active' },
   ];
 
-  state.addresses = [
-    {
-      id: 'addr-1',
-      user_id: 'u-cust-1',
-      full_name: 'Rajesh Sharma',
-      phone: '+91 98765 12345',
-      address_line_1: 'Flat 402, Highline Residency',
-      address_line_2: 'MG Road, Indiranagar',
-      area: 'Indiranagar 2nd Stage',
-      city: 'Bengaluru',
-      state: 'Karnataka',
-      pincode: '560038',
-      landmark: 'Near Metro Station',
-      is_default: 1,
-      created_at: new Date().toISOString(),
-    },
-  ];
-
-  state.user_vehicles = [
-    { id: 'uv-1', user_id: 'u-cust-1', vehicle_variant_id: 'vv-swift-vxi-gen3', year: 2022, nickname: 'My Daily Swift VXI', is_default: 1, created_at: new Date().toISOString() },
-    { id: 'uv-2', user_id: 'u-cust-1', vehicle_variant_id: 'vv-r15-v4', year: 2023, nickname: 'Track Bike R15 V4', is_default: 0, created_at: new Date().toISOString() },
-  ];
-
-  state.reviews = [
-    {
-      id: 'rev-1',
-      product_id: 'p-bosch-swift-pad',
-      user_id: 'u-cust-1',
-      rating: 5,
-      review: 'Perfect fit for my 2022 Swift VXI. Zero noise and braking bite has improved significantly compared to OEM stock pads. Genuine Bosch product delivered with tamper-proof seal!',
-      is_verified_purchase: 1,
-      status: 'approved',
-      created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-    },
-    {
-      id: 'rev-2',
-      product_id: 'p-philips-led-h4',
-      user_id: 'u-cust-1',
-      rating: 5,
-      review: 'Incredible illumination! Completely transformed my night highway drives. The cutoff beam is sharp so oncoming traffic is not blinded. Worth every rupee.',
-      is_verified_purchase: 1,
-      status: 'approved',
-      created_at: new Date(Date.now() - 86400000 * 4).toISOString(),
-    },
-  ];
-
-  // Seed 1 sample delivered order
-  state.orders = [
-    {
-      id: 'ord-sample-1',
-      user_id: 'u-cust-1',
-      order_number: 'TRQ-2026-881294',
-      subtotal: 1499.00,
-      discount: 149.90,
-      shipping_charge: 0.00,
-      tax: 205.80,
-      total_amount: 1349.10,
-      coupon_code: 'WELCOME10',
-      payment_status: 'paid',
-      order_status: 'delivered',
-      razorpay_order_id: 'order_mock_sample_1',
-      razorpay_payment_id: 'pay_mock_sample_1',
-      shipping_address: JSON.stringify(state.addresses[0]),
-      tracking_number: 'BLUEDART-88291039',
-      courier_name: 'Blue Dart Express',
-      estimated_delivery: '2026-08-25',
-      created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
-      updated_at: new Date(Date.now() - 86400000 * 1).toISOString(),
-    },
-  ];
-
-  state.order_items = [
-    {
-      id: 'oi-sample-1',
-      order_id: 'ord-sample-1',
-      product_id: 'p-bosch-swift-pad',
-      product_name: 'Bosch Ceramic Front Brake Pad Set (Low Dust, Silent Braking)',
-      sku: 'BSH-BRK-55102',
-      image_url: 'https://images.unsplash.com/photo-1600705722908-bab1e61c0b4d?w=800&auto=format&fit=crop&q=80',
-      quantity: 1,
-      price: 1499.00,
-      total: 1499.00,
-    },
-  ];
+  state.addresses = [];
+  state.user_vehicles = [];
+  state.reviews = [];
+  state.orders = [];
+  state.order_items = [];
+  state.payments = [];
 
   saveState();
 }
@@ -918,7 +852,33 @@ function executeQuery(sql, params, mode) {
     // Brands
     if (/FROM brands/i.test(cleanSql)) {
       let list = state.brands.filter(b => b.status === 'active');
+      if (/is_featured\s*=\s*1/i.test(cleanSql)) {
+        list = list.filter(b => b.is_featured);
+      }
       return list;
+    }
+
+    // Product Count queries (used by brands, categories, and inventory health)
+    if (/^SELECT COUNT\(\*\)/i.test(cleanSql) && /FROM products/i.test(cleanSql)) {
+      if (/stock_quantity\s*<=\s*low_stock_threshold/i.test(cleanSql)) {
+        const count = state.products.filter(p => p.status === 'active' && Number(p.stock_quantity) <= Number(p.low_stock_threshold || 5)).length;
+        return { count };
+      }
+      if (/brand_id\s*=\s*\?/i.test(cleanSql)) {
+        const count = state.products.filter(p => p.brand_id === params[0] && p.status === 'active').length;
+        return { count };
+      }
+      if (/category_id\s*=\s*\?/i.test(cleanSql)) {
+        const count = state.products.filter(p => p.category_id === params[0] && p.status === 'active').length;
+        return { count };
+      }
+      return { count: state.products.filter(p => p.status === 'active').length };
+    }
+
+    // Low stock products query
+    if (/FROM products/i.test(cleanSql) && /stock_quantity\s*<=\s*low_stock_threshold/i.test(cleanSql)) {
+      const items = state.products.filter(p => p.status === 'active' && Number(p.stock_quantity) <= Number(p.low_stock_threshold || 5));
+      return items.sort((a, b) => Number(a.stock_quantity) - Number(b.stock_quantity)).slice(0, 8);
     }
 
     // Single Product Lookup by slug or id
@@ -944,15 +904,32 @@ function executeQuery(sql, params, mode) {
       };
     }
 
+    // Admin Products list
+    if (/FROM products p/i.test(cleanSql) && /compatible_vehicles_count/i.test(cleanSql)) {
+      return state.products.map(p => {
+        const cat = state.categories.find(c => c.id === p.category_id);
+        const br = state.brands.find(b => b.id === p.brand_id);
+        const pImg = state.product_images.find(img => img.product_id === p.id && img.is_primary);
+        const fitCount = state.product_compatibility.filter(fit => fit.product_id === p.id).length;
+        return {
+          ...p,
+          category_name: cat ? cat.name : '',
+          brand_name: br ? br.name : '',
+          primary_image: pImg ? pImg.image_url : null,
+          compatible_vehicles_count: fitCount,
+        };
+      });
+    }
+
     // Product Images
-    if (/FROM product_images/i.test(cleanSql)) {
+    if (!/FROM products/i.test(cleanSql) && /FROM product_images/i.test(cleanSql)) {
       const pImages = state.product_images.filter(img => img.product_id === params[0]);
       if (mode === 'get') return pImages[0] || null;
       return pImages;
     }
 
     // Product Compatibility
-    if (/FROM product_compatibility/i.test(cleanSql)) {
+    if (!/FROM products/i.test(cleanSql) && /FROM product_compatibility/i.test(cleanSql)) {
       if (/WHERE pc\.product_id = \? AND pc\.vehicle_variant_id = \?/i.test(cleanSql)) {
         const pc = state.product_compatibility.find(fit => fit.product_id === params[0] && fit.vehicle_variant_id === params[1]);
         if (!pc) return null;
@@ -1087,10 +1064,27 @@ function executeQuery(sql, params, mode) {
     // Orders
     if (/FROM orders/i.test(cleanSql)) {
       if (/SUM\(total_amount\)/i.test(cleanSql)) {
-        const total = state.orders.filter(o => o.payment_status === 'paid').reduce((sum, o) => sum + (o.total_amount || 0), 0);
+        let matchingOrders = state.orders.filter(o => o.payment_status === 'paid');
+        if (/date\(created_at\)/i.test(cleanSql)) {
+          const todayIso = new Date().toISOString().slice(0, 10);
+          const todayLocale = new Date().toLocaleDateString('en-CA');
+          matchingOrders = matchingOrders.filter(o => {
+            const ordDate = (o.created_at || '').slice(0, 10);
+            return ordDate === todayIso || ordDate === todayLocale;
+          });
+        }
+        const total = matchingOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
         return { total };
       }
       if (/COUNT\(\*\)/i.test(cleanSql)) {
+        if (/date\(created_at\)/i.test(cleanSql)) {
+          const todayIso = new Date().toISOString().slice(0, 10);
+          const todayLocale = new Date().toLocaleDateString('en-CA');
+          return { count: state.orders.filter(o => {
+            const ordDate = (o.created_at || '').slice(0, 10);
+            return ordDate === todayIso || ordDate === todayLocale;
+          }).length };
+        }
         if (/order_status IN/i.test(cleanSql)) {
           return { count: state.orders.filter(o => ['pending', 'processing', 'packed'].includes(o.order_status)).length };
         }
@@ -1103,8 +1097,12 @@ function executeQuery(sql, params, mode) {
       if (/WHERE o\.user_id = \?/i.test(cleanSql)) {
         return state.orders.filter(o => o.user_id === params[0]);
       }
-      // All orders (Admin)
-      return state.orders.map(o => {
+      // All orders (Admin) - newest first
+      let sortedOrders = [...state.orders].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+      if (/LIMIT\s+6/i.test(cleanSql)) {
+        sortedOrders = sortedOrders.slice(0, 6);
+      }
+      return sortedOrders.map(o => {
         const user = state.users.find(u => u.id === o.user_id);
         return {
           ...o,
@@ -1132,22 +1130,7 @@ function executeQuery(sql, params, mode) {
       });
     }
 
-    // Admin Products list
-    if (/FROM products p/i.test(cleanSql) && /compatible_vehicles_count/i.test(cleanSql)) {
-      return state.products.map(p => {
-        const cat = state.categories.find(c => c.id === p.category_id);
-        const br = state.brands.find(b => b.id === p.brand_id);
-        const pImg = state.product_images.find(img => img.product_id === p.id && img.is_primary);
-        const fitCount = state.product_compatibility.filter(fit => fit.product_id === p.id).length;
-        return {
-          ...p,
-          category_name: cat ? cat.name : '',
-          brand_name: br ? br.name : '',
-          primary_image: pImg ? pImg.image_url : null,
-          compatible_vehicles_count: fitCount,
-        };
-      });
-    }
+
   }
 
   // 2. INSERT queries
@@ -1374,6 +1357,18 @@ function executeQuery(sql, params, mode) {
         autoReplicateUpdate('products', prod, 'id', id);
       }
       return { changes: 1 };
+    }
+    if (/UPDATE product_images/i.test(cleanSql)) {
+      const [imgUrl, targetId] = params;
+      let matched = state.product_images.filter(pi => pi.id === targetId || (pi.product_id === targetId && pi.is_primary));
+      if (matched.length === 0) {
+        matched = state.product_images.filter(pi => pi.product_id === targetId);
+      }
+      matched.forEach(img => {
+        img.image_url = imgUrl;
+      });
+      saveState();
+      return { changes: matched.length || 1 };
     }
   }
 

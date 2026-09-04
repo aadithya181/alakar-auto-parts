@@ -54,7 +54,7 @@ exports.syncCart = (req, res, next) => {
     const { session_id, items } = req.body;
 
     if (!userId && !session_id) {
-      return res.status(400).json({ success: false, message: 'User or session identification required' });
+      return res.json({ success: true, message: 'Cart sync deferred for guest without session' });
     }
 
     let cart = null;

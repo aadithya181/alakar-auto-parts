@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 5001;
 
 const server = app.listen(PORT, () => {
   console.log(`=======================================================`);
-  console.log(`🚀 Alakar Auto Parts API Server running on port ${PORT}`);
+  console.log(`🚀 New Alagar Auto Parts API Server running on port ${PORT}`);
   console.log(`📍 West Main Street, Old GH road, Pudukkottai (Surendar - 8526613000)`);
   console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🚗 Connected directly to Supabase PostgreSQL`);
@@ -14,5 +14,5 @@ const server = app.listen(PORT, () => {
   console.log(`=======================================================`);
 });
 
-// Direct Supabase Live Mode Active: 2026-08-23
+// Direct Supabase Live Mode Active (Razorpay keys configured): 2026-09-04
 module.exports = server;

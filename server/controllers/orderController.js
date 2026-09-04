@@ -42,11 +42,16 @@ exports.getOrderDetails = (req, res, next) => {
 
     const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(order.id);
 
+    let addr = order.shipping_address;
+    if (typeof addr === 'string') {
+      try { addr = JSON.parse(addr); } catch (e) {}
+    }
+
     res.json({
       success: true,
       order: {
         ...order,
-        shipping_address: JSON.parse(order.shipping_address),
+        shipping_address: addr,
         items,
       },
     });
@@ -67,9 +72,13 @@ exports.getUserOrders = (req, res, next) => {
 
     const fullOrders = orders.map((ord) => {
       const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(ord.id);
+      let oAddr = ord.shipping_address;
+      if (typeof oAddr === 'string') {
+        try { oAddr = JSON.parse(oAddr); } catch (e) {}
+      }
       return {
         ...ord,
-        shipping_address: JSON.parse(ord.shipping_address),
+        shipping_address: oAddr,
         items,
       };
     });

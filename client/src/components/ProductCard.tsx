@@ -41,9 +41,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const discount = product.discount_percentage || (mrp > sellingPrice ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0);
 
   return (
-    <div className="group relative bg-white hover:bg-white border border-slate-200 hover:border-red-400 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col h-full shadow-card hover:shadow-card-hover">
+    <div className="group relative bg-white hover:bg-white border border-slate-200/80 hover:border-red-400 rounded-3xl overflow-hidden transition-all duration-300 flex flex-col h-full shadow-card hover:shadow-card-hover">
       {/* Top Image Container */}
-      <Link to={`/product/${product.slug || product.id}`} className="relative block aspect-[4/3] bg-slate-50 overflow-hidden">
+      <Link to={`/product/${product.slug || product.id}`} className="relative block aspect-[4/3] bg-slate-50 overflow-hidden border-b border-slate-100">
         <img
           src={imageUrl}
           alt={product.name}
@@ -52,14 +52,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         />
 
         {/* Badges */}
-        <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
           {discount > 0 && (
-            <span className="px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-black uppercase tracking-wider bg-red-600 text-white shadow-sm">
+            <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-wider bg-red-600 text-white shadow-sm">
               {discount}% OFF
             </span>
           )}
           {product.is_bestseller && (
-            <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-slate-950 shadow-sm flex items-center gap-1">
+            <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-slate-950 shadow-sm flex items-center gap-1">
               <Zap className="w-3 h-3 fill-slate-950" /> Bestseller
             </span>
           )}
@@ -69,7 +69,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <button
           onClick={handleWishlistToggle}
           aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-          className={`absolute top-2 right-2 p-2 rounded-full backdrop-blur-md transition-all duration-200 z-10 shadow-sm ${
+          className={`absolute top-2.5 right-2.5 p-2 rounded-full backdrop-blur-md transition-all duration-200 z-10 shadow-sm ${
             inWishlist
               ? 'bg-red-600 text-white'
               : 'bg-white/90 text-slate-600 hover:text-red-600 hover:bg-white'
@@ -80,7 +80,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
         {/* Stock Alert Badge if low */}
         {product.stock_quantity <= 5 && product.stock_quantity > 0 && (
-          <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-amber-100 border border-amber-300 text-amber-800 text-[10px] font-semibold">
+          <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-amber-100/90 border border-amber-300 text-amber-900 text-[10px] font-bold backdrop-blur-sm">
             Only {product.stock_quantity} left
           </div>
         )}

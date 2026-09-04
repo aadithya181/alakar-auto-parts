@@ -16,7 +16,8 @@ exports.getCategories = (req, res, next) => {
 
     // Attach product counts
     const categoriesWithCount = categories.map((cat) => {
-      const count = db.prepare("SELECT COUNT(*) as count FROM products WHERE category_id = ? AND status = 'active'").get(cat.id).count;
+      const row = db.prepare("SELECT COUNT(*) as count FROM products WHERE category_id = ? AND status = 'active'").get(cat.id);
+      const count = row && typeof row.count === 'number' ? row.count : 0;
       return {
         ...cat,
         product_count: count,

@@ -4,6 +4,67 @@ export function handleFallbackApi(method: string, url: string, params: any = {},
   const normUrl = url.replace(/^\/api/, '');
   const state = fallbackDb as any;
 
+  // 0. Auth Fallbacks
+  if (normUrl === '/auth/login' && method.toUpperCase() === 'POST') {
+    const email = (body.email || '').toLowerCase().trim();
+    const isAdmin = email.includes('admin');
+    const demoUser = isAdmin ? {
+      id: '00000000-0000-4000-a000-000000000001',
+      name: 'Surendar (Admin)',
+      email: email || 'admin@newalagarautoparts.com',
+      phone: '+91 85266 13000',
+      role: 'admin'
+    } : {
+      id: '00000000-0000-4000-a000-000000000002',
+      name: 'Karthik Raja',
+      email: email || 'customer@newalagarautoparts.com',
+      phone: '+91 94433 22110',
+      role: 'customer'
+    };
+
+    return {
+      success: true,
+      message: 'Login successful',
+      token: 'fallback_token_' + Date.now(),
+      user: demoUser
+    };
+  }
+
+  if (normUrl === '/auth/register' && method.toUpperCase() === 'POST') {
+    const newUser = {
+      id: 'usr_' + Date.now(),
+      name: body.name || 'User',
+      email: body.email || 'user@newalagarautoparts.com',
+      phone: body.phone || '+91 98765 43210',
+      role: 'customer'
+    };
+    return {
+      success: true,
+      message: 'Registration successful',
+      token: 'fallback_token_' + Date.now(),
+      user: newUser
+    };
+  }
+
+  if (normUrl === '/auth/profile' && method.toUpperCase() === 'GET') {
+    let parsedUser = null;
+    try {
+      const saved = localStorage.getItem('torq_user');
+      parsedUser = saved ? JSON.parse(saved) : null;
+    } catch (e) {}
+
+    return {
+      success: true,
+      user: parsedUser || {
+        id: '00000000-0000-4000-a000-000000000001',
+        name: 'Surendar (Admin)',
+        email: 'admin@newalagarautoparts.com',
+        role: 'admin',
+        savedVehicles: []
+      }
+    };
+  }
+
   // 1. Categories
   if (normUrl === '/categories' && method.toUpperCase() === 'GET') {
     let cats = state.categories || [];
@@ -250,27 +311,118 @@ export function handleFallbackApi(method: string, url: string, params: any = {},
         brand_name: br ? br.name : '',
         primary_image: primaryImg ? primaryImg.image_url : '/images/products/5m-single-horn-box.jpeg',
         compatible_vehicles_count: compCount,
-      };
+      }; 
     });
     return { success: true, products: formatted };
   }
 
-  // 7. Admin Dashboard
-  if (normUrl === '/admin/dashboard' && method.toUpperCase() === 'GET') {
+  // Admin POST product
+  if (normUrl === '/admin/products' && method.toUpperCase() === 'POST') {
+    const newId = 'p-' + Date.now();
+    const newProd = {
+      id: newId,
+      name: body.name,
+      sku: body.sku,
+      category_id: body.category_id,
+      brand_id: body.brand_id,
+      mrp: Number(body.mrp),
+      selling_price: Number(body.selling_price),
+      cost_price: Number(body.cost_price || 0),
+      stock_quantity: Number(body.stock_quantity),
+      description: body.description || '',
+      short_description: body.short_description || '',
+      status: body.status || 'active',
+      is_featured: Boolean(body.is_featured),
+      is_bestseller: Boolean(body.is_bestseller),
+      is_new_arrival: Boolean(body.is_new_arrival),
+      created_at: new Date().toISOString(),
+    };
+    state.products = state.products || [];
+    state.products.unshift(newProd);
+    if (body.image_url) {
+      state.product_images = state.product_images || [];
+      state.product_images.push({ id: 'pi-' + Date.now(), product_id: newId, image_url: body.image_url, is_primary: 1 });
+    }
+    return { success: true, message: 'Product created successfully', productId: newId };
+  }
+
+  // Admin PUT product
+  if (normUrl.startsWith('/admin/products/') && method.toUpperCase() === 'PUT') {
+    const prodId = normUrl.replace('/admin/products/', '');
+    const prod = (state.products || []).find((p: any) => p.id === prodId);
+    if (prod) {
+      Object.assign(prod, {
+        name: body.name || prod.name,
+        sku: body.sku || prod.sku,
+        category_id: body.category_id || prod.category_id,
+        brand_id: body.brand_id || prod.brand_id,
+        mrp: Number(body.mrp) || prod.mrp,
+        selling_price: Number(body.selling_price) || prod.selling_price,
+        cost_price: Number(body.cost_price) || prod.cost_price,
+        stock_quantity: Number(body.stock_quantity) !== undefined ? Number(body.stock_quantity) : prod.stock_quantity,
+        description: body.description !== undefined ? body.description : prod.description,
+        short_description: body.short_description !== undefined ? body.short_description : prod.short_description,
+        status: body.status || prod.status,
+        is_featured: body.is_featured !== undefined ? Boolean(body.is_featured) : prod.is_featured,
+        is_bestseller: body.is_bestseller !== undefined ? Boolean(body.is_bestseller) : prod.is_bestseller,
+        is_new_arrival: body.is_new_arrival !== undefined ? Boolean(body.is_new_arrival) : prod.is_new_arrival,
+      });
+      if (body.image_url) {
+        state.product_images = state.product_images || [];
+        const existing = state.product_images.find((img: any) => img.product_id === prodId && img.is_primary);
+        if (existing) {
+          existing.image_url = body.image_url;
+        } else {
+          state.product_images.push({ id: 'pi-' + Date.now(), product_id: prodId, image_url: body.image_url, is_primary: 1 });
+        }
+      }
+    }
+    return { success: true, message: 'Product updated successfully' };
+  }
+
+  // Admin DELETE product
+  if (normUrl.startsWith('/admin/products/') && method.toUpperCase() === 'DELETE') {
+    const prodId = normUrl.replace('/admin/products/', '');
+    state.products = (state.products || []).filter((p: any) => p.id !== prodId);
+    state.product_images = (state.product_images || []).filter((img: any) => img.product_id !== prodId);
+    state.product_compatibility = (state.product_compatibility || []).filter((c: any) => c.product_id !== prodId);
+    return { success: true, message: 'Product deleted successfully' };
+  }
+
+  // 7. Admin Dashboard & Stats (Real-time live amounts)
+  if ((normUrl === '/admin/dashboard' || normUrl === '/admin/stats') && method.toUpperCase() === 'GET') {
+    const orders = state.orders || [];
+    const paidOrders = orders.filter((o: any) => o.payment_status === 'paid');
+    const totalSales = paidOrders.reduce((sum: number, o: any) => sum + (Number(o.total_amount) || 0), 0);
+    const today = new Date().toISOString().slice(0, 10);
+    const todaySales = paidOrders
+      .filter((o: any) => (o.created_at || '').slice(0, 10) === today)
+      .reduce((sum: number, o: any) => sum + (Number(o.total_amount) || 0), 0);
+    const pendingOrders = orders.filter((o: any) => ['pending', 'processing', 'packed'].includes(o.order_status)).length;
+    const realCustomers = (state.users || []).filter((u: any) => u.role === 'customer').length;
+
     return {
       success: true,
       stats: {
-        totalSales: 184500,
-        todaySales: 12600,
-        totalOrders: 48,
-        pendingOrders: 3,
+        totalSales,
+        todaySales,
+        totalOrders: orders.length,
+        pendingOrders,
         totalProducts: (state.products || []).length,
-        totalCustomers: 124,
+        totalCustomers: realCustomers,
         lowStockCount: (state.products || []).filter((p: any) => p.stock_quantity <= (p.low_stock_threshold || 5)).length,
       },
-      recentOrders: [],
-      topProducts: (state.products || []).slice(0, 5),
-      lowStockProducts: (state.products || []).filter((p: any) => p.stock_quantity <= 5).slice(0, 5),
+      recentOrders: orders.slice(0, 6),
+      topProducts: [],
+      lowStockProducts: (state.products || []).filter((p: any) => p.stock_quantity <= (p.low_stock_threshold || 5)).slice(0, 5),
+    };
+  }
+
+  // Admin Orders
+  if (normUrl === '/admin/orders' && method.toUpperCase() === 'GET') {
+    return {
+      success: true,
+      orders: state.orders || []
     };
   }
 
@@ -280,7 +432,8 @@ export function handleFallbackApi(method: string, url: string, params: any = {},
       success: true,
       coupons: [
         { id: 'cpn-first50', code: 'FIRST50', discount_type: 'fixed', discount_value: 50, min_order_value: 499, description: 'Flat ₹50 OFF on your first spare parts order' },
-        { id: 'cpn-torq10', code: 'ALAKAR10', discount_type: 'percentage', discount_value: 10, min_order_value: 1200, max_discount: 300, description: '10% instant discount on orders above ₹1,200' },
+        { id: 'cpn-torq10', code: 'ALAGAR10', discount_type: 'percentage', discount_value: 10, min_order_value: 1200, max_discount: 300, description: '10% instant discount on orders above ₹1,200' },
+        { id: 'cpn-torq11', code: 'ALAKAR10', discount_type: 'percentage', discount_value: 10, min_order_value: 1200, max_discount: 300, description: '10% instant discount on orders above ₹1,200' },
       ],
     };
   }

@@ -87,7 +87,7 @@ export const AdminVehicles: React.FC = () => {
         <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-card space-y-3">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">1. Vehicle Brands</h3>
           <div className="space-y-1.5 max-h-96 overflow-y-auto pr-1">
-            {brands.map((b) => (
+            {(Array.isArray(brands) ? brands : []).map((b) => (
               <button
                 key={b.id}
                 onClick={() => setSelectedBrand(b.id)}
@@ -108,7 +108,7 @@ export const AdminVehicles: React.FC = () => {
         <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-card space-y-3">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">2. Models</h3>
           <div className="space-y-1.5 max-h-96 overflow-y-auto pr-1">
-            {models.map((m) => (
+            {(Array.isArray(models) ? models : []).map((m) => (
               <button
                 key={m.id}
                 onClick={() => setSelectedModel(m.id)}
@@ -129,7 +129,7 @@ export const AdminVehicles: React.FC = () => {
         <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-card space-y-3">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">3. Generation Variants</h3>
           <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
-            {variants.map((v) => (
+            {(Array.isArray(variants) ? variants : []).map((v) => (
               <div key={v.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs">
                 <h4 className="font-bold text-slate-900">{v.name}</h4>
                 <p className="text-[11px] text-slate-500 mt-0.5">

@@ -61,7 +61,7 @@ export const Footer: React.FC = () => {
                 <Car className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-black font-display tracking-tight text-slate-900">
-                ALAKAR<span className="text-red-600 ml-1">AUTO PARTS</span>
+                NEW ALAGAR<span className="text-red-600 ml-1">AUTO PARTS</span>
               </span>
             </Link>
             <p className="text-slate-500 leading-relaxed mb-4 text-[11px] max-w-sm">
@@ -69,7 +69,7 @@ export const Footer: React.FC = () => {
             </p>
             <div className="space-y-1.5 text-[11px]">
               <p className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-red-600" /> <span className="font-semibold text-slate-700">Surendar:</span> +91 85266 13000</p>
-              <p className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-red-600" /> support@alakarautoparts.com</p>
+              <p className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-red-600" /> support@newalagarautoparts.com</p>
               <p className="flex items-start gap-2"><MapPin className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" /> West Main Street, Old GH Road, Near Murugan Kovil, Pudukkottai</p>
             </div>
           </div>
@@ -113,7 +113,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Copyright */}
         <div className="pt-8 mt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
-          <p>© {new Date().getFullYear()} Alakar Auto Parts (Surendar). Pudukkottai, Tamil Nadu. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} New Alagar Auto Parts (Surendar). Pudukkottai, Tamil Nadu. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <span>Privacy Policy</span>
             <span>Terms of Service</span>

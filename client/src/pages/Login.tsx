@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Car, Lock, Mail, Eye, EyeOff, Zap, User2 } from 'lucide-react';
+import { Car, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
@@ -39,25 +39,6 @@ export const Login: React.FC = () => {
     }
   };
 
-  const handleQuickDemo = async (demoEmail: string, demoPass: string, label: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    try {
-      setLoading(true);
-      const user = await login(demoEmail, demoPass);
-      showSuccess(`Logged in as ${user.name} (${user.role}) ✅`);
-      if (user.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
-    } catch (err: any) {
-      showError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-10 relative overflow-hidden">
       {/* Animated background orbs */}
@@ -84,47 +65,9 @@ export const Login: React.FC = () => {
                 Sign In
               </h1>
               <p className="text-sm text-slate-500 mt-1">
-                Welcome back to <span className="text-red-600 font-bold">Alakar Auto Parts</span>
+                Welcome back to <span className="text-red-600 font-bold">New Alagar Auto Parts</span>
               </p>
             </div>
-          </div>
-
-          {/* Quick Demo Shortcuts */}
-          <div className="animate-badge">
-            <p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-2 text-center">
-              Quick Demo Login
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('customer@alakarautoparts.com', 'customer123', 'Customer')}
-                disabled={loading}
-                className="demo-btn group py-2.5 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                <span className="w-6 h-6 rounded-lg bg-slate-200 group-hover:bg-slate-300 flex items-center justify-center transition-colors">
-                  <User2 className="w-3.5 h-3.5 text-slate-600" />
-                </span>
-                Customer
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('admin@alakarautoparts.com', 'admin123', 'Admin')}
-                disabled={loading}
-                className="demo-btn group py-2.5 px-3 rounded-xl bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 text-xs font-bold text-red-700 flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                <span className="w-6 h-6 rounded-lg bg-red-100 group-hover:bg-red-200 flex items-center justify-center transition-colors">
-                  <Zap className="w-3.5 h-3.5 text-red-600" />
-                </span>
-                Surendar (Admin)
-              </button>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="relative flex items-center gap-3">
-            <div className="flex-1 h-px bg-slate-200" />
-            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">or sign in manually</span>
-            <div className="flex-1 h-px bg-slate-200" />
           </div>
 
           {/* Form */}
@@ -143,7 +86,7 @@ export const Login: React.FC = () => {
                   onFocus={() => setFocusedField('email')}
                   onBlur={() => setFocusedField(null)}
                   placeholder="name@example.com"
-                  className="auth-input w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400"
+                  className="auth-input w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-red-500"
                 />
                 <Mail className={`w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 ${focusedField === 'email' ? 'text-red-500' : 'text-slate-400'}`} />
               </div>
@@ -163,7 +106,7 @@ export const Login: React.FC = () => {
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
                   placeholder="••••••••"
-                  className="auth-input w-full pl-11 pr-11 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400"
+                  className="auth-input w-full pl-11 pr-11 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-red-500"
                 />
                 <Lock className={`w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 ${focusedField === 'password' ? 'text-red-500' : 'text-slate-400'}`} />
                 <button
@@ -181,7 +124,7 @@ export const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary-auth w-full py-3.5 rounded-2xl bg-red-600 text-white text-sm font-black uppercase tracking-wider shadow-lg shadow-red-600/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="btn-primary-auth w-full py-3.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-sm font-black uppercase tracking-wider shadow-lg shadow-red-600/30 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">

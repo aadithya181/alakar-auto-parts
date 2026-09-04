@@ -175,25 +175,26 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
   };
 
   return (
-    <div className={`w-full ${compact ? 'p-4 bg-white rounded-2xl border border-slate-200 shadow-sm' : 'p-5 sm:p-6 md:p-8 rounded-2xl bg-white shadow-card border border-slate-200'}`}>
+    <div className={`w-full ${compact ? 'p-4 bg-white rounded-2xl border border-slate-200 shadow-sm' : 'p-5 sm:p-7 md:p-8 rounded-3xl bg-white shadow-card hover:shadow-card-hover border border-slate-200/90 transition-all'}`}>
       {/* Title & Tabs Header */}
-      <div className="flex flex-col gap-3 mb-4 sm:mb-6">
+      <div className="flex flex-col gap-3 mb-5 sm:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-base sm:text-xl font-black text-slate-900 font-display tracking-tight">
+            <h2 className="text-base sm:text-xl font-black text-slate-900 font-display tracking-tight flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
               Find Exact Fit Parts For Your Vehicle
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Select your vehicle for 100% genuine compatibility.
+              Guaranteed OEM fitment for two-wheelers, three-wheelers, cars, and commercial vans.
             </p>
           </div>
 
           {/* Vehicle Type Tabs (Bike, Auto, Car, Van) */}
-          <div className="grid grid-cols-2 sm:flex p-1 rounded-xl bg-slate-100 border border-slate-200 self-start gap-1">
+          <div className="grid grid-cols-2 sm:flex p-1 rounded-2xl bg-slate-100 border border-slate-200 self-start gap-1">
             <button
               type="button"
               onClick={() => setVehicleType('bike')}
-              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
                 vehicleType === 'bike'
                   ? 'bg-red-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -205,7 +206,7 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
             <button
               type="button"
               onClick={() => setVehicleType('auto')}
-              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
                 vehicleType === 'auto'
                   ? 'bg-red-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -217,7 +218,7 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
             <button
               type="button"
               onClick={() => setVehicleType('car')}
-              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
                 vehicleType === 'car'
                   ? 'bg-red-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -229,7 +230,7 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
             <button
               type="button"
               onClick={() => setVehicleType('van')}
-              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
                 vehicleType === 'van'
                   ? 'bg-red-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -246,8 +247,8 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5 mb-5">
         {/* 1. Brand */}
         <div>
-          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-            1. Select {vehicleType === 'car' ? 'Car' : 'Bike'} Brand
+          <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+            1. Select {vehicleType === 'bike' ? 'Two-Wheeler' : vehicleType === 'auto' ? 'Auto' : vehicleType === 'car' ? 'Car' : 'Commercial'} Brand
           </label>
           <select
             value={selectedBrand}
@@ -257,7 +258,7 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
               setSelectedVariant('');
             }}
             disabled={loadingBrands}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-colors"
+            className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50/80 border border-slate-200 text-xs sm:text-sm font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all"
           >
             <option value="">{loadingBrands ? 'Loading Brands...' : 'Choose Brand...'}</option>
             {brands.map((b) => (
@@ -270,7 +271,7 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
 
         {/* 2. Model */}
         <div>
-          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
             2. Select Model
           </label>
           <select
@@ -280,7 +281,7 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
               setSelectedVariant('');
             }}
             disabled={!selectedBrand || loadingModels}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50/80 border border-slate-200 text-xs sm:text-sm font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="">
               {!selectedBrand ? 'Select Brand First' : loadingModels ? 'Loading Models...' : 'Choose Model...'}
@@ -295,14 +296,14 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
 
         {/* 3. Variant */}
         <div>
-          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-            3. Select Variant / Gen
+          <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+            3. Select Variant / Generation
           </label>
           <select
             value={selectedVariant}
             onChange={(e) => setSelectedVariant(e.target.value)}
             disabled={!selectedModel || loadingVariants}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50/80 border border-slate-200 text-xs sm:text-sm font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="">
               {!selectedModel ? 'Select Model First' : loadingVariants ? 'Loading Variants...' : 'Choose Variant...'}
@@ -317,14 +318,14 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
 
         {/* 4. Year */}
         <div>
-          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
             4. Manufacturing Year
           </label>
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
             disabled={!selectedVariant}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50/80 border border-slate-200 text-xs sm:text-sm font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="">Select Year...</option>
             {availableYears.map((y) => (
@@ -348,9 +349,9 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
                 key={v.id}
                 type="button"
                 onClick={() => handleSelectFromGarage(v)}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-colors shrink-0 ${
+                className={`px-3 py-1 rounded-xl text-[11px] font-semibold border transition-all shrink-0 ${
                   activeVehicle?.variantId === v.vehicle_variant_id
-                    ? 'bg-red-50 border-red-300 text-red-700'
+                    ? 'bg-red-50 border-red-300 text-red-700 font-bold'
                     : 'bg-slate-50 border-slate-200 text-slate-700 hover:border-slate-400'
                 }`}
               >
@@ -359,8 +360,9 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
             ))}
           </div>
         ) : (
-          <div className="text-xs text-slate-500 hidden sm:block">
-            💡 Select your vehicle to view only 100% fitting brake pads, filters, engine components & accessories.
+          <div className="text-xs text-slate-500 hidden sm:flex items-center gap-1.5">
+            <span className="text-emerald-600 font-bold">✓ 100% Fitment:</span>
+            <span>Only parts verified for your specific engine and model year will be shown.</span>
           </div>
         )}
 
@@ -368,9 +370,9 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
           type="button"
           onClick={handleFindParts}
           disabled={!selectedBrand || !selectedModel || !selectedVariant}
-          className="w-full sm:w-auto px-7 py-3 rounded-xl text-sm font-extrabold uppercase tracking-wide bg-red-600 hover:bg-red-700 text-white shadow-md shadow-red-600/20 flex items-center justify-center gap-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ml-auto active:scale-95"
+          className="w-full sm:w-auto px-7 py-3 rounded-2xl text-xs sm:text-sm font-extrabold tracking-wide bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-md shadow-red-600/25 flex items-center justify-center gap-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ml-auto active:scale-95"
         >
-          <Search className="w-4 h-4" />
+          <Search className="w-4 h-4 stroke-[2.5]" />
           <span>Show Compatible Parts</span>
           <ChevronRight className="w-4 h-4" />
         </button>

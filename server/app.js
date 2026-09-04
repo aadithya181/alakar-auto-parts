@@ -41,9 +41,9 @@ app.get('/api/health', async (req, res) => {
   res.json({
     status: 'online',
     timestamp: new Date().toISOString(),
-    service: 'Alakar Auto Parts API (Pudukkottai)',
+    service: 'New Alagar Auto Parts API (Pudukkottai)',
     store: {
-      name: 'Alakar Auto Parts',
+      name: 'New Alagar Auto Parts',
       owner: 'Surendar',
       phone: '8526613000',
       address: 'West Main Street, Old GH road, Near murugan kovil, Pudukkottai',

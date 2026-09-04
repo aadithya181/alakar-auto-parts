@@ -10,6 +10,7 @@ exports.getDashboardStats = (req, res, next) => {
     const todaySales = todaySalesRow.total || 0;
 
     const totalOrders = db.prepare('SELECT COUNT(*) as count FROM orders').get().count;
+    const todayOrders = db.prepare("SELECT COUNT(*) as count FROM orders WHERE date(created_at) = date('now')").get().count;
     const pendingOrders = db.prepare("SELECT COUNT(*) as count FROM orders WHERE order_status IN ('pending', 'processing', 'packed')").get().count;
     const totalProducts = db.prepare("SELECT COUNT(*) as count FROM products WHERE status = 'active'").get().count;
     const totalCustomers = db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'customer'").get().count;
@@ -51,12 +52,19 @@ exports.getDashboardStats = (req, res, next) => {
         totalSales,
         todaySales,
         totalOrders,
+        todayOrders,
         pendingOrders,
         totalProducts,
         totalCustomers,
         lowStockCount,
       },
-      recentOrders: recentOrders.map(o => ({ ...o, shipping_address: JSON.parse(o.shipping_address) })),
+      recentOrders: recentOrders.map(o => {
+        let addr = o.shipping_address;
+        if (typeof addr === 'string') {
+          try { addr = JSON.parse(addr); } catch (e) {}
+        }
+        return { ...o, shipping_address: addr };
+      }),
       topProducts,
       lowStockProducts,
     });
@@ -197,9 +205,13 @@ exports.getAdminOrders = (req, res, next) => {
 
     const formatted = orders.map((o) => {
       const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(o.id);
+      let addr = o.shipping_address;
+      if (typeof addr === 'string') {
+        try { addr = JSON.parse(addr); } catch (e) {}
+      }
       return {
         ...o,
-        shipping_address: JSON.parse(o.shipping_address),
+        shipping_address: addr,
         items,
       };
     });

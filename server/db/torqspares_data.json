@@ -2,6 +2,24 @@
   "users": [
     {
       "id": "u-admin-1",
+      "name": "Admin (New Alagar Auto Parts)",
+      "email": "admin@newalagarautoparts.com",
+      "password_hash": "$2a$10$B0RNehH0G1b6YYfx/dmbS.PHlTwJy4xCk75ovQPMjgDlL/hgM248W",
+      "phone": "+91 85266 13000",
+      "role": "admin",
+      "created_at": "2026-08-23T12:41:20.332Z"
+    },
+    {
+      "id": "u-admin-2",
+      "name": "Admin (Alakar)",
+      "email": "admin@alakarautoparts.com",
+      "password_hash": "$2a$10$B0RNehH0G1b6YYfx/dmbS.PHlTwJy4xCk75ovQPMjgDlL/hgM248W",
+      "phone": "+91 85266 13000",
+      "role": "admin",
+      "created_at": "2026-08-23T12:41:20.332Z"
+    },
+    {
+      "id": "u-admin-3",
       "name": "Torq Admin",
       "email": "admin@torqspares.com",
       "password_hash": "$2a$10$B0RNehH0G1b6YYfx/dmbS.PHlTwJy4xCk75ovQPMjgDlL/hgM248W",
@@ -776,58 +794,6 @@
       "status": "active"
     },
     {
-      "id": "cat-head-light-bulbs-bike",
-      "main_group": "LIGHTS",
-      "sub_group": "HEAD LIGHT BULBS",
-      "vehicle_type": "bike",
-      "name": "Bike Headlight Bulbs",
-      "slug": "bike-head-light-bulbs",
-      "description": "HS1, H4, M5 high-power LED and halogen headlight conversion bulbs for bikes",
-      "image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=400",
-      "icon_name": "Zap",
-      "sort_order": 5,
-      "status": "active"
-    },
-    {
-      "id": "cat-head-light-bulbs-auto",
-      "main_group": "LIGHTS",
-      "sub_group": "HEAD LIGHT BULBS",
-      "vehicle_type": "auto",
-      "name": "Auto Headlight Bulbs",
-      "slug": "auto-head-light-bulbs",
-      "description": "12V high-luminance headlamp bulbs and holders for Bajaj RE, Ape & TVS autos",
-      "image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=400",
-      "icon_name": "Zap",
-      "sort_order": 6,
-      "status": "active"
-    },
-    {
-      "id": "cat-head-light-bulbs-car",
-      "main_group": "LIGHTS",
-      "sub_group": "HEAD LIGHT BULBS",
-      "vehicle_type": "car",
-      "name": "Car Headlight Bulbs",
-      "slug": "car-head-light-bulbs",
-      "description": "H4, H7, H11, 9005 pure white LED conversion kits and ultra-bright halogen bulbs",
-      "image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=400",
-      "icon_name": "Zap",
-      "sort_order": 7,
-      "status": "active"
-    },
-    {
-      "id": "cat-head-light-bulbs-van",
-      "main_group": "LIGHTS",
-      "sub_group": "HEAD LIGHT BULBS",
-      "vehicle_type": "van",
-      "name": "Van Headlight Bulbs",
-      "slug": "van-head-light-bulbs",
-      "description": "Heavy-duty 12V / 24V commercial vehicle headlight bulbs for Tata Ace, Traveller, Dost",
-      "image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=400",
-      "icon_name": "Zap",
-      "sort_order": 8,
-      "status": "active"
-    },
-    {
       "id": "cat-fancy-led-bike",
       "main_group": "LIGHTS",
       "sub_group": "FANCY LED",
@@ -1020,15 +986,6 @@
       "description": "Performance control components, handlebar grips, and motorcycle accessories.",
       "is_featured": 1,
       "status": "active"
-    },
-    {
-      "id": "br-philips",
-      "name": "Philips Automotive",
-      "slug": "philips-automotive",
-      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Philips_logo_new.svg/320px-Philips_logo_new.svg.png",
-      "description": "Advanced automotive LED and halogen lighting conversion kits.",
-      "is_featured": 1,
-      "status": "active"
     }
   ],
   "products": [
@@ -1098,7 +1055,7 @@
       "selling_price": 249,
       "cost_price": 130,
       "gst_percentage": 18,
-      "stock_quantity": 80,
+      "stock_quantity": 79,
       "low_stock_threshold": 10,
       "weight": 0.35,
       "warranty": "6 Months Warranty",
@@ -1108,7 +1065,8 @@
       "is_new_arrival": 0,
       "status": "active",
       "specifications": "{\"Department\":\"HORN > BIKE\",\"Voltage\":\"12V DC\",\"Current\":\"1.5A\",\"Decibel Output\":\"110dB Loud Sound\",\"Diaphragm\":\"Heavy Duty Acoustic Disc\",\"Waterproof Rating\":\"100% Waterproof\",\"Ideal Fitment\":\"Hero Splendor, HF Deluxe, Bajaj Platina, Honda Shine, TVS Sport, Auto Rickshaws\"}",
-      "created_at": "2026-08-25T12:00:00.000Z"
+      "created_at": "2026-08-25T12:00:00.000Z",
+      "updated_at": "2026-09-04T15:05:18.794Z"
     },
     {
       "id": "p-wowsonal-xl-horn",
@@ -1264,110 +1222,6 @@
       "is_new_arrival": 0,
       "status": "active",
       "specifications": "{\"Department\":\"LIGHTS > FOG LIGHTS (VAN)\",\"Power\":\"15W Dual Beam (White / Amber)\",\"Fitment\":\"Tata Ace, Mahindra Bolero Maxi Truck, Force Traveller\"}",
-      "created_at": "2026-08-25T12:00:00.000Z"
-    },
-    {
-      "id": "p-philips-led-h4",
-      "category_id": "cat-head-light-bulbs-car",
-      "brand_id": "br-philips",
-      "name": "Philips Ultinon Pro9100 H4 / HS1 LED Headlight Bulbs (5800K Cool White, +350% Brighter)",
-      "slug": "philips-ultinon-pro9100-h4-led-headlight-bulbs",
-      "sku": "PHL-LED-H4-9100",
-      "oem_number": "LUM-H4-11342",
-      "description": "Top-of-the-line Lumileds TopContact LEDs with AirBoost cooling technology. Provides up to +350% brighter illumination on dark highways with precise cutoff line for Cars, Vans, Autos and Bikes.",
-      "short_description": "Ultra-bright 5800K pure white automotive LED conversion kit with CANBus adapter.",
-      "mrp": 7999,
-      "selling_price": 5999,
-      "cost_price": 4200,
-      "gst_percentage": 18,
-      "stock_quantity": 24,
-      "low_stock_threshold": 4,
-      "weight": 0.7,
-      "warranty": "3 Years Manufacturer Replacement Warranty",
-      "returnable": 1,
-      "is_featured": 1,
-      "is_bestseller": 1,
-      "is_new_arrival": 1,
-      "status": "active",
-      "specifications": "{\"Department\":\"LIGHTS > HEAD LIGHT BULBS (CAR)\",\"Bulb Socket\":\"H4 / HS1 (Hi/Low Dual Beam)\",\"Color Temperature\":\"5800K Crisp Diamond White\",\"Luminous Flux\":\"2600 Lumens per bulb\",\"Cooling System\":\"AirBoost Active Copper Heatpipe Fan\"}",
-      "created_at": "2026-08-25T12:00:00.000Z"
-    },
-    {
-      "id": "p-philips-led-hs1-bike",
-      "category_id": "cat-head-light-bulbs-bike",
-      "brand_id": "br-philips",
-      "name": "Philips HS1 / H4 High-Output LED Motorcycle Headlight Bulb (6000K Pure White)",
-      "slug": "philips-hs1-h4-led-motorcycle-headlight-bulb",
-      "sku": "PHL-LED-HS1-BK",
-      "oem_number": "HS1-12V-LED",
-      "description": "Direct OEM replacement HS1/H4 LED bulb designed for motorcycle headlight reflectors. Delivers razor sharp cut-off and instant high-beam illumination.",
-      "short_description": "Direct-fit 6000K pure white HS1 LED bulb for 2-wheelers.",
-      "mrp": 1499,
-      "selling_price": 999,
-      "cost_price": 650,
-      "gst_percentage": 18,
-      "stock_quantity": 50,
-      "low_stock_threshold": 10,
-      "weight": 0.2,
-      "warranty": "1 Year Warranty",
-      "returnable": 1,
-      "is_featured": 0,
-      "is_bestseller": 1,
-      "is_new_arrival": 0,
-      "status": "active",
-      "specifications": "{\"Department\":\"LIGHTS > HEAD LIGHT BULBS (BIKE)\",\"Socket\":\"HS1 / H4 12V\",\"Color\":\"6000K Cool White\"}",
-      "created_at": "2026-08-25T12:00:00.000Z"
-    },
-    {
-      "id": "p-philips-led-auto-bulb",
-      "category_id": "cat-head-light-bulbs-auto",
-      "brand_id": "br-philips",
-      "name": "Philips 12V Super Bright Headlamp Bulb Set for Auto Rickshaws",
-      "slug": "philips-12v-super-bright-headlamp-bulb-auto",
-      "sku": "PHL-BLB-AUT-12V",
-      "oem_number": "AUT-HL-12V35W",
-      "description": "Heavy duty vibration-resistant filament headlamp bulb kit engineered for Bajaj RE, Ape and TVS King auto rickshaws.",
-      "short_description": "Heavy duty 12V 35/35W headlamp bulb set for Auto Rickshaws.",
-      "mrp": 450,
-      "selling_price": 280,
-      "cost_price": 150,
-      "gst_percentage": 18,
-      "stock_quantity": 70,
-      "low_stock_threshold": 10,
-      "weight": 0.15,
-      "warranty": "6 Months Warranty",
-      "returnable": 1,
-      "is_featured": 0,
-      "is_bestseller": 1,
-      "is_new_arrival": 0,
-      "status": "active",
-      "specifications": "{\"Department\":\"LIGHTS > HEAD LIGHT BULBS (AUTO)\",\"Wattage\":\"12V 35/35W\",\"Fitment\":\"Bajaj RE, Piaggio Ape, TVS King\"}",
-      "created_at": "2026-08-25T12:00:00.000Z"
-    },
-    {
-      "id": "p-van-h4-heavy-duty-bulb",
-      "category_id": "cat-head-light-bulbs-van",
-      "brand_id": "br-philips",
-      "name": "Philips 12V H4 Heavy Duty Commercial Headlight Bulbs (Pair) for Tata Ace & Vans",
-      "slug": "philips-h4-heavy-duty-commercial-headlight-van",
-      "sku": "PHL-H4-VAN-HD",
-      "oem_number": "H4-12V-6055W",
-      "description": "High durability H4 halogen bulbs with reinforced filament support to resist road vibrations on commercial pickup vans.",
-      "short_description": "Reinforced 12V H4 commercial vehicle headlamp bulb pair.",
-      "mrp": 599,
-      "selling_price": 380,
-      "cost_price": 210,
-      "gst_percentage": 18,
-      "stock_quantity": 45,
-      "low_stock_threshold": 8,
-      "weight": 0.25,
-      "warranty": "6 Months Warranty",
-      "returnable": 1,
-      "is_featured": 0,
-      "is_bestseller": 1,
-      "is_new_arrival": 0,
-      "status": "active",
-      "specifications": "{\"Department\":\"LIGHTS > HEAD LIGHT BULBS (VAN)\",\"Socket\":\"H4 (60/55W)\",\"Fitment\":\"Tata Ace, Force Traveller, Ashok Leyland Dost, Maruti Eeco\"}",
       "created_at": "2026-08-25T12:00:00.000Z"
     },
     {
@@ -1712,34 +1566,6 @@
       "image_url": "/images/products/5m-mini-drive-light-road.jpeg",
       "is_primary": 0,
       "sort_order": 1
-    },
-    {
-      "id": "pi-clean-20",
-      "product_id": "p-philips-led-h4",
-      "image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=800",
-      "is_primary": 1,
-      "sort_order": 0
-    },
-    {
-      "id": "pi-clean-21",
-      "product_id": "p-philips-led-hs1-bike",
-      "image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=800",
-      "is_primary": 1,
-      "sort_order": 0
-    },
-    {
-      "id": "pi-clean-22",
-      "product_id": "p-philips-led-auto-bulb",
-      "image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=800",
-      "is_primary": 1,
-      "sort_order": 0
-    },
-    {
-      "id": "pi-clean-23",
-      "product_id": "p-van-h4-heavy-duty-bulb",
-      "image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=800",
-      "is_primary": 1,
-      "sort_order": 0
     },
     {
       "id": "pi-clean-24",
@@ -2117,120 +1943,213 @@
       "year_from": 2020,
       "year_to": 2024,
       "notes": "Universal 22mm 7/8 inch handlebar fitment"
-    },
-    {
-      "id": "pf-12",
-      "product_id": "p-philips-led-h4",
-      "vehicle_variant_id": "vv-swift-vxi-gen3",
-      "year_from": 2018,
-      "year_to": 2024,
-      "notes": "Plug & Play LED Upgrade"
-    },
-    {
-      "id": "pf-13",
-      "product_id": "p-philips-led-h4",
-      "vehicle_variant_id": "vv-thar-lx",
-      "year_from": 2020,
-      "year_to": 2024,
-      "notes": "Plug & Play LED Upgrade"
     }
   ],
-  "user_vehicles": [
-    {
-      "id": "uv-1",
-      "user_id": "u-cust-1",
-      "vehicle_variant_id": "vv-swift-vxi-gen3",
-      "year": 2022,
-      "nickname": "My Daily Swift VXI",
-      "is_default": 1,
-      "created_at": "2026-08-23T12:41:20.332Z"
-    },
-    {
-      "id": "uv-2",
-      "user_id": "u-cust-1",
-      "vehicle_variant_id": "vv-r15-v4",
-      "year": 2023,
-      "nickname": "Track Bike R15 V4",
-      "is_default": 0,
-      "created_at": "2026-08-23T12:41:20.332Z"
-    }
-  ],
-  "carts": [
-    {
-      "id": "cart-1787491458303",
-      "user_id": "u-cust-1",
-      "session_id": "u-cust-1",
-      "created_at": "2026-08-23T13:24:18.304Z"
-    },
-    {
-      "id": "cart-1787491493005",
-      "user_id": "u-1787491492885",
-      "session_id": "u-1787491492885",
-      "created_at": "2026-08-23T13:24:53.005Z"
-    },
-    {
-      "id": "cart-1787493130829",
-      "user_id": "u-1787493130710",
-      "session_id": "u-1787493130710",
-      "created_at": "2026-08-23T13:52:10.829Z"
-    }
-  ],
+  "user_vehicles": [],
+  "carts": [],
   "cart_items": [],
   "wishlists": [],
   "addresses": [
     {
-      "id": "addr-1",
-      "user_id": "u-cust-1",
-      "full_name": "Rajesh Sharma",
-      "phone": "+91 98765 12345",
-      "address_line_1": "Flat 402, Highline Residency",
-      "address_line_2": "MG Road, Indiranagar",
-      "area": "Indiranagar 2nd Stage",
-      "city": "Bengaluru",
-      "state": "Karnataka",
-      "pincode": "560038",
-      "landmark": "Near Metro Station",
+      "id": "addr-1788533778840",
+      "user_id": "00000000-0000-4000-a000-000000000002",
+      "full_name": "AADITHYA R",
+      "phone": "9790817496",
+      "address_line_1": "21/34",
+      "address_line_2": "EMK Street",
+      "area": "Palavanthangal",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600114",
+      "landmark": null,
       "is_default": 1,
-      "created_at": "2026-08-23T12:41:20.332Z"
+      "created_at": "2026-09-04T14:56:18.841Z"
     }
   ],
   "orders": [
     {
-      "id": "ord-sample-1",
-      "user_id": "u-cust-1",
-      "order_number": "TRQ-2026-881294",
-      "subtotal": 1499,
-      "discount": 149.9,
-      "shipping_charge": 0,
-      "tax": 205.8,
-      "total_amount": 1349.1,
-      "coupon_code": "WELCOME10",
+      "id": "ord-1788534295595-715",
+      "user_id": null,
+      "order_number": "TRQ-2026-242309",
+      "subtotal": 249,
+      "discount": 0,
+      "shipping_charge": 99,
+      "tax": 37.98,
+      "total_amount": 348,
+      "coupon_code": null,
       "payment_status": "paid",
-      "order_status": "delivered",
-      "razorpay_order_id": "order_mock_sample_1",
-      "razorpay_payment_id": "pay_mock_sample_1",
-      "shipping_address": "{\"id\":\"addr-1\",\"user_id\":\"u-cust-1\",\"full_name\":\"Rajesh Sharma\",\"phone\":\"+91 98765 12345\",\"address_line_1\":\"Flat 402, Highline Residency\",\"address_line_2\":\"MG Road, Indiranagar\",\"area\":\"Indiranagar 2nd Stage\",\"city\":\"Bengaluru\",\"state\":\"Karnataka\",\"pincode\":\"560038\",\"landmark\":\"Near Metro Station\",\"is_default\":1,\"created_at\":\"2026-08-23T12:41:20.332Z\"}",
-      "tracking_number": "BLUEDART-88291039",
-      "courier_name": "Blue Dart Express",
-      "estimated_delivery": "2026-08-25",
-      "created_at": "2026-08-20T12:41:20.332Z",
-      "updated_at": "2026-08-22T12:41:20.332Z"
+      "order_status": "confirmed",
+      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
+      "created_at": "2026-09-04T15:04:55.595Z",
+      "updated_at": "2026-09-04T15:05:18.792Z",
+      "razorpay_order_id": "order_TY0ETclPnTiOp8",
+      "razorpay_payment_id": "pay_upi_1788534318787"
+    },
+    {
+      "id": "ord-1788534274675-757",
+      "user_id": null,
+      "order_number": "TRQ-2026-855650",
+      "subtotal": 249,
+      "discount": 0,
+      "shipping_charge": 99,
+      "tax": 37.98,
+      "total_amount": 348,
+      "coupon_code": null,
+      "payment_status": "pending",
+      "order_status": "pending",
+      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
+      "created_at": "2026-09-04T15:04:34.675Z",
+      "updated_at": "2026-09-04T15:04:34.675Z",
+      "razorpay_order_id": "order_TY0E6oLX7Ih9jQ"
+    },
+    {
+      "id": "ord-1788534199016-297",
+      "user_id": null,
+      "order_number": "TRQ-2026-192987",
+      "subtotal": 249,
+      "discount": 0,
+      "shipping_charge": 99,
+      "tax": 37.98,
+      "total_amount": 348,
+      "coupon_code": null,
+      "payment_status": "pending",
+      "order_status": "pending",
+      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
+      "created_at": "2026-09-04T15:03:19.018Z",
+      "updated_at": "2026-09-04T15:03:19.018Z",
+      "razorpay_order_id": "order_TY0CmIgBUoMkuq"
+    },
+    {
+      "id": "ord-1788534135360-871",
+      "user_id": null,
+      "order_number": "TRQ-2026-758716",
+      "subtotal": 249,
+      "discount": 0,
+      "shipping_charge": 99,
+      "tax": 37.98,
+      "total_amount": 348,
+      "coupon_code": null,
+      "payment_status": "pending",
+      "order_status": "pending",
+      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
+      "created_at": "2026-09-04T15:02:15.360Z",
+      "updated_at": "2026-09-04T15:02:15.360Z",
+      "razorpay_order_id": "order_TY0BemoqbirWgR"
+    },
+    {
+      "id": "ord-1788534103226-299",
+      "user_id": null,
+      "order_number": "TRQ-2026-386281",
+      "subtotal": 249,
+      "discount": 0,
+      "shipping_charge": 99,
+      "tax": 37.98,
+      "total_amount": 348,
+      "coupon_code": null,
+      "payment_status": "pending",
+      "order_status": "pending",
+      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
+      "created_at": "2026-09-04T15:01:43.226Z",
+      "updated_at": "2026-09-04T15:01:43.226Z",
+      "razorpay_order_id": "order_TY0B5eXMvPrsZT"
+    },
+    {
+      "id": "ord-1788533783251-441",
+      "user_id": null,
+      "order_number": "TRQ-2026-341949",
+      "subtotal": 249,
+      "discount": 0,
+      "shipping_charge": 99,
+      "tax": 37.98,
+      "total_amount": 348,
+      "coupon_code": null,
+      "payment_status": "pending",
+      "order_status": "pending",
+      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
+      "created_at": "2026-09-04T14:56:23.251Z",
+      "updated_at": "2026-09-04T14:56:23.251Z",
+      "razorpay_order_id": "order_TY05SRnDoWtP0R"
     }
   ],
   "order_items": [
     {
-      "id": "oi-sample-1",
-      "order_id": "ord-sample-1",
-      "product_id": "p-bosch-swift-pad",
-      "product_name": "Bosch Ceramic Front Brake Pad Set (Low Dust, Silent Braking)",
-      "sku": "BSH-BRK-55102",
-      "image_url": "https://images.unsplash.com/photo-1600705722908-bab1e61c0b4d?w=800&auto=format&fit=crop&q=80",
+      "id": "oi-bt7hfryh2",
+      "order_id": "ord-1788533783251-441",
+      "product_id": "p-5m-single-horn-bike",
+      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
+      "sku": "5M-HRN-SNG-110",
+      "image_url": "/images/products/5m-single-horn-box.jpeg",
       "quantity": 1,
-      "price": 1499,
-      "total": 1499
+      "price": 249,
+      "total": 249
+    },
+    {
+      "id": "oi-x9ct03nqt",
+      "order_id": "ord-1788534103226-299",
+      "product_id": "p-5m-single-horn-bike",
+      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
+      "sku": "5M-HRN-SNG-110",
+      "image_url": "/images/products/5m-single-horn-box.jpeg",
+      "quantity": 1,
+      "price": 249,
+      "total": 249
+    },
+    {
+      "id": "oi-bzz6qsog4",
+      "order_id": "ord-1788534135360-871",
+      "product_id": "p-5m-single-horn-bike",
+      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
+      "sku": "5M-HRN-SNG-110",
+      "image_url": "/images/products/5m-single-horn-box.jpeg",
+      "quantity": 1,
+      "price": 249,
+      "total": 249
+    },
+    {
+      "id": "oi-jjbtwysh0",
+      "order_id": "ord-1788534199016-297",
+      "product_id": "p-5m-single-horn-bike",
+      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
+      "sku": "5M-HRN-SNG-110",
+      "image_url": "/images/products/5m-single-horn-box.jpeg",
+      "quantity": 1,
+      "price": 249,
+      "total": 249
+    },
+    {
+      "id": "oi-n4hirur7q",
+      "order_id": "ord-1788534274675-757",
+      "product_id": "p-5m-single-horn-bike",
+      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
+      "sku": "5M-HRN-SNG-110",
+      "image_url": "/images/products/5m-single-horn-box.jpeg",
+      "quantity": 1,
+      "price": 249,
+      "total": 249
+    },
+    {
+      "id": "oi-qcf1nq6sb",
+      "order_id": "ord-1788534295595-715",
+      "product_id": "p-5m-single-horn-bike",
+      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
+      "sku": "5M-HRN-SNG-110",
+      "image_url": "/images/products/5m-single-horn-box.jpeg",
+      "quantity": 1,
+      "price": 249,
+      "total": 249
     }
   ],
-  "payments": [],
+  "payments": [
+    {
+      "id": "pay-1788534318793",
+      "order_id": "ord-1788534295595-715",
+      "razorpay_order_id": "order_TY0ETclPnTiOp8",
+      "razorpay_payment_id": "pay_upi_1788534318787",
+      "razorpay_signature": "sig_upi_completed",
+      "amount": 348,
+      "created_at": "2026-09-04T15:05:18.793Z"
+    }
+  ],
   "coupons": [
     {
       "id": "cp-1",
@@ -2242,20 +2161,20 @@
       "start_date": "2026-08-23T12:41:20.332Z",
       "expiry_date": "2026-11-21T12:41:20.332Z",
       "usage_limit": 5000,
-      "used_count": 14,
+      "used_count": 0,
       "status": "active"
     },
     {
       "id": "cp-2",
-      "code": "TORQ200",
-      "discount_type": "fixed",
-      "discount_value": 200,
-      "minimum_order": 1999,
-      "maximum_discount": 200,
+      "code": "ALAGAR10",
+      "discount_type": "percentage",
+      "discount_value": 10,
+      "minimum_order": 1200,
+      "maximum_discount": 300,
       "start_date": "2026-08-23T12:41:20.332Z",
       "expiry_date": "2026-11-21T12:41:20.332Z",
       "usage_limit": 2000,
-      "used_count": 8,
+      "used_count": 0,
       "status": "active"
     },
     {
@@ -2268,21 +2187,10 @@
       "start_date": "2026-08-23T12:41:20.332Z",
       "expiry_date": "2026-11-21T12:41:20.332Z",
       "usage_limit": 1000,
-      "used_count": 5,
+      "used_count": 0,
       "status": "active"
     }
   ],
   "coupon_usage": [],
-  "reviews": [
-    {
-      "id": "rev-2",
-      "product_id": "p-philips-led-h4",
-      "user_id": "u-cust-1",
-      "rating": 5,
-      "review": "Incredible illumination! Completely transformed my night highway drives. The cutoff beam is sharp so oncoming traffic is not blinded. Worth every rupee.",
-      "is_verified_purchase": 1,
-      "status": "approved",
-      "created_at": "2026-08-19T12:41:20.332Z"
-    }
-  ]
+  "reviews": []
 }

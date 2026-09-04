@@ -44,7 +44,7 @@ export const Register: React.FC = () => {
       setLoading(true);
       const user = await register(formData.name, formData.email, formData.password, formData.phone);
       setSubmitted(true);
-      showSuccess(`Account created! Welcome to Alakar Auto Parts, ${user.name} 🎉`);
+      showSuccess(`Account created! Welcome to New Alagar Auto Parts, ${user.name} 🎉`);
       setTimeout(() => navigate('/'), 800);
     } catch (err: any) {
       showError(err.message || 'Registration failed');
@@ -88,7 +88,7 @@ export const Register: React.FC = () => {
                 {submitted ? 'Account Created! 🎉' : 'Create Your Account'}
               </h1>
               <p className="text-sm text-slate-500 mt-1">
-                Join <span className="text-red-600 font-bold">Alakar Auto Parts</span> · Pudukkottai
+                Join <span className="text-red-600 font-bold">New Alagar Auto Parts</span> · Pudukkottai
               </p>
             </div>
           </div>

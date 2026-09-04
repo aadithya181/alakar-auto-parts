@@ -31,10 +31,15 @@ export const AdminCompatibility: React.FC = () => {
           api.get('/admin/products'),
           api.get('/vehicles/brands', { params: { type: vehicleType } }),
         ]);
-        if (pRes.success) {
-          setProducts(pRes.products || []);
-          if (pRes.products?.[0]) {
-            setSelectedProductId(pRes.products[0].id);
+        if (pRes) {
+          const list = Array.isArray(pRes.products)
+            ? pRes.products
+            : Array.isArray(pRes)
+            ? pRes
+            : [];
+          setProducts(list);
+          if (list[0]) {
+            setSelectedProductId(list[0].id);
           }
         }
         if (bRes.success) setBrands(bRes.brands || []);
@@ -156,7 +161,7 @@ export const AdminCompatibility: React.FC = () => {
               onChange={(e) => setSelectedProductId(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:border-red-500"
             >
-              {products.map((p) => (
+              {(Array.isArray(products) ? products : []).map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.brand_name} • {p.name} (SKU: {p.sku})
                 </option>

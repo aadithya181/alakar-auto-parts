@@ -14,7 +14,8 @@ exports.getBrands = (req, res, next) => {
     const brands = db.prepare(query).all(...params);
 
     const brandsWithCount = brands.map((br) => {
-      const count = db.prepare("SELECT COUNT(*) as count FROM products WHERE brand_id = ? AND status = 'active'").get(br.id).count;
+      const row = db.prepare("SELECT COUNT(*) as count FROM products WHERE brand_id = ? AND status = 'active'").get(br.id);
+      const count = row && typeof row.count === 'number' ? row.count : 0;
       return { ...br, product_count: count };
     });
 
