@@ -2,11 +2,11 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { handleFallbackApi } from './fallbackData';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 15000,
 });
 
 // Request interceptor to attach JWT token
