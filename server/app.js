@@ -35,6 +35,16 @@ app.use(express.urlencoded({ extended: true }));
 
 const { checkSupabaseConnection, isSupabaseConfigured } = require('./config/supabase');
 
+// Root API Status
+app.get('/', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'New Alagar Auto Parts Backend API',
+    healthCheck: '/api/health',
+    version: '1.0.0',
+  });
+});
+
 // Health Check
 app.get('/api/health', async (req, res) => {
   const supabaseHealth = await checkSupabaseConnection();
