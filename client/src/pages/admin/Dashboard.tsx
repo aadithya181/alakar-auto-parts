@@ -32,6 +32,23 @@ export const AdminDashboard: React.FC = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [lastSyncedTime, setLastSyncedTime] = useState<string>('Just now');
 
+  const formatSafeDate = (d: any) => {
+    try {
+      if (!d) return 'Recently';
+      const date = new Date(d);
+      return isNaN(date.getTime())
+        ? 'Recently'
+        : date.toLocaleString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+    } catch {
+      return 'Recently';
+    }
+  };
+
   const fetchDashboard = async (isManual = false) => {
     try {
       if (isManual) setRefreshing(true);
@@ -39,20 +56,35 @@ export const AdminDashboard: React.FC = () => {
       const startTime = Date.now();
       const res: any = await api.get('/admin/stats');
 
-      // Ensure at least 400ms spin for smooth user feedback on manual click
+      // Ensure at least 300ms spin for smooth user feedback on manual click
       if (isManual) {
         const elapsed = Date.now() - startTime;
-        if (elapsed < 400) {
-          await new Promise((r) => setTimeout(r, 400 - elapsed));
+        if (elapsed < 300) {
+          await new Promise((r) => setTimeout(r, 300 - elapsed));
         }
       }
 
-      if (res.success) {
-        setStats(res.stats);
-        setRecentOrders(res.recentOrders || []);
+      if (res.success && res.stats) {
+        setStats((prev: any) => {
+          if (!prev) return res.stats;
+          const isSame =
+            prev.totalSales === res.stats.totalSales &&
+            prev.totalOrders === res.stats.totalOrders &&
+            prev.pendingOrders === res.stats.pendingOrders &&
+            prev.totalProducts === res.stats.totalProducts;
+          return isSame ? prev : res.stats;
+        });
+
+        setRecentOrders((prev: any[]) => {
+          const next = res.recentOrders || [];
+          if (prev.length !== next.length) return next;
+          if (prev.length === 0) return prev;
+          return prev[0]?.id === next[0]?.id ? prev : next;
+        });
+
         setLowStockProducts(res.lowStockProducts || []);
         const now = new Date();
-        setLastSyncedTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+        setLastSyncedTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
 
         if (isManual) {
           showSuccess('Dashboard telemetry synchronized with live database');
@@ -69,22 +101,22 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
-  // Initial fetch and automatic background sync every 8 seconds
+  // Initial fetch and calm background sync every 30 seconds
   useEffect(() => {
     fetchDashboard(false);
     const interval = setInterval(() => {
       fetchDashboard(false);
-    }, 8000);
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) {
+  if (loading && !stats) {
     return (
-      <div className="space-y-6 animate-pulse">
-        <div className="h-10 bg-slate-100 border border-slate-200 rounded-2xl w-1/3" />
+      <div className="space-y-6">
+        <div className="h-10 bg-slate-100 border border-slate-200 rounded-2xl w-1/3 animate-pulse" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-36 bg-white border border-slate-200 rounded-3xl" />
+            <div key={i} className="h-36 bg-white border border-slate-200 rounded-3xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -256,74 +288,11 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Quick Operations Launchpad */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Link
-          to="/admin/products"
-          className="p-4 rounded-3xl bg-white border border-slate-200 hover:border-red-500 hover:shadow-card transition-all flex items-center gap-3.5 group"
-        >
-          <div className="w-10 h-10 rounded-2xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-2xs">
-            <Package className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-slate-900 group-hover:text-red-600 transition-colors">
-              Manage Parts Catalog
-            </h4>
-            <p className="text-[10px] text-slate-500 mt-0.5">Edit prices, images, stock</p>
-          </div>
-        </Link>
-
-        <Link
-          to="/admin/orders"
-          className="p-4 rounded-3xl bg-white border border-slate-200 hover:border-blue-500 hover:shadow-card transition-all flex items-center gap-3.5 group"
-        >
-          <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-2xs">
-            <Truck className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-              Dispatch & Orders
-            </h4>
-            <p className="text-[10px] text-slate-500 mt-0.5">Fulfill & print tracking slips</p>
-          </div>
-        </Link>
-
-        <Link
-          to="/admin/compatibility"
-          className="p-4 rounded-3xl bg-white border border-slate-200 hover:border-amber-500 hover:shadow-card transition-all flex items-center gap-3.5 group"
-        >
-          <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-2xs">
-            <Wrench className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
-              Vehicle Fitment Matrix
-            </h4>
-            <p className="text-[10px] text-slate-500 mt-0.5">Map parts to car/bike models</p>
-          </div>
-        </Link>
-
-        <Link
-          to="/admin/coupons"
-          className="p-4 rounded-3xl bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-card transition-all flex items-center gap-3.5 group"
-        >
-          <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-2xs">
-            <Tag className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
-              Discount Coupons
-            </h4>
-            <p className="text-[10px] text-slate-500 mt-0.5">Seasonal & promo codes</p>
-          </div>
-        </Link>
-      </div>
-
-      {/* 4. Live Orders & Low-Stock Alerts Grid */}
+      {/* 3. Live Orders & Inventory Watchlist Grid (No Duplicates) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
         
-        {/* Recent Orders (7 Cols) */}
-        <div className="lg:col-span-7 space-y-4">
+        {/* Recent Live Orders (8 Cols) */}
+        <div className="lg:col-span-8 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-4 h-4 text-red-600" />
@@ -335,7 +304,7 @@ export const AdminDashboard: React.FC = () => {
               to="/admin/orders"
               className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1"
             >
-              <span>View All Orders ({totalOrders})</span>
+              <span>Manage All ({totalOrders})</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -349,73 +318,76 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                   <p className="text-sm font-bold text-slate-800">No Orders Placed Yet</p>
                   <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-                    Live orders placed through Razorpay or cash checkout will automatically stream here.
+                    Live customer orders placed through Razorpay checkout will automatically stream here.
                   </p>
                 </div>
               ) : (
-                recentOrders.map((ord: any) => (
-                  <div key={ord.id} className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-slate-50/70 transition-colors">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-xs text-red-600">
-                          #{ord.order_number}
-                        </span>
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
-                          ord.payment_status === 'paid'
+                recentOrders.map((ord: any) => {
+                  const customerName = ord.shipping_address?.full_name || ord.customer_name || ord.user_name || 'Customer';
+                  const city = ord.shipping_address?.city || 'Pudukkottai';
+
+                  return (
+                    <div key={ord.id} className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-slate-50/70 transition-colors">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-xs text-red-600">
+                            #{ord.order_number}
+                          </span>
+                          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                            ord.payment_status === 'paid'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}>
+                            {ord.payment_status === 'paid' ? 'Paid' : 'Pending'}
+                          </span>
+                        </div>
+                        <p className="text-xs font-bold text-slate-900 mt-1 truncate">
+                          {customerName}
+                          <span className="font-normal text-slate-400 ml-1.5">• {city}</span>
+                        </p>
+                        <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                          {formatSafeDate(ord.created_at)}
+                        </p>
+                      </div>
+
+                      <div className="text-right shrink-0">
+                        <p className="text-sm font-black text-slate-900 font-mono">
+                          ₹{Number(ord.total_amount).toLocaleString('en-IN')}
+                        </p>
+                        <span className={`inline-block mt-1 px-2.5 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider ${
+                          ord.order_status === 'delivered'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : ord.order_status === 'dispatched'
+                            ? 'bg-blue-100 text-blue-800'
+                            : ord.order_status === 'confirmed'
                             ? 'bg-emerald-100 text-emerald-800'
                             : 'bg-amber-100 text-amber-800'
                         }`}>
-                          {ord.payment_status || 'Pending'}
+                          {ord.order_status?.replace(/_/g, ' ') || 'Pending'}
                         </span>
                       </div>
-                      <p className="text-xs font-bold text-slate-900 mt-1 truncate">
-                        {ord.customer_name || ord.user_name || 'Customer'}
-                      </p>
-                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">
-                        {new Date(ord.created_at).toLocaleString('en-IN', {
-                          day: 'numeric',
-                          month: 'short',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
                     </div>
-
-                    <div className="text-right shrink-0">
-                      <p className="text-sm font-black text-slate-900 font-mono">
-                        ₹{Number(ord.total_amount).toLocaleString('en-IN')}
-                      </p>
-                      <span className={`inline-block mt-1 px-2.5 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider ${
-                        ord.order_status === 'delivered'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : ord.order_status === 'dispatched'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-amber-100 text-amber-800'
-                      }`}>
-                        {ord.order_status?.replace(/_/g, ' ') || 'Pending'}
-                      </span>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>
         </div>
 
-        {/* Low Stock Alerts (5 Cols) */}
-        <div className="lg:col-span-5 space-y-4">
+        {/* Low Stock Alerts & Database Summary (4 Cols) */}
+        <div className="lg:col-span-4 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-500" />
               <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                Critical Inventory Watchlist
+                Inventory Watchlist
               </h3>
             </div>
             <Link
               to="/admin/products"
               className="text-xs font-bold text-slate-500 hover:text-red-600"
             >
-              All SKUs →
+              All Parts →
             </Link>
           </div>
 
@@ -442,56 +414,36 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               ))
             ) : (
-              <div className="py-8 text-center text-slate-500 space-y-2">
-                <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
+              <div className="py-6 text-center text-slate-500 space-y-2">
+                <CheckCircle2 className="w-7 h-7 text-emerald-500 mx-auto" />
                 <p className="text-xs font-bold text-slate-800">All Stock Healthy</p>
                 <p className="text-[10px] text-slate-400">Zero inventory items below minimum safety threshold.</p>
               </div>
             )}
           </div>
-        </div>
-      </div>
 
-      {/* 5. System Health & Warehouse Telemetry */}
-      <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-card">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-            Live System & Logistics Infrastructure
-          </h4>
-          <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-200 self-start font-bold">
-            ● All Services Operational
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-            <div className="flex items-center gap-2 mb-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span className="text-xs font-bold text-slate-900">Razorpay Payments</span>
+          {/* Live Store Telemetry Summary Card */}
+          <div className="rounded-3xl bg-slate-900 text-white p-5 shadow-card space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Store Operations Status
+              </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </div>
-            <p className="text-[11px] text-slate-500">
-              UPI, Netbanking & Cards gateway synchronized with webhook confirmation.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-            <div className="flex items-center gap-2 mb-1.5">
-              <MapPin className="w-4 h-4 text-red-600" />
-              <span className="text-xs font-bold text-slate-900">Pudukkottai Dispatch</span>
+            <div className="space-y-2 text-xs">
+              <div className="flex items-center justify-between text-slate-300">
+                <span>Verified Customers</span>
+                <span className="font-bold text-white font-mono">{stats?.totalCustomers ?? 0}</span>
+              </div>
+              <div className="flex items-center justify-between text-slate-300">
+                <span>Catalog Parts Listed</span>
+                <span className="font-bold text-white font-mono">{totalProducts} SKUs</span>
+              </div>
+              <div className="flex items-center justify-between text-slate-300">
+                <span>Fulfillment Rate</span>
+                <span className="font-bold text-emerald-400 font-mono">100% Guaranteed</span>
+              </div>
             </div>
-            <p className="text-[11px] text-slate-500">
-              West Main Street hub active for 48h express dispatch across India.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-            <div className="flex items-center gap-2 mb-1.5">
-              <Car className="w-4 h-4 text-amber-600" />
-              <span className="text-xs font-bold text-slate-900">Fitment Database</span>
-            </div>
-            <p className="text-[11px] text-slate-500">
-              Relational compatibility active for Bike, Auto, Car, and Van classes.
-            </p>
           </div>
         </div>
       </div>

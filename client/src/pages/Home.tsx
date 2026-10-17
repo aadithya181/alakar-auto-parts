@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Car,
   Bike,
-  ShieldCheck,
   Truck,
   RotateCcw,
   ChevronRight,
   ArrowRight,
   Sparkles,
-  CheckCircle2,
-  HelpCircle,
   Zap,
   Wrench,
   Phone,
@@ -28,6 +25,7 @@ export const Home: React.FC = () => {
   const [bikeProducts, setBikeProducts] = useState<Product[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'lights' | 'horns' | 'accessories'>('all');
+  const [productTab, setProductFilterTab] = useState<'all' | 'car' | 'bike'>('all');
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -193,24 +191,19 @@ export const Home: React.FC = () => {
     ? curatedCategories
     : curatedCategories.filter((c) => c.tab === activeCategoryTab);
 
-  const faqs = [
-    {
-      q: 'How does the Vehicle Compatibility Finder guarantee the part will fit?',
-      a: 'Our database maps each SKU directly to specific vehicle variant generations, engine capacities, and manufacturing year ranges. When you select your vehicle, our system filters out incompatible parts and highlights verified direct-fit components.'
-    },
-    {
-      q: 'Are all products sold on New Alagar Auto Parts 100% genuine?',
-      a: 'Yes. We source directly from official manufacturers and certified distributors including 5M Auto Care Products, WOW SONAL, LIU HJG, ProTaper, and Philips Automotive. Every item comes with manufacturer warranty and authentic packaging.'
-    },
-    {
-      q: 'What is your shipping time and return policy?',
-      a: 'Orders above ₹999 qualify for Free Express Shipping. Most metro orders are delivered within 48 to 72 hours. We also offer a hassle-free 7-day vehicle fitment replacement guarantee.'
-    },
-    {
-      q: 'Can I visit the New Alagar Auto Parts store in Pudukkottai?',
-      a: 'Absolutely! Our store is located on West Main Street, Old GH Road (Near Murugan Kovil), Pudukkottai, Tamil Nadu. You can also call Surendar directly at +91 85266 13000 for part enquiries and immediate pickup.'
+  const displayedProducts = useMemo(() => {
+    if (productTab === 'car') {
+      return carProducts.length > 0
+        ? carProducts
+        : featuredProducts.filter((p) => p.vehicle_type === 'car' || p.vehicle_type === 'both');
     }
-  ];
+    if (productTab === 'bike') {
+      return bikeProducts.length > 0
+        ? bikeProducts
+        : featuredProducts.filter((p) => p.vehicle_type === 'bike' || p.vehicle_type === 'both');
+    }
+    return featuredProducts;
+  }, [productTab, featuredProducts, carProducts, bikeProducts]);
 
   return (
     <div className="space-y-12 sm:space-y-16 pb-20">
@@ -218,40 +211,39 @@ export const Home: React.FC = () => {
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-100/80 via-white to-slate-50 pt-10 sm:pt-16 pb-12 sm:pb-16 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-red-600" />
-              <span>100% Genuine Spare Parts • Pudukkottai Store</span>
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-red-50 border border-red-200 text-red-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-4 shadow-sm max-w-full">
+              <Sparkles className="w-3.5 h-3.5 text-red-600 shrink-0" />
+              <span className="truncate">100% Genuine Spare Parts • Pudukkottai Store</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black font-display tracking-tight text-slate-900 leading-tight">
+            <h1 className="text-2xl sm:text-5xl md:text-6xl font-black font-display tracking-tight text-slate-900 leading-tight">
               Precision Auto Parts, <br className="hidden sm:inline" />
               <span className="text-red-600">Guaranteed to Fit.</span>
             </h1>
-            <p className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Find verified OE replacement parts and premium accessories for two-wheelers, three-wheelers, cars, and commercial vans with guaranteed compatibility and fast doorstep dispatch.
-            </p>
 
             {/* Clean Hero Action Buttons */}
-            <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-none mx-auto">
               <Link
                 to="/products"
-                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-xs sm:text-sm font-extrabold shadow-md shadow-red-600/25 flex items-center gap-2 transition-all active:scale-95"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-xs sm:text-sm font-extrabold shadow-md shadow-red-600/25 flex items-center justify-center gap-2 transition-all active:scale-95"
               >
                 <span>Browse All Spares →</span>
               </Link>
-              <Link
-                to="/products?type=bike"
-                className="px-4 sm:px-5 py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-bold flex items-center gap-2 shadow-sm transition-all active:scale-95"
-              >
-                <Bike className="w-4 h-4 text-amber-600" />
-                <span>Bike Parts</span>
-              </Link>
-              <Link
-                to="/products?type=car"
-                className="px-4 sm:px-5 py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-bold flex items-center gap-2 shadow-sm transition-all active:scale-95"
-              >
-                <Car className="w-4 h-4 text-red-600" />
-                <span>Car Parts</span>
-              </Link>
+              <div className="grid grid-cols-2 gap-2.5 w-full sm:w-auto sm:flex sm:items-center">
+                <Link
+                  to="/products?type=bike"
+                  className="px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
+                >
+                  <Bike className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>Bike Parts</span>
+                </Link>
+                <Link
+                  to="/products?type=car"
+                  className="px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
+                >
+                  <Car className="w-4 h-4 text-red-600 shrink-0" />
+                  <span>Car Parts</span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -296,7 +288,7 @@ export const Home: React.FC = () => {
                   </p>
                 </div>
                 <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
-                  <span className={card.accentColor}>Browse Catalog</span>
+                  <span className={card.accentColor}>Browse Products</span>
                   <ArrowRight className={`w-4 h-4 ${card.accentColor} group-hover:translate-x-1 transition-transform`} />
                 </div>
               </Link>
@@ -318,7 +310,7 @@ export const Home: React.FC = () => {
           </div>
 
           {/* Clean Category Filter Tabs */}
-          <div className="flex items-center p-1 rounded-2xl bg-slate-100 border border-slate-200 self-start sm:self-auto gap-1">
+          <div className="flex items-center p-1 rounded-2xl bg-slate-100 border border-slate-200 self-start sm:self-auto gap-1 overflow-x-auto max-w-full scrollbar-none">
             <button
               onClick={() => setActiveCategoryTab('all')}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
@@ -398,10 +390,10 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. Featured Store Products */}
+      {/* 4. Featured Spares & Bestsellers (Interactive Tabbed Showcase) */}
       {featuredProducts.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-2xl bg-red-50 text-red-600 border border-red-200">
                 <Sparkles className="w-5 h-5" />
@@ -415,87 +407,65 @@ export const Home: React.FC = () => {
                 </p>
               </div>
             </div>
-            <Link
-              to="/products"
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1"
-            >
-              <span>View All</span>
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
-            {featuredProducts.map((prod) => (
-              <ProductCard key={prod.id} product={prod} />
-            ))}
-          </div>
-        </section>
-      )}
+            {/* Quick Segmented Filter */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center p-1 rounded-2xl bg-slate-100 border border-slate-200">
+                <button
+                  onClick={() => setProductFilterTab('all')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    productTab === 'all'
+                      ? 'bg-white text-slate-900 shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  All Spares
+                </button>
+                <button
+                  onClick={() => setProductFilterTab('car')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    productTab === 'car'
+                      ? 'bg-red-600 text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Car Spares
+                </button>
+                <button
+                  onClick={() => setProductFilterTab('bike')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    productTab === 'bike'
+                      ? 'bg-amber-600 text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Bike Spares
+                </button>
+              </div>
 
-      {/* 5. Popular Car Parts */}
-      {carProducts.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-2xl bg-red-50 text-red-600 border border-red-200">
-                <Car className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="text-lg sm:text-2xl font-black font-display text-slate-900 tracking-tight">
-                  Popular Car Spares
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-500">
-                  Windtone horn pairs, bumper projector fog lamps, number plate frames
-                </p>
-              </div>
+              <Link
+                to={productTab === 'all' ? '/products' : `/products?type=${productTab}`}
+                className="hidden sm:flex text-xs font-bold text-red-600 hover:text-red-700 items-center gap-1 shrink-0 ml-2"
+              >
+                <span>View All</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
-            <Link
-              to="/products?type=car"
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1"
-            >
-              <span>View All</span>
-              <ChevronRight className="w-4 h-4" />
-            </Link>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
-            {carProducts.map((prod) => (
+            {displayedProducts.map((prod) => (
               <ProductCard key={prod.id} product={prod} />
             ))}
           </div>
-        </section>
-      )}
 
-      {/* 6. Popular Bike Parts */}
-      {bikeProducts.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200">
-                <Bike className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="text-lg sm:text-2xl font-black font-display text-slate-900 tracking-tight">
-                  Popular Two-Wheeler Spares
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-500">
-                  9-LED fog lights, loud disc horns, performance handlebar grips & bulbs
-                </p>
-              </div>
-            </div>
+          <div className="sm:hidden mt-4 text-center">
             <Link
-              to="/products?type=bike"
-              className="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1"
+              to={productTab === 'all' ? '/products' : `/products?type=${productTab}`}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 text-xs font-bold text-slate-800 hover:bg-slate-200 transition-colors"
             >
-              <span>View All</span>
-              <ChevronRight className="w-4 h-4" />
+              <span>Explore All {productTab === 'car' ? 'Car Spares' : productTab === 'bike' ? 'Bike Spares' : 'Spares'} →</span>
             </Link>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
-            {bikeProducts.map((prod) => (
-              <ProductCard key={prod.id} product={prod} />
-            ))}
           </div>
         </section>
       )}
@@ -535,79 +505,7 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 8. Trust & Value Propositions */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="p-6 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-card">
-          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-            <span className="text-xs font-black uppercase tracking-wider text-red-600">
-              The New Alagar Auto Parts Promise
-            </span>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black font-display text-slate-900 mt-1">
-              Built for Mechanics, Enthusiasts & Daily Drivers
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
-            <div className="p-6 rounded-2xl bg-slate-50/80 border border-slate-200">
-              <div className="w-10 h-10 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mb-4">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1.5">Relational Vehicle Fitment</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Zero guesswork. Select your exact vehicle variant to discover verified components that fit factory specifications.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-slate-50/80 border border-slate-200">
-              <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-4">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1.5">100% Genuine OE Guarantee</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Every horn, projector light, and accessory carries official serial numbers, warranty support, and tamper seals.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-slate-50/80 border border-slate-200">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
-                <Truck className="w-5 h-5" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1.5">Express Doorstep Dispatch</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Swift dispatch from our Pudukkottai hub with live order tracking and verified express logistics across India.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. FAQs */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl font-black font-display text-slate-900">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Answers to vehicle fitment, genuine guarantees, and order fulfillment
-          </p>
-        </div>
-
-        <div className="space-y-3 sm:space-y-4">
-          {faqs.map((faq, idx) => (
-            <div key={idx} className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
-              <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2.5 mb-1.5">
-                <HelpCircle className="w-4 h-4 text-red-600 shrink-0" />
-                <span>{faq.q}</span>
-              </h4>
-              <p className="text-xs text-slate-600 leading-relaxed pl-6">
-                {faq.a}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 10. Local Pudukkottai Store & Phone Helpline Banner */}
+      {/* 8. Local Pudukkottai Store & Phone Helpline Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="p-6 sm:p-8 md:p-10 rounded-3xl bg-slate-950 border border-slate-800 text-white shadow-card relative overflow-hidden">
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">

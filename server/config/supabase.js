@@ -35,8 +35,12 @@ async function checkSupabaseConnection() {
   }
 
   try {
-    // Attempt a light ping/query on vehicle_types or categories table
-    const { data, error } = await supabase.from('vehicle_types').select('id').limit(1);
+    const pingPromise = supabase.from('vehicle_types').select('id').limit(1);
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Supabase ping timeout (1500ms exceeded)')), 1500)
+    );
+
+    const { data, error } = await Promise.race([pingPromise, timeoutPromise]);
     if (error) {
       return {
         connected: false,

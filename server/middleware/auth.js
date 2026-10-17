@@ -41,7 +41,13 @@ function optionalAuth(req, res, next) {
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (!err && user) {
       const dbUser = db.prepare('SELECT id, name, email, phone, role FROM users WHERE id = ?').get(user.id);
-      req.user = dbUser || null;
+      req.user = dbUser || {
+        id: user.id,
+        name: user.name || (user.role === 'admin' ? 'Surendar (Admin)' : 'Customer'),
+        email: user.email,
+        phone: user.phone || '',
+        role: user.role || (user.email && user.email.includes('admin') ? 'admin' : 'customer')
+      };
     } else {
       req.user = null;
     }

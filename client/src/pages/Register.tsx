@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Car, Lock, Mail, User, Phone, Eye, EyeOff, CheckCircle2, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -21,6 +21,7 @@ function getPasswordStrength(p: string): { score: number; label: string; color: 
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { register } = useAuth();
   const { showSuccess, showError } = useToast();
 
@@ -45,7 +46,8 @@ export const Register: React.FC = () => {
       const user = await register(formData.name, formData.email, formData.password, formData.phone);
       setSubmitted(true);
       showSuccess(`Account created! Welcome to New Alagar Auto Parts, ${user.name} 🎉`);
-      setTimeout(() => navigate('/'), 800);
+      const target = (location.state as any)?.from || '/';
+      setTimeout(() => navigate(target), 800);
     } catch (err: any) {
       showError(err.message || 'Registration failed');
     } finally {
@@ -210,6 +212,7 @@ export const Register: React.FC = () => {
             Already have an account?{' '}
             <Link
               to="/login"
+              state={location.state}
               className="font-bold text-red-600 hover:text-red-700 underline underline-offset-2 transition-colors"
             >
               Sign In

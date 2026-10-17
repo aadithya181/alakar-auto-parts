@@ -32,15 +32,18 @@ import { AdminOrders } from './pages/admin/AdminOrders';
 import { AdminCustomers } from './pages/admin/AdminCustomers';
 import { AdminCoupons } from './pages/admin/AdminCoupons';
 
+import { ScrollToTopButton } from './components/ScrollToTopButton';
+
 // Customer Layout with Header & Footer in White Theme
 const CustomerLayout: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-red-600 selection:text-white antialiased">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-red-600 selection:text-white antialiased overflow-x-hidden">
       <Navbar />
-      <div className="flex-1">
+      <div className="flex-1 w-full max-w-full">
         <Outlet />
       </div>
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 };

@@ -93,7 +93,6 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
     };
 
     fetchProducts();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [searchParams, categorySlug, activeVehicle, currentPage, sortBy]);
 
   const updateQueryParam = (key: string, value: string) => {

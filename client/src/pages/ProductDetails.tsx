@@ -8,7 +8,6 @@ import {
   ShoppingBag,
   CheckCircle2,
   AlertCircle,
-  Wrench,
   Star,
   Check
 } from 'lucide-react';
@@ -16,7 +15,6 @@ import { RatingStars } from '../components/RatingStars';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
-import { useVehicle } from '../context/VehicleContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import api from '../services/api';
@@ -27,7 +25,6 @@ export const ProductDetails: React.FC = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const { activeVehicle } = useVehicle();
   const { token } = useAuth();
   const { showSuccess, showError } = useToast();
 
@@ -37,16 +34,6 @@ export const ProductDetails: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('description');
   const [loading, setLoading] = useState<boolean>(true);
   const [added, setAdded] = useState<boolean>(false);
-
-  // Fitment verification interactive widget state
-  const [customBrand, setCustomBrand] = useState<string>('');
-  const [customModel, setCustomModel] = useState<string>('');
-  const [customVariant, setCustomVariant] = useState<string>('');
-  const [customYear, setCustomYear] = useState<string>('');
-  const [fitResult, setFitResult] = useState<any>(null);
-  const [brandsList, setBrandsList] = useState<any[]>([]);
-  const [modelsList, setModelsList] = useState<any[]>([]);
-  const [variantsList, setVariantsList] = useState<any[]>([]);
 
   // Review Form
   const [newRating, setNewRating] = useState<number>(5);
@@ -62,9 +49,6 @@ export const ProductDetails: React.FC = () => {
           setProduct(res.product);
           const firstImg = res.product.images?.[0]?.image_url || res.product.primary_image;
           setSelectedImage(firstImg);
-
-          const bRes: any = await api.get('/vehicles/brands', { params: { type: res.product.vehicle_type } });
-          if (bRes.success) setBrandsList(bRes.brands || []);
         }
       } catch (err) {
         console.error('Error fetching product details:', err);
@@ -74,72 +58,7 @@ export const ProductDetails: React.FC = () => {
     };
 
     fetchProduct();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [slug]);
-
-  // Check fitment automatically if user already has an active vehicle
-  useEffect(() => {
-    if (activeVehicle && product?.id) {
-      api.get('/products/check-compatibility', {
-        params: {
-          product_id: product.id,
-          vehicle_variant_id: activeVehicle.variantId,
-          year: activeVehicle.year,
-        },
-      })
-        .then((res: any) => {
-          if (res.success) setFitResult(res);
-        })
-        .catch(console.warn);
-    }
-  }, [activeVehicle, product]);
-
-  // Cascading Models
-  useEffect(() => {
-    if (customBrand) {
-      api.get('/vehicles/models', { params: { brand_id: customBrand } })
-        .then((res: any) => {
-          if (res.success) setModelsList(res.models || []);
-        })
-        .catch(console.warn);
-    } else {
-      setModelsList([]);
-    }
-    setCustomModel('');
-    setCustomVariant('');
-  }, [customBrand]);
-
-  // Cascading Variants
-  useEffect(() => {
-    if (customModel) {
-      api.get('/vehicles/variants', { params: { model_id: customModel } })
-        .then((res: any) => {
-          if (res.success) setVariantsList(res.variants || []);
-        })
-        .catch(console.warn);
-    } else {
-      setVariantsList([]);
-    }
-    setCustomVariant('');
-  }, [customModel]);
-
-  const handleManualCheckFit = async () => {
-    if (!customVariant) return;
-    try {
-      const res: any = await api.get('/products/check-compatibility', {
-        params: {
-          product_id: product.id,
-          vehicle_variant_id: customVariant,
-          year: customYear || null,
-        },
-      });
-      if (res.success) {
-        setFitResult(res);
-      }
-    } catch (err) {
-      console.warn('Manual fit check error:', err);
-    }
-  };
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -152,6 +71,11 @@ export const ProductDetails: React.FC = () => {
   const handleBuyNow = () => {
     if (!product) return;
     addToCart(product, quantity);
+    if (!token) {
+      showInfo('Please sign in to proceed with checkout');
+      navigate('/login', { state: { from: '/checkout' } });
+      return;
+    }
     navigate('/checkout');
   };
 
@@ -276,171 +200,48 @@ export const ProductDetails: React.FC = () => {
               ))}
             </div>
           )}
-
-          {/* Key Trust Badges */}
-          <div className="grid grid-cols-3 gap-3 pt-4 border-t border-slate-200">
-            <div className="p-3 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
-              <ShieldCheck className="w-5 h-5 text-red-600 mx-auto mb-1" />
-              <p className="text-[11px] font-bold text-slate-900">100% Genuine</p>
-              <p className="text-[10px] text-slate-500">OE Certified</p>
-            </div>
-            <div className="p-3 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
-              <Truck className="w-5 h-5 text-amber-600 mx-auto mb-1" />
-              <p className="text-[11px] font-bold text-slate-900">Free Delivery</p>
-              <p className="text-[10px] text-slate-500">Orders above ₹999</p>
-            </div>
-            <div className="p-3 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
-              <RotateCcw className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
-              <p className="text-[11px] font-bold text-slate-900">7-Day Returns</p>
-              <p className="text-[10px] text-slate-500">Fitment Guarantee</p>
-            </div>
-          </div>
         </div>
 
         {/* Right: Details & Purchase Actions (6 Cols) */}
-        <div className="lg:col-span-6 flex flex-col justify-between">
-          <div>
-            {/* Brand & SKU Header */}
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-extrabold uppercase tracking-wide text-red-600">
-                  {product.brand_name || 'Genuine OEM'}
-                </span>
-                {product.brand_logo_url && (
-                  <img src={product.brand_logo_url} alt="" className="h-4 object-contain" />
-                )}
-              </div>
-              <span className="text-xs font-mono text-slate-400">
-                SKU: {product.sku} {product.oem_number ? `• OE: ${product.oem_number}` : ''}
-              </span>
-            </div>
-
-            {/* Product Title */}
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black font-display text-slate-900 tracking-tight leading-snug mb-3">
-              {product.name}
-            </h1>
-
-            {/* Rating Stars */}
-            <div className="flex items-center gap-3 mb-4">
-              <RatingStars
-                rating={product.avg_rating || product.rating_avg || 4.8}
-                totalReviews={product.total_reviews || product.rating_count}
-                size="md"
-              />
-              <span className="text-xs text-slate-500">• Verified Automotive Purchase</span>
-            </div>
-
-            {/* Price Box */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 mb-6">
-              <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-black text-slate-900">
-                  ₹{sellingPrice.toLocaleString('en-IN')}
-                </span>
-                {mrp > sellingPrice && (
-                  <>
-                    <span className="text-base text-slate-400 line-through">
-                      MRP ₹{mrp.toLocaleString('en-IN')}
-                    </span>
-                    <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-md">
-                      Save ₹{(mrp - sellingPrice).toLocaleString('en-IN')} ({discount}%)
-                    </span>
-                  </>
-                )}
-              </div>
-              <p className="text-xs text-slate-500 mt-1">
-                Inclusive of GST ({product.gst_percentage || 18}%). Free shipping applied on checkout.
-              </p>
-            </div>
-
-            {/* FITMENT CHECKER WIDGET */}
-            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-card mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <Wrench className="w-4 h-4 text-amber-600" />
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider">
-                  Will This Part Fit My Vehicle?
-                </h3>
-              </div>
-
-              {/* Fitment Result Status Notice */}
-              {fitResult && (
-                <div
-                  className={`p-3 rounded-xl mb-4 text-xs font-semibold flex items-center gap-2.5 border ${
-                    fitResult.isCompatible
-                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                      : 'bg-amber-50 border-amber-200 text-amber-800'
-                  }`}
-                >
-                  {fitResult.isCompatible ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                  ) : (
-                    <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
-                  )}
-                  <span>{fitResult.message}</span>
-                </div>
-              )}
-
-              {/* Vehicle Compatibility Dropdown Checker */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3">
-                <select
-                  value={customBrand}
-                  onChange={(e) => setCustomBrand(e.target.value)}
-                  className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500"
-                >
-                  <option value="">Select Brand...</option>
-                  {brandsList.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.name}
-                    </option>
-                  ))}
-                </select>
-
-                <select
-                  value={customModel}
-                  onChange={(e) => setCustomModel(e.target.value)}
-                  disabled={!customBrand}
-                  className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 disabled:opacity-50"
-                >
-                  <option value="">Select Model...</option>
-                  {modelsList.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.name}
-                    </option>
-                  ))}
-                </select>
-
-                <select
-                  value={customVariant}
-                  onChange={(e) => setCustomVariant(e.target.value)}
-                  disabled={!customModel}
-                  className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 disabled:opacity-50"
-                >
-                  <option value="">Select Variant...</option>
-                  {variantsList.map((v) => (
-                    <option key={v.id} value={v.id}>
-                      {v.name} ({v.year_start || v.year_from || 'All'}+)
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleManualCheckFit}
-                disabled={!customVariant}
-                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs font-bold text-white transition-colors disabled:opacity-40 shadow-sm"
-              >
-                Check Compatibility Now
-              </button>
-            </div>
-
-            {/* Short Description */}
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
-              {product.short_description || product.description}
-            </p>
+        <div className="lg:col-span-6 flex flex-col space-y-5">
+          {/* Brand Header */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-extrabold uppercase tracking-wide text-red-600">
+              {product.brand_name || 'Genuine OEM'}
+            </span>
+            {product.brand_logo_url && (
+              <img src={product.brand_logo_url} alt="" className="h-4 object-contain" />
+            )}
           </div>
 
+          {/* Product Title */}
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black font-display text-slate-900 tracking-tight leading-snug">
+            {product.name}
+          </h1>
+
+          {/* Price Box */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-black text-slate-900">
+                ₹{sellingPrice.toLocaleString('en-IN')}
+              </span>
+              {mrp > sellingPrice && (
+                <span className="text-base text-slate-400 line-through">
+                  MRP ₹{mrp.toLocaleString('en-IN')}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Short Description */}
+          {(product.short_description || product.description) && (
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              {product.short_description || product.description}
+            </p>
+          )}
+
           {/* Action Row (Quantity + Add to Cart + Buy Now) */}
-          <div className="pt-6 border-t border-slate-200 space-y-4">
+          <div className="pt-4 border-t border-slate-200 space-y-4">
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               {/* Quantity Modifier */}
               <div className="flex items-center rounded-xl bg-slate-100 border border-slate-200 p-1">
@@ -512,6 +313,25 @@ export const ProductDetails: React.FC = () => {
                 </span>
               )}
             </div>
+
+            {/* Key Trust Strip */}
+            <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-slate-200">
+              <div className="p-3 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
+                <ShieldCheck className="w-5 h-5 text-red-600 mx-auto mb-1" />
+                <p className="text-[11px] font-bold text-slate-900">100% Genuine</p>
+                <p className="text-[10px] text-slate-500">OE Certified</p>
+              </div>
+              <div className="p-3 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
+                <Truck className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                <p className="text-[11px] font-bold text-slate-900">Free Delivery</p>
+                <p className="text-[10px] text-slate-500">Orders above ₹999</p>
+              </div>
+              <div className="p-3 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
+                <RotateCcw className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
+                <p className="text-[11px] font-bold text-slate-900">7-Day Returns</p>
+                <p className="text-[10px] text-slate-500">Fitment Guarantee</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -547,16 +367,7 @@ export const ProductDetails: React.FC = () => {
               <p className="whitespace-pre-line">{product.description}</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <h4 className="font-bold text-slate-900 mb-2">Warranty & Protection</h4>
-                <p className="text-slate-500">{product.warranty || '1 Year Manufacturer Warranty against manufacturing defects'}</p>
-              </div>
-              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <h4 className="font-bold text-slate-900 mb-2">Return Policy</h4>
-                <p className="text-slate-500">7-Day replacement if the part does not fit your selected vehicle as described.</p>
-              </div>
-            </div>
+
           </div>
         )}
 

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 import api from '../../services/api';
 
 export const AdminLayout: React.FC = () => {
@@ -50,7 +51,7 @@ export const AdminLayout: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
 
-  // Poll for incoming orders every 10 seconds
+  // Poll for incoming orders every 30 seconds
   useEffect(() => {
     if (!isAdmin) return;
 
@@ -61,8 +62,11 @@ export const AdminLayout: React.FC = () => {
           const pending = res.orders.filter(
             (o: any) => o.order_status === 'pending' || o.payment_status === 'paid' || o.order_status === 'confirmed'
           );
-          setPendingOrdersCount(pending.length);
-          setRecentOrders(res.orders.slice(0, 5));
+          setPendingOrdersCount((prev) => (prev !== pending.length ? pending.length : prev));
+          setRecentOrders((prev) => {
+            const isDiff = prev.length !== res.orders.length || (prev[0]?.id !== res.orders[0]?.id);
+            return isDiff ? res.orders.slice(0, 5) : prev;
+          });
 
           // Trigger live toast alert if new order arrives
           if (prevOrderCountRef.current !== null && res.orders.length > prevOrderCountRef.current) {
@@ -77,7 +81,7 @@ export const AdminLayout: React.FC = () => {
     };
 
     pollOrders();
-    const interval = setInterval(pollOrders, 10000);
+    const interval = setInterval(pollOrders, 30000);
     return () => clearInterval(interval);
   }, [isAdmin]);
 
@@ -354,7 +358,7 @@ export const AdminLayout: React.FC = () => {
                             </p>
                             <p className="text-[11px] text-slate-600">{ord.customer_name || 'Customer'}</p>
                             <p className="text-[10px] text-slate-400 font-mono">
-                              {new Date(ord.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              {ord.created_at ? new Date(ord.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recently'}
                             </p>
                           </div>
                           <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase ${
@@ -390,7 +394,9 @@ export const AdminLayout: React.FC = () => {
         </header>
 
         <main className="flex-1 p-4 sm:p-6 md:p-8 lg:p-10 overflow-y-auto max-w-7xl w-full mx-auto">
-          <Outlet />
+          <ErrorBoundary fallbackTitle="Admin Section Loading Error">
+            <Outlet />
+          </ErrorBoundary>
         </main>
       </div>
     </div>

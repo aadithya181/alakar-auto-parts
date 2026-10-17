@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 
@@ -16,7 +17,8 @@ export const Cart: React.FC = () => {
   const navigate = useNavigate();
   const { items, updateQuantity, removeFromCart, totalItems, subtotal } = useCart();
   const { toggleWishlist } = useWishlist();
-  const { showSuccess } = useToast();
+  const { token } = useAuth();
+  const { showSuccess, showInfo } = useToast();
 
   const shippingCharge = subtotal >= 999 || subtotal === 0 ? 0.00 : 99.00;
   const grandTotal = Math.max(0, subtotal + shippingCharge);
@@ -195,8 +197,15 @@ export const Cart: React.FC = () => {
             {/* Checkout Action Button */}
             <button
               type="button"
-              onClick={() => navigate('/checkout')}
-              className="w-full py-3.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black uppercase tracking-wider shadow-md shadow-red-600/20 flex items-center justify-center gap-2 transition-all active:scale-95"
+              onClick={() => {
+                if (!token) {
+                  showInfo('Please log in to proceed with checkout');
+                  navigate('/login', { state: { from: '/checkout' } });
+                  return;
+                }
+                navigate('/checkout');
+              }}
+              className="w-full py-3.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black uppercase tracking-wider shadow-md shadow-red-600/20 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer"
             >
               <span>Proceed to Secure Checkout</span>
               <ArrowRight className="w-4 h-4" />

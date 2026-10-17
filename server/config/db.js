@@ -773,11 +773,11 @@ function executeQuery(sql, params, mode) {
         const found = state.users.find(u => u.id === params[0]);
         return found ? { ...found } : null;
       }
-      if (/WHERE role = 'customer'/i.test(cleanSql)) {
+      if (/WHERE (u\.)?role = 'customer'/i.test(cleanSql)) {
         if (/COUNT\(\*\)/i.test(cleanSql)) {
           return { count: state.users.filter(u => u.role === 'customer').length };
         }
-        return state.users.filter(u => u.role === 'customer').map(u => {
+        const custs = state.users.filter(u => u.role === 'customer').map(u => {
           const userOrders = state.orders.filter(o => o.user_id === u.id);
           const totalSpent = userOrders.filter(o => o.payment_status === 'paid').reduce((sum, o) => sum + (o.total_amount || 0), 0);
           return {
@@ -787,6 +787,7 @@ function executeQuery(sql, params, mode) {
             last_order_date: userOrders[0] ? userOrders[0].created_at : null,
           };
         });
+        return custs.sort((a, b) => (b.total_spent || 0) - (a.total_spent || 0));
       }
     }
 
@@ -1063,7 +1064,7 @@ function executeQuery(sql, params, mode) {
 
     // Orders
     if (/FROM orders/i.test(cleanSql)) {
-      if (/SUM\(total_amount\)/i.test(cleanSql)) {
+      if (/^SELECT\s+SUM\(total_amount\)/i.test(cleanSql)) {
         let matchingOrders = state.orders.filter(o => o.payment_status === 'paid');
         if (/date\(created_at\)/i.test(cleanSql)) {
           const todayIso = new Date().toISOString().slice(0, 10);
@@ -1076,7 +1077,7 @@ function executeQuery(sql, params, mode) {
         const total = matchingOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
         return { total };
       }
-      if (/COUNT\(\*\)/i.test(cleanSql)) {
+      if (/^SELECT\s+COUNT\(\*\)/i.test(cleanSql)) {
         if (/date\(created_at\)/i.test(cleanSql)) {
           const todayIso = new Date().toISOString().slice(0, 10);
           const todayLocale = new Date().toLocaleDateString('en-CA');
@@ -1090,12 +1091,18 @@ function executeQuery(sql, params, mode) {
         }
         return { count: state.orders.length };
       }
+      if (/WHERE razorpay_order_id = \?/i.test(cleanSql)) {
+        const found = state.orders.find(o => o.razorpay_order_id === params[0]);
+        return found ? { ...found } : null;
+      }
       if (/WHERE id = \? OR order_number = \?/i.test(cleanSql) || /WHERE id = \?/i.test(cleanSql)) {
         const found = state.orders.find(o => o.id === params[0] || o.order_number === params[0]);
         return found ? { ...found } : null;
       }
-      if (/WHERE o\.user_id = \?/i.test(cleanSql)) {
-        return state.orders.filter(o => o.user_id === params[0]);
+      if (/WHERE (o\.)?user_id = \?/i.test(cleanSql)) {
+        return state.orders
+          .filter(o => o.user_id === params[0])
+          .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
       }
       // All orders (Admin) - newest first
       let sortedOrders = [...state.orders].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
@@ -1111,6 +1118,42 @@ function executeQuery(sql, params, mode) {
           customer_phone: user ? user.phone : '',
         };
       });
+    }
+
+    // Top Selling Products Aggregation
+    if (/FROM order_items oi/i.test(cleanSql)) {
+      const productSales = {};
+      state.order_items.forEach((oi) => {
+        if (!oi.product_id) return;
+        if (!productSales[oi.product_id]) {
+          productSales[oi.product_id] = { units_sold: 0, total_revenue: 0 };
+        }
+        productSales[oi.product_id].units_sold += Number(oi.quantity || 1);
+        productSales[oi.product_id].total_revenue += Number(oi.total || (oi.price * (oi.quantity || 1)) || 0);
+      });
+
+      const top = Object.entries(productSales)
+        .map(([pid, stats]) => {
+          const prod = state.products.find((p) => p.id === pid);
+          if (!prod) return null;
+          const pImg = state.product_images.find((img) => img.product_id === pid && img.is_primary) ||
+                       state.product_images.find((img) => img.product_id === pid);
+          return {
+            id: prod.id,
+            name: prod.name,
+            sku: prod.sku,
+            selling_price: prod.selling_price,
+            stock_quantity: prod.stock_quantity,
+            units_sold: stats.units_sold,
+            total_revenue: stats.total_revenue,
+            image_url: pImg ? pImg.image_url : null,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.units_sold - a.units_sold)
+        .slice(0, 5);
+
+      return top;
     }
 
     // Order Items

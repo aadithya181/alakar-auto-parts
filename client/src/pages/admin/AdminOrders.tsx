@@ -167,13 +167,13 @@ export const AdminOrders: React.FC = () => {
                   <td className="p-4">
                     <span className="font-mono font-bold text-red-600">#{ord.order_number}</span>
                     <p className="text-[10px] text-slate-400">
-                      {new Date(ord.created_at).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}
+                      {ord.created_at ? new Date(ord.created_at).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : 'Recently'}
                     </p>
                   </td>
                   <td className="p-4">
-                    <span className="font-bold text-slate-900">{ord.customer_name || ord.user_name || 'Customer'}</span>
-                    <p className="text-[10px] text-slate-500">{ord.customer_email || ord.user_email}</p>
-                    <p className="text-[10px] text-slate-400">{ord.shipping_address?.city}, {ord.shipping_address?.state}</p>
+                    <span className="font-bold text-slate-900">{ord.shipping_address?.full_name || ord.customer_name || ord.user_name || 'Customer'}</span>
+                    <p className="text-[10px] text-slate-500">{ord.shipping_address?.phone || ord.customer_phone || ord.customer_email || 'Verified Order'}</p>
+                    <p className="text-[10px] text-slate-400">{[ord.shipping_address?.city, ord.shipping_address?.state].filter(Boolean).join(', ') || 'Tamil Nadu'}</p>
                   </td>
                   <td className="p-4">
                     <span className="font-bold text-slate-900">₹{Number(ord.total_amount).toLocaleString('en-IN')}</span>

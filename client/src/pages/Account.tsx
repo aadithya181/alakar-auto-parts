@@ -251,7 +251,7 @@ export const Account: React.FC = () => {
               <h3 className="text-base font-bold text-slate-900">No Orders Yet</h3>
               <p className="text-xs text-slate-500 mt-1 mb-4">You haven't placed any spare parts orders yet.</p>
               <Link to="/products" className="px-5 py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold shadow-sm">
-                Shop Catalog
+                Shop Products
               </Link>
             </div>
           )}

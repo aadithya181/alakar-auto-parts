@@ -19,24 +19,6 @@
       "created_at": "2026-08-23T12:41:20.332Z"
     },
     {
-      "id": "u-admin-3",
-      "name": "Torq Admin",
-      "email": "admin@torqspares.com",
-      "password_hash": "$2a$10$B0RNehH0G1b6YYfx/dmbS.PHlTwJy4xCk75ovQPMjgDlL/hgM248W",
-      "phone": "+91 98765 43210",
-      "role": "admin",
-      "created_at": "2026-08-23T12:41:20.332Z"
-    },
-    {
-      "id": "u-cust-1",
-      "name": "Rajesh Sharma",
-      "email": "customer@torqspares.com",
-      "password_hash": "$2a$10$WyzteI8jQBYKvL9zVpYuz.eZl5HJpEhWIlFbbLsOGEpEx/wmZvwa.",
-      "phone": "+91 98765 12345",
-      "role": "customer",
-      "created_at": "2026-08-23T12:41:20.332Z"
-    },
-    {
       "id": "u-1787491492885",
       "name": "Aadithya R",
       "email": "aadithya00018@gmail.com",
@@ -1003,7 +985,7 @@
       "selling_price": 999,
       "cost_price": 650,
       "gst_percentage": 18,
-      "stock_quantity": 35,
+      "stock_quantity": 31,
       "low_stock_threshold": 5,
       "weight": 1.2,
       "warranty": "6 Months Manufacturer Warranty",
@@ -1013,7 +995,8 @@
       "is_new_arrival": 1,
       "status": "active",
       "specifications": "{\"Department\":\"HORN > VAN\",\"Model\":\"JGR-603\",\"Trumpets\":\"3 Red Air Horn Pipes\",\"Voltage\":\"12V DC Compatible\",\"Sound Type\":\"Dual Tone Musical Powerful Sound\",\"Waterproof\":\"100% Waterproof Design\",\"Fitments Included\":\"Air hose tube, Heavy duty relay, Selector switch, Wiring harness, Mounting bolts & brackets\",\"Compatible Vehicles\":\"Tata Ace, Mahindra Bolero Pickup, Force Traveller, Auto Rickshaws, 2 Wheelers\"}",
-      "created_at": "2026-08-25T12:00:00.000Z"
+      "created_at": "2026-08-25T12:00:00.000Z",
+      "updated_at": "2026-10-17T08:29:59.512Z"
     },
     {
       "id": "p-5m-windtone-horn",
@@ -1946,7 +1929,20 @@
     }
   ],
   "user_vehicles": [],
-  "carts": [],
+  "carts": [
+    {
+      "id": "cart-1792229991653",
+      "user_id": "00000000-0000-4000-a000-000000000001",
+      "session_id": "00000000-0000-4000-a000-000000000001",
+      "created_at": "2026-10-17T09:39:51.653Z"
+    },
+    {
+      "id": "cart-1792234347047",
+      "user_id": "1e038732-d043-4067-8087-da3933fc6750",
+      "session_id": "1e038732-d043-4067-8087-da3933fc6750",
+      "created_at": "2026-10-17T10:52:27.047Z"
+    }
+  ],
   "cart_items": [],
   "wishlists": [],
   "addresses": [
@@ -1962,194 +1958,13 @@
       "state": "Tamil Nadu",
       "pincode": "600114",
       "landmark": null,
-      "is_default": 1,
+      "is_default": 0,
       "created_at": "2026-09-04T14:56:18.841Z"
     }
   ],
-  "orders": [
-    {
-      "id": "ord-1788534295595-715",
-      "user_id": null,
-      "order_number": "TRQ-2026-242309",
-      "subtotal": 249,
-      "discount": 0,
-      "shipping_charge": 99,
-      "tax": 37.98,
-      "total_amount": 348,
-      "coupon_code": null,
-      "payment_status": "paid",
-      "order_status": "confirmed",
-      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
-      "created_at": "2026-09-04T15:04:55.595Z",
-      "updated_at": "2026-09-04T15:05:18.792Z",
-      "razorpay_order_id": "order_TY0ETclPnTiOp8",
-      "razorpay_payment_id": "pay_upi_1788534318787"
-    },
-    {
-      "id": "ord-1788534274675-757",
-      "user_id": null,
-      "order_number": "TRQ-2026-855650",
-      "subtotal": 249,
-      "discount": 0,
-      "shipping_charge": 99,
-      "tax": 37.98,
-      "total_amount": 348,
-      "coupon_code": null,
-      "payment_status": "pending",
-      "order_status": "pending",
-      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
-      "created_at": "2026-09-04T15:04:34.675Z",
-      "updated_at": "2026-09-04T15:04:34.675Z",
-      "razorpay_order_id": "order_TY0E6oLX7Ih9jQ"
-    },
-    {
-      "id": "ord-1788534199016-297",
-      "user_id": null,
-      "order_number": "TRQ-2026-192987",
-      "subtotal": 249,
-      "discount": 0,
-      "shipping_charge": 99,
-      "tax": 37.98,
-      "total_amount": 348,
-      "coupon_code": null,
-      "payment_status": "pending",
-      "order_status": "pending",
-      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
-      "created_at": "2026-09-04T15:03:19.018Z",
-      "updated_at": "2026-09-04T15:03:19.018Z",
-      "razorpay_order_id": "order_TY0CmIgBUoMkuq"
-    },
-    {
-      "id": "ord-1788534135360-871",
-      "user_id": null,
-      "order_number": "TRQ-2026-758716",
-      "subtotal": 249,
-      "discount": 0,
-      "shipping_charge": 99,
-      "tax": 37.98,
-      "total_amount": 348,
-      "coupon_code": null,
-      "payment_status": "pending",
-      "order_status": "pending",
-      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
-      "created_at": "2026-09-04T15:02:15.360Z",
-      "updated_at": "2026-09-04T15:02:15.360Z",
-      "razorpay_order_id": "order_TY0BemoqbirWgR"
-    },
-    {
-      "id": "ord-1788534103226-299",
-      "user_id": null,
-      "order_number": "TRQ-2026-386281",
-      "subtotal": 249,
-      "discount": 0,
-      "shipping_charge": 99,
-      "tax": 37.98,
-      "total_amount": 348,
-      "coupon_code": null,
-      "payment_status": "pending",
-      "order_status": "pending",
-      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
-      "created_at": "2026-09-04T15:01:43.226Z",
-      "updated_at": "2026-09-04T15:01:43.226Z",
-      "razorpay_order_id": "order_TY0B5eXMvPrsZT"
-    },
-    {
-      "id": "ord-1788533783251-441",
-      "user_id": null,
-      "order_number": "TRQ-2026-341949",
-      "subtotal": 249,
-      "discount": 0,
-      "shipping_charge": 99,
-      "tax": 37.98,
-      "total_amount": 348,
-      "coupon_code": null,
-      "payment_status": "pending",
-      "order_status": "pending",
-      "shipping_address": "{\"id\":\"addr-1788533778840\",\"user_id\":\"00000000-0000-4000-a000-000000000002\",\"full_name\":\"AADITHYA R\",\"phone\":\"9790817496\",\"address_line_1\":\"21/34\",\"address_line_2\":\"EMK Street\",\"area\":\"Palavanthangal\",\"city\":\"Chennai\",\"state\":\"Tamil Nadu\",\"pincode\":\"600114\",\"landmark\":null,\"is_default\":1,\"created_at\":\"2026-09-04T14:56:18.841Z\"}",
-      "created_at": "2026-09-04T14:56:23.251Z",
-      "updated_at": "2026-09-04T14:56:23.251Z",
-      "razorpay_order_id": "order_TY05SRnDoWtP0R"
-    }
-  ],
-  "order_items": [
-    {
-      "id": "oi-bt7hfryh2",
-      "order_id": "ord-1788533783251-441",
-      "product_id": "p-5m-single-horn-bike",
-      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
-      "sku": "5M-HRN-SNG-110",
-      "image_url": "/images/products/5m-single-horn-box.jpeg",
-      "quantity": 1,
-      "price": 249,
-      "total": 249
-    },
-    {
-      "id": "oi-x9ct03nqt",
-      "order_id": "ord-1788534103226-299",
-      "product_id": "p-5m-single-horn-bike",
-      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
-      "sku": "5M-HRN-SNG-110",
-      "image_url": "/images/products/5m-single-horn-box.jpeg",
-      "quantity": 1,
-      "price": 249,
-      "total": 249
-    },
-    {
-      "id": "oi-bzz6qsog4",
-      "order_id": "ord-1788534135360-871",
-      "product_id": "p-5m-single-horn-bike",
-      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
-      "sku": "5M-HRN-SNG-110",
-      "image_url": "/images/products/5m-single-horn-box.jpeg",
-      "quantity": 1,
-      "price": 249,
-      "total": 249
-    },
-    {
-      "id": "oi-jjbtwysh0",
-      "order_id": "ord-1788534199016-297",
-      "product_id": "p-5m-single-horn-bike",
-      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
-      "sku": "5M-HRN-SNG-110",
-      "image_url": "/images/products/5m-single-horn-box.jpeg",
-      "quantity": 1,
-      "price": 249,
-      "total": 249
-    },
-    {
-      "id": "oi-n4hirur7q",
-      "order_id": "ord-1788534274675-757",
-      "product_id": "p-5m-single-horn-bike",
-      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
-      "sku": "5M-HRN-SNG-110",
-      "image_url": "/images/products/5m-single-horn-box.jpeg",
-      "quantity": 1,
-      "price": 249,
-      "total": 249
-    },
-    {
-      "id": "oi-qcf1nq6sb",
-      "order_id": "ord-1788534295595-715",
-      "product_id": "p-5m-single-horn-bike",
-      "product_name": "5M Single Automotive Bike Horn (12V 1.5A 110dB Crystal Clear Tone)",
-      "sku": "5M-HRN-SNG-110",
-      "image_url": "/images/products/5m-single-horn-box.jpeg",
-      "quantity": 1,
-      "price": 249,
-      "total": 249
-    }
-  ],
-  "payments": [
-    {
-      "id": "pay-1788534318793",
-      "order_id": "ord-1788534295595-715",
-      "razorpay_order_id": "order_TY0ETclPnTiOp8",
-      "razorpay_payment_id": "pay_upi_1788534318787",
-      "razorpay_signature": "sig_upi_completed",
-      "amount": 348,
-      "created_at": "2026-09-04T15:05:18.793Z"
-    }
-  ],
+  "orders": [],
+  "order_items": [],
+  "payments": [],
   "coupons": [
     {
       "id": "cp-1",

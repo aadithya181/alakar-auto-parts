@@ -25,7 +25,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   });
   const [token, setToken] = useState<string | null>(localStorage.getItem('torq_token') || null);
-  const [loading, setLoading] = useState<boolean>(!localStorage.getItem('torq_token'));
+  const [loading, setLoading] = useState<boolean>(() => {
+    const hasToken = Boolean(localStorage.getItem('torq_token'));
+    const hasUser = Boolean(localStorage.getItem('torq_user'));
+    return hasToken && !hasUser;
+  });
 
   useEffect(() => {
     if (token) {

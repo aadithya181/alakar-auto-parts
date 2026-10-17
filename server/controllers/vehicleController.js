@@ -3,7 +3,7 @@ const db = require('../config/db');
 exports.getVehicleTypes = (req, res, next) => {
   try {
     const types = db.prepare('SELECT * FROM vehicle_types').all();
-    res.json({ success: true, types });
+    res.json({ success: true, types, vehicleTypes: types });
   } catch (err) {
     next(err);
   }

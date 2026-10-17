@@ -34,7 +34,7 @@ exports.checkCompatibility = (req, res, next) => {
     }
 
     const fitResult = compatibilityService.checkProductFit(product_id, vehicle_variant_id, year);
-    res.json({ success: true, ...fitResult });
+    res.json({ success: true, compatible: fitResult.isCompatible, ...fitResult });
   } catch (err) {
     next(err);
   }

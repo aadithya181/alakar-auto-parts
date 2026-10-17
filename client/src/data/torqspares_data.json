@@ -19,24 +19,6 @@
       "created_at": "2026-08-23T12:41:20.332Z"
     },
     {
-      "id": "u-admin-3",
-      "name": "Torq Admin",
-      "email": "admin@torqspares.com",
-      "password_hash": "$2a$10$B0RNehH0G1b6YYfx/dmbS.PHlTwJy4xCk75ovQPMjgDlL/hgM248W",
-      "phone": "+91 98765 43210",
-      "role": "admin",
-      "created_at": "2026-08-23T12:41:20.332Z"
-    },
-    {
-      "id": "u-cust-1",
-      "name": "Rajesh Sharma",
-      "email": "customer@torqspares.com",
-      "password_hash": "$2a$10$WyzteI8jQBYKvL9zVpYuz.eZl5HJpEhWIlFbbLsOGEpEx/wmZvwa.",
-      "phone": "+91 98765 12345",
-      "role": "customer",
-      "created_at": "2026-08-23T12:41:20.332Z"
-    },
-    {
       "id": "u-1787491492885",
       "name": "Aadithya R",
       "email": "aadithya00018@gmail.com",
@@ -1003,7 +985,7 @@
       "selling_price": 999,
       "cost_price": 650,
       "gst_percentage": 18,
-      "stock_quantity": 35,
+      "stock_quantity": 31,
       "low_stock_threshold": 5,
       "weight": 1.2,
       "warranty": "6 Months Manufacturer Warranty",
@@ -1013,7 +995,8 @@
       "is_new_arrival": 1,
       "status": "active",
       "specifications": "{\"Department\":\"HORN > VAN\",\"Model\":\"JGR-603\",\"Trumpets\":\"3 Red Air Horn Pipes\",\"Voltage\":\"12V DC Compatible\",\"Sound Type\":\"Dual Tone Musical Powerful Sound\",\"Waterproof\":\"100% Waterproof Design\",\"Fitments Included\":\"Air hose tube, Heavy duty relay, Selector switch, Wiring harness, Mounting bolts & brackets\",\"Compatible Vehicles\":\"Tata Ace, Mahindra Bolero Pickup, Force Traveller, Auto Rickshaws, 2 Wheelers\"}",
-      "created_at": "2026-08-25T12:00:00.000Z"
+      "created_at": "2026-08-25T12:00:00.000Z",
+      "updated_at": "2026-10-17T08:29:59.512Z"
     },
     {
       "id": "p-5m-windtone-horn",
@@ -1055,7 +1038,7 @@
       "selling_price": 249,
       "cost_price": 130,
       "gst_percentage": 18,
-      "stock_quantity": 80,
+      "stock_quantity": 79,
       "low_stock_threshold": 10,
       "weight": 0.35,
       "warranty": "6 Months Warranty",
@@ -1065,7 +1048,8 @@
       "is_new_arrival": 0,
       "status": "active",
       "specifications": "{\"Department\":\"HORN > BIKE\",\"Voltage\":\"12V DC\",\"Current\":\"1.5A\",\"Decibel Output\":\"110dB Loud Sound\",\"Diaphragm\":\"Heavy Duty Acoustic Disc\",\"Waterproof Rating\":\"100% Waterproof\",\"Ideal Fitment\":\"Hero Splendor, HF Deluxe, Bajaj Platina, Honda Shine, TVS Sport, Auto Rickshaws\"}",
-      "created_at": "2026-08-25T12:00:00.000Z"
+      "created_at": "2026-08-25T12:00:00.000Z",
+      "updated_at": "2026-09-04T15:05:18.794Z"
     },
     {
       "id": "p-wowsonal-xl-horn",
@@ -1945,10 +1929,39 @@
     }
   ],
   "user_vehicles": [],
-  "carts": [],
+  "carts": [
+    {
+      "id": "cart-1792229991653",
+      "user_id": "00000000-0000-4000-a000-000000000001",
+      "session_id": "00000000-0000-4000-a000-000000000001",
+      "created_at": "2026-10-17T09:39:51.653Z"
+    },
+    {
+      "id": "cart-1792234347047",
+      "user_id": "1e038732-d043-4067-8087-da3933fc6750",
+      "session_id": "1e038732-d043-4067-8087-da3933fc6750",
+      "created_at": "2026-10-17T10:52:27.047Z"
+    }
+  ],
   "cart_items": [],
   "wishlists": [],
-  "addresses": [],
+  "addresses": [
+    {
+      "id": "addr-1788533778840",
+      "user_id": "00000000-0000-4000-a000-000000000002",
+      "full_name": "AADITHYA R",
+      "phone": "9790817496",
+      "address_line_1": "21/34",
+      "address_line_2": "EMK Street",
+      "area": "Palavanthangal",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600114",
+      "landmark": null,
+      "is_default": 0,
+      "created_at": "2026-09-04T14:56:18.841Z"
+    }
+  ],
   "orders": [],
   "order_items": [],
   "payments": [],

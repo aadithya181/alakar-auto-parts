@@ -21,6 +21,14 @@ exports.register = async (req, res) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
+
+    // Check if user already exists
+    const existing = db.prepare('SELECT * FROM users WHERE email = ?').get(normalizedEmail) ||
+      db.getState().users.find((u) => u.email.toLowerCase() === normalizedEmail);
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'An account with this email already exists.' });
+    }
+
     const passwordHash = bcrypt.hashSync(password, 10);
     const userId = crypto.randomUUID();
 

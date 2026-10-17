@@ -4,7 +4,7 @@ const app = require('./app');
 
 const PORT = process.env.PORT || 5001;
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`=======================================================`);
   console.log(`🚀 New Alagar Auto Parts API Server running on port ${PORT}`);
   console.log(`📍 West Main Street, Old GH road, Pudukkottai (Surendar - 8526613000)`);

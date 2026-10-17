@@ -97,73 +97,34 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      {/* Top Announcement Bar - Clean Light White Theme */}
-      <div className="bg-white border-b border-slate-200/80 text-slate-600 text-[11px] sm:text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <span className="flex items-center gap-1.5 text-slate-900 font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5 text-red-600 shrink-0" />
-              <span>100% Genuine OEM Spares</span>
-            </span>
-            <span className="hidden md:inline text-slate-300">•</span>
-            <span className="hidden md:flex items-center gap-1.5 text-slate-700">
-              <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-              <span>Direct Fitment Guarantee</span>
-            </span>
-            <span className="hidden sm:inline text-slate-300">•</span>
-            <span className="hidden sm:inline text-slate-500">
-              Fast 48h Dispatch across India
-            </span>
-          </div>
-          <div className="flex items-center gap-3 sm:gap-4 text-[11px]">
-            <a
-              href="tel:+918526613000"
-              className="flex items-center gap-1 text-slate-600 hover:text-red-600 transition-colors"
-            >
-              <span className="font-semibold text-slate-800">📞 +91 85266 13000</span>
-              <span className="text-slate-400 hidden sm:inline">(Pudukkottai)</span>
-            </a>
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-50 border border-red-200 text-red-700 hover:bg-red-100 font-bold text-[10px] transition-colors shadow-2xs"
-              >
-                <LayoutDashboard className="w-3 h-3 text-red-600" />
-                <span>Admin Console</span>
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Main Sticky Navbar */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20 gap-3 sm:gap-6">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-20 gap-2 sm:gap-6">
             
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-md shadow-red-600/25 group-hover:scale-105 transition-transform">
-                <Car className="w-5 h-5 sm:w-6 sm:h-6 text-white stroke-[2.2]" />
+            <Link to="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0 group min-w-0">
+              <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-md shadow-red-600/25 group-hover:scale-105 transition-transform shrink-0">
+                <Car className="w-4 h-4 sm:w-6 sm:h-6 text-white stroke-[2.2]" />
               </div>
-              <div className="flex flex-col">
-                <div className="flex items-baseline">
-                  <span className="text-base sm:text-xl font-black font-display tracking-tight text-slate-900 leading-none">
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-baseline truncate">
+                  <span className="text-sm sm:text-xl font-black font-display tracking-tight text-slate-900 leading-none">
                     NEW ALAGAR
                   </span>
-                  <span className="text-base sm:text-xl font-black font-display tracking-tight text-red-600 ml-1.5 leading-none">
+                  <span className="text-sm sm:text-xl font-black font-display tracking-tight text-red-600 ml-1 sm:ml-1.5 leading-none">
                     AUTO PARTS
                   </span>
                 </div>
-                <span className="text-[9px] uppercase tracking-widest text-slate-400 font-bold mt-1">
+                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider sm:tracking-widest text-slate-400 font-bold mt-0.5 sm:mt-1 truncate">
                   PUDUKKOTTAI • GENUINE SPARES
                 </span>
               </div>
             </Link>
 
-            {/* Vehicle Selector Badge / Quick Trigger */}
-            <div className="hidden lg:flex items-center shrink-0">
-              {activeVehicle ? (
+            {/* Active Vehicle Badge (Only shown when a vehicle filter is active) */}
+            {activeVehicle && (
+              <div className="hidden lg:flex items-center shrink-0">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-red-50 border border-red-200 text-xs shadow-sm">
                   <div className="w-6 h-6 rounded-lg bg-red-600 text-white flex items-center justify-center shrink-0">
                     {activeVehicle.type === 'bike' ? (
@@ -192,20 +153,11 @@ export const Navbar: React.FC = () => {
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
-              ) : (
-                <button
-                  onClick={() => setShowVehicleModal(true)}
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-xs font-bold text-slate-800 transition-all shadow-sm group"
-                >
-                  <Wrench className="w-3.5 h-3.5 text-amber-600 group-hover:rotate-45 transition-transform" />
-                  <span>Select Vehicle</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-                </button>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Clean Pill Search Bar */}
-            <div className="relative flex-1 max-w-lg hidden md:block" ref={searchRef}>
+            <div className="relative flex-1 max-w-xl hidden md:block" ref={searchRef}>
               <form onSubmit={handleSearchSubmit} className="relative">
                 <input
                   type="text"
@@ -278,22 +230,13 @@ export const Navbar: React.FC = () => {
             </div>
 
             {/* Right Header Action Icons */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              
-              {/* Mobile Vehicle Button */}
-              <button
-                onClick={() => setShowVehicleModal(true)}
-                className="lg:hidden p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-red-600 transition-colors"
-                title="Select Vehicle"
-              >
-                <Wrench className="w-4 h-4 text-amber-600" />
-              </button>
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
 
-              {/* Wishlist */}
+              {/* Wishlist (Desktop) */}
               <Link
                 to="/wishlist"
                 aria-label="Wishlist"
-                className="relative p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 hover:text-red-600 transition-all"
+                className="hidden md:flex relative p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 hover:text-red-600 transition-all shrink-0"
               >
                 <Heart className="w-5 h-5" />
                 {wishlistCount > 0 && (
@@ -303,33 +246,33 @@ export const Navbar: React.FC = () => {
                 )}
               </Link>
 
-              {/* Cart Button */}
+              {/* Cart Button (Desktop) */}
               <Link
                 to="/cart"
                 aria-label="Cart"
-                className="relative flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-md shadow-red-600/20 transition-all active:scale-95"
+                className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-md shadow-red-600/20 transition-all active:scale-95 shrink-0"
               >
                 <div className="relative">
-                  <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <ShoppingCart className="w-5 h-5" />
                   {totalItems > 0 && (
                     <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-slate-950 text-white text-[9px] font-black flex items-center justify-center">
                       {totalItems}
                     </span>
                   )}
                 </div>
-                <span className="hidden sm:inline font-mono font-extrabold">
+                <span className="font-mono font-extrabold">
                   ₹{Number(subtotal).toLocaleString('en-IN')}
                 </span>
               </Link>
 
-              {/* Account Dropdown */}
-              <div className="relative" ref={accountRef}>
+              {/* Account Dropdown (Desktop) */}
+              <div className="relative hidden md:block shrink-0" ref={accountRef}>
                 <button
                   onClick={() => setShowAccountDropdown(!showAccountDropdown)}
                   className="flex items-center gap-1 p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 transition-all"
                 >
                   <User className="w-5 h-5 text-slate-700" />
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
 
                 {showAccountDropdown && (
@@ -421,9 +364,10 @@ export const Navbar: React.FC = () => {
               {/* Mobile Drawer Menu Toggle */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2.5 rounded-2xl bg-slate-100 text-slate-700 hover:text-slate-900"
+                className="md:hidden p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-slate-900 shrink-0"
+                aria-label="Toggle menu"
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
               </button>
             </div>
           </div>
@@ -454,6 +398,7 @@ export const Navbar: React.FC = () => {
                 }`}
               >
                 Home
+                
               </Link>
 
               <Link
@@ -553,17 +498,24 @@ export const Navbar: React.FC = () => {
           }`}
         >
           <Grid className="w-5 h-5 mb-0.5" />
-          <span>Catalog</span>
+          <span>Products</span>
         </Link>
-        <button
-          onClick={() => setShowVehicleModal(true)}
-          className={`flex flex-col items-center py-1 px-2 text-[10px] font-bold ${
-            activeVehicle ? 'text-red-600' : 'text-slate-500 hover:text-slate-900'
+        <Link
+          to="/wishlist"
+          className={`relative flex flex-col items-center py-1 px-2 text-[10px] font-bold ${
+            location.pathname === '/wishlist' ? 'text-red-600' : 'text-slate-500 hover:text-slate-900'
           }`}
         >
-          <Wrench className="w-5 h-5 mb-0.5 text-amber-600" />
-          <span>{activeVehicle ? 'Vehicle' : 'Select'}</span>
-        </button>
+          <div className="relative">
+            <Heart className="w-5 h-5 mb-0.5" />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold flex items-center justify-center">
+                {wishlistCount}
+              </span>
+            )}
+          </div>
+          <span>Wishlist</span>
+        </Link>
         <Link
           to="/cart"
           className={`relative flex flex-col items-center py-1 px-2 text-[10px] font-bold ${
@@ -617,39 +569,6 @@ export const Navbar: React.FC = () => {
                 >
                   <X className="w-5 h-5" />
                 </button>
-              </div>
-
-              {/* Mobile Vehicle Quick Selector */}
-              <div className="mb-6 p-3 rounded-2xl bg-slate-50 border border-slate-200">
-                <p className="text-[10px] font-bold uppercase text-slate-500 tracking-wider mb-2">Vehicle Filter</p>
-                {activeVehicle ? (
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-bold text-slate-900">{activeVehicle.brandName} {activeVehicle.modelName}</p>
-                      <p className="text-[10px] text-slate-500">{activeVehicle.year}</p>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        setShowVehicleModal(true);
-                      }}
-                      className="text-xs font-bold text-red-600 underline"
-                    >
-                      Change
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setShowVehicleModal(true);
-                    }}
-                    className="w-full py-2 px-3 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 flex items-center justify-center gap-2 shadow-sm"
-                  >
-                    <Wrench className="w-3.5 h-3.5 text-amber-600" />
-                    <span>Select Your Vehicle</span>
-                  </button>
-                )}
               </div>
 
               {/* Mobile Navigation Links */}
