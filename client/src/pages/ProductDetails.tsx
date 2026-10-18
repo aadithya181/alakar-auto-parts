@@ -72,11 +72,6 @@ export const ProductDetails: React.FC = () => {
   const handleBuyNow = () => {
     if (!product) return;
     addToCart(product, quantity);
-    if (!token) {
-      showInfo('Please sign in to proceed with checkout');
-      navigate('/login', { state: { from: '/checkout' } });
-      return;
-    }
     navigate('/checkout');
   };
 
@@ -329,10 +324,10 @@ export const ProductDetails: React.FC = () => {
       <div className="mt-12">
         <div className="flex items-center gap-2 border-b border-slate-200 pb-px overflow-x-auto">
           {[
-            { id: 'description', label: 'Full Description' },
-            { id: 'specs', label: 'Technical Specifications' },
-            { id: 'compatibility', label: `Compatible Vehicles (${product.compatibility?.length || 0})` },
-            { id: 'reviews', label: `Customer Reviews (${product.reviews?.length || 0})` },
+            { id: 'description', label: 'Overview' },
+            { id: 'specs', label: 'Specifications' },
+            { id: 'compatibility', label: `Compatibility (${product.compatibility?.length || 0})` },
+            { id: 'reviews', label: `Reviews (${product.reviews?.length || 0})` },
           ].map((tab) => (
             <button
               key={tab.id}

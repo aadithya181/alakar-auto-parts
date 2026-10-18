@@ -40,13 +40,13 @@ export const OrderDetails: React.FC = () => {
   }, [id]);
 
   const stages = [
-    { key: 'pending', label: 'Order Placed', desc: 'Order received in system' },
-    { key: 'confirmed', label: 'Payment Confirmed', desc: 'Verified via Razorpay' },
-    { key: 'processing', label: 'Processing', desc: 'Allocated in warehouse' },
-    { key: 'packed', label: 'Packed', desc: 'Tamper-proof sealed' },
-    { key: 'shipped', label: 'Shipped', desc: 'Handed to express courier' },
-    { key: 'out_for_delivery', label: 'Out for Delivery', desc: 'Courier out on route' },
-    { key: 'delivered', label: 'Delivered', desc: 'Delivered to customer' },
+    { key: 'pending', label: 'Placed', desc: 'Received' },
+    { key: 'confirmed', label: 'Confirmed', desc: 'Payment verified' },
+    { key: 'processing', label: 'Processing', desc: 'In warehouse' },
+    { key: 'packed', label: 'Packed', desc: 'Ready for courier' },
+    { key: 'shipped', label: 'Shipped', desc: 'In transit' },
+    { key: 'out_for_delivery', label: 'Out for Delivery', desc: 'On vehicle' },
+    { key: 'delivered', label: 'Delivered', desc: 'Completed' },
   ];
 
   const getStageIndex = (status: string) => {
@@ -135,15 +135,20 @@ export const OrderDetails: React.FC = () => {
               <CheckCircle2 className="w-7 h-7" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-black text-slate-900">Payment Confirmed & Order Placed!</h2>
+              <h2 className="text-base sm:text-lg font-black text-slate-900">
+                {order.payment_status === 'paid' ? 'Payment Confirmed & Order Placed!' : 'Order Confirmed (Cash on Delivery)!'}
+              </h2>
               <p className="text-xs text-slate-600">
-                A confirmation has been sent to your email with Tracking ID: <span className="font-mono text-emerald-700 font-bold">{order.order_number}</span>
+                {order.payment_status === 'paid'
+                  ? 'A payment receipt and invoice have been sent to your email. Tracking ID: '
+                  : 'Order placed successfully. Please keep exact cash ready upon delivery. Tracking ID: '}
+                <span className="font-mono text-emerald-700 font-bold">{order.order_number}</span>
               </p>
             </div>
           </div>
           <button
             onClick={() => window.print()}
-            className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold flex items-center gap-2 border border-slate-200 shrink-0 shadow-sm"
+            className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold flex items-center gap-2 border border-slate-200 shrink-0 shadow-sm cursor-pointer"
           >
             <Printer className="w-4 h-4" /> Print Invoice
           </button>

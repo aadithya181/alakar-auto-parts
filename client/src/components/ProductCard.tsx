@@ -91,27 +91,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </Link>
 
       {/* Card Details */}
-      <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between gap-2.5">
+      <div className="p-3 sm:p-3.5 flex-1 flex flex-col justify-between gap-2">
         <div>
-          {/* Brand & Laser-Engraved SKU Plate */}
-          <div className="flex items-center justify-between gap-1 mb-1.5">
-            <span className="eyebrow-tag px-2 py-0.5 rounded-md bg-slate-900 text-white text-[10px] font-black uppercase tracking-wider truncate shadow-2xs">
+          {/* Brand */}
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 truncate">
               {product.brand_name || 'Genuine OEM'}
-            </span>
-            <span className="sku-code text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/80 font-bold shrink-0">
-              {product.sku}
             </span>
           </div>
 
           {/* Product Title */}
-          <Link to={`/product/${product.slug || product.id}`} className="block mb-2">
-            <h3 className="heading-sm text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2 leading-snug">
+          <Link to={`/product/${product.slug || product.id}`} className="block mb-1.5">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2 leading-snug">
               {product.name}
             </h3>
           </Link>
 
           {/* Compatibility badge */}
-          <div className="mb-2">
+          <div className="mb-1.5">
             <CompatibilityBadge product={product} />
           </div>
 
@@ -126,21 +123,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         {/* Price & Action Row */}
-        <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
-          <div>
-            <div className="flex items-baseline gap-1.5 flex-wrap">
-              <span className="text-base sm:text-lg font-black text-slate-950 font-display tracking-tight">
-                ₹{sellingPrice.toLocaleString('en-IN')}
-              </span>
-              {mrp > sellingPrice && (
-                <span className="text-[11px] text-slate-400 line-through">
-                  ₹{mrp.toLocaleString('en-IN')}
-                </span>
-              )}
-            </div>
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
+          <div className="flex items-baseline gap-1.5 flex-wrap">
+            <span className="text-base sm:text-lg font-black text-slate-950 font-display tracking-tight">
+              ₹{sellingPrice.toLocaleString('en-IN')}
+            </span>
             {mrp > sellingPrice && (
-              <span className="inline-block text-[9px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-md mt-0.5">
-                Save ₹{(mrp - sellingPrice).toLocaleString('en-IN')}
+              <span className="text-[11px] text-slate-400 line-through">
+                ₹{mrp.toLocaleString('en-IN')}
               </span>
             )}
           </div>
@@ -149,12 +139,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <button
             onClick={handleAddToCart}
             disabled={product.stock_quantity <= 0}
-            className={`btn-bounce px-3.5 py-2 rounded-xl text-xs font-black tracking-wide transition-all duration-200 flex items-center gap-1.5 shadow-sm active:scale-95 ${
+            className={`btn-bounce px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-1.5 shadow-sm active:scale-95 ${
               product.stock_quantity <= 0
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
                 : added
                 ? 'bg-emerald-600 text-white shadow-emerald-500/20'
-                : 'bg-gradient-to-r from-red-600 via-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white shadow-md shadow-red-600/25'
+                : 'bg-red-600 hover:bg-red-700 text-white shadow-sm shadow-red-600/25'
             }`}
           >
             {added ? (

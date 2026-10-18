@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { sendOrderConfirmationEmail } = require('./emailService');
 
 class OrderService {
   /**
@@ -196,7 +197,142 @@ class OrderService {
       }
     }
 
-    return db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    const confirmedOrder = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+
+    // Trigger non-blocking asynchronous order confirmation email
+    try {
+      let customerEmail = null;
+      let customerName = null;
+
+      if (confirmedOrder.user_id) {
+        const userRow = db.prepare('SELECT email, name FROM users WHERE id = ?').get(confirmedOrder.user_id);
+        if (userRow) {
+          customerEmail = userRow.email;
+          customerName = userRow.name;
+        }
+      }
+
+      if (!customerEmail && confirmedOrder.shipping_address) {
+        try {
+          const sAddr = typeof confirmedOrder.shipping_address === 'string'
+            ? JSON.parse(confirmedOrder.shipping_address)
+            : confirmedOrder.shipping_address;
+          customerEmail = sAddr.email || null;
+          customerName = customerName || sAddr.full_name || null;
+        } catch (e) {}
+      }
+
+      if (customerEmail) {
+        sendOrderConfirmationEmail({
+          email: customerEmail,
+          name: customerName,
+          order: confirmedOrder,
+        }).catch((emailErr) => {
+          console.warn('[Email Service] Order confirmation email dispatch failed:', emailErr.message);
+        });
+      }
+    } catch (err) {
+      console.warn('[OrderService] Could not resolve recipient for order email:', err.message);
+    }
+
+    return confirmedOrder;
+  }
+
+  /**
+   * Confirm Cash on Delivery order (order confirmed, payment status remains pending until delivery)
+   */
+  confirmCodOrder(orderId) {
+    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    if (!order) throw new Error('Order not found');
+
+    const codOrderId = 'order_cod_' + Date.now();
+    const codPaymentId = 'pay_cod_' + Date.now();
+
+    const updateOrder = db.prepare(`
+      UPDATE orders 
+      SET payment_status = 'pending', 
+          order_status = 'confirmed',
+          razorpay_order_id = ?,
+          razorpay_payment_id = ?,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `);
+    updateOrder.run(codOrderId, codPaymentId, orderId);
+
+    // Record payment as pending collection
+    const paymentId = 'pay-' + Date.now();
+    const insertPayment = db.prepare(`
+      INSERT INTO payments (id, order_id, razorpay_order_id, razorpay_payment_id, razorpay_signature, amount, status, method)
+      VALUES (?, ?, ?, ?, ?, ?, 'pending', 'cod')
+    `);
+    insertPayment.run(paymentId, orderId, codOrderId, codPaymentId, 'cod_pending_delivery', order.total_amount);
+
+    // Atomically reduce stock
+    const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(orderId);
+    const updateStock = db.prepare(`
+      UPDATE products 
+      SET stock_quantity = MAX(0, stock_quantity - ?),
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `);
+
+    for (const itm of items) {
+      if (itm.product_id) {
+        updateStock.run(itm.quantity, itm.product_id);
+      }
+    }
+
+    // Record coupon usage if applied
+    if (order.coupon_code && order.user_id) {
+      const coupon = db.prepare('SELECT id FROM coupons WHERE code = ?').get(order.coupon_code);
+      if (coupon) {
+        db.prepare('UPDATE coupons SET used_count = used_count + 1 WHERE id = ?').run(coupon.id);
+        db.prepare(`
+          INSERT INTO coupon_usage (id, coupon_id, user_id, order_id, discount_amount)
+          VALUES (?, ?, ?, ?, ?)
+        `).run('cu-' + Date.now(), coupon.id, order.user_id, orderId, order.discount);
+      }
+    }
+
+    const confirmedOrder = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+
+    // Trigger confirmation email with COD instructions
+    try {
+      let customerEmail = null;
+      let customerName = null;
+
+      if (confirmedOrder.user_id) {
+        const userRow = db.prepare('SELECT email, name FROM users WHERE id = ?').get(confirmedOrder.user_id);
+        if (userRow) {
+          customerEmail = userRow.email;
+          customerName = userRow.name;
+        }
+      }
+
+      if (!customerEmail && confirmedOrder.shipping_address) {
+        try {
+          const sAddr = typeof confirmedOrder.shipping_address === 'string'
+            ? JSON.parse(confirmedOrder.shipping_address)
+            : confirmedOrder.shipping_address;
+          customerEmail = sAddr.email || null;
+          customerName = customerName || sAddr.full_name || null;
+        } catch (e) {}
+      }
+
+      if (customerEmail) {
+        sendOrderConfirmationEmail({
+          email: customerEmail,
+          name: customerName,
+          order: confirmedOrder,
+        }).catch((emailErr) => {
+          console.warn('[Email Service] COD confirmation email dispatch note:', emailErr.message);
+        });
+      }
+    } catch (err) {
+      console.warn('[OrderService] COD email recipient resolution note:', err.message);
+    }
+
+    return confirmedOrder;
   }
 }
 

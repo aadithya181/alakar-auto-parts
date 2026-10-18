@@ -60,7 +60,7 @@ export const AdminLayout: React.FC = () => {
         const res: any = await api.get('/admin/orders');
         if (res.success && Array.isArray(res.orders)) {
           const pending = res.orders.filter(
-            (o: any) => o.order_status === 'pending' || o.payment_status === 'paid' || o.order_status === 'confirmed'
+            (o: any) => ['confirmed', 'processing', 'packed'].includes(o.order_status)
           );
           setPendingOrdersCount((prev) => (prev !== pending.length ? pending.length : prev));
           setRecentOrders((prev) => {

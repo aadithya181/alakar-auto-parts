@@ -42,6 +42,24 @@ exports.verifyPayment = async (req, res, next) => {
   }
 };
 
+exports.confirmCod = async (req, res, next) => {
+  try {
+    const { order_id } = req.body;
+    if (!order_id) {
+      return res.status(400).json({ success: false, message: 'order_id is required' });
+    }
+
+    const order = await paymentService.confirmCodOrder(order_id);
+    res.json({
+      success: true,
+      message: 'Order confirmed with Cash on Delivery (payment pending delivery)!',
+      order,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.handleWebhook = async (req, res, next) => {
   try {
     const signature = req.headers['x-razorpay-signature'];

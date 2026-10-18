@@ -45,9 +45,20 @@ export const Navbar: React.FC = () => {
   const [showVehicleModal, setShowVehicleModal] = useState(false);
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const searchRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
+
+  // Monitor scroll for elevated sticky navbar styling
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -108,20 +119,25 @@ export const Navbar: React.FC = () => {
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
             <span className="text-white font-extrabold tracking-wide">NEW ALAGAR AUTO PARTS</span>
             <span className="text-slate-600 hidden sm:inline">•</span>
-            <span className="text-slate-400 hidden sm:inline">100% Genuine Spare Parts • Pudukkottai Store</span>
+            <span className="text-slate-400 hidden sm:inline">Pudukkottai</span>
           </div>
           <div className="flex items-center gap-4 text-[10px] sm:text-[11px] font-bold">
-            <span className="text-amber-400 font-mono hidden md:inline">⚡ Direct Dispatch from Store</span>
+            <span className="text-amber-400 font-mono hidden md:inline">⚡ Store Dispatch</span>
             <a href="tel:8526613000" className="flex items-center gap-1.5 text-slate-200 hover:text-red-400 transition-colors">
               <Phone className="w-3 h-3 text-red-500 shrink-0" />
-              <span>Call / WhatsApp: <span className="font-mono text-white">8526613000</span></span>
+              <span>Call: <span className="font-mono text-white">8526613000</span></span>
             </a>
           </div>
         </div>
       </div>
 
       {/* Main Sticky Navbar */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+      <header
+        className={`sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-shadow duration-200 ${
+          isScrolled ? 'shadow-md shadow-slate-900/5' : 'shadow-xs'
+        }`}
+        style={{ position: 'sticky', top: 0 }}
+      >
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-20 gap-2 sm:gap-6">
             
@@ -184,7 +200,7 @@ export const Navbar: React.FC = () => {
               <form onSubmit={handleSearchSubmit} className="relative">
                 <input
                   type="text"
-                  placeholder="Search spare parts, SKUs, brands (e.g. 5M Horn, Fog Light, Bulbs)..."
+                  placeholder="Search parts, brands, or categories..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
@@ -362,7 +378,7 @@ export const Navbar: React.FC = () => {
                     ) : (
                       <div className="p-3">
                         <p className="text-xs font-medium text-slate-600 mb-3">
-                          Sign in to manage your garage, track orders & view genuine warranties.
+                          Sign in to track orders and manage your account.
                         </p>
                         <Link
                           to="/login"
@@ -409,12 +425,12 @@ export const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Mobile Search Bar & Fast Collections Bar */}
-          <div className="md:hidden pb-2" ref={searchRef}>
-            <form onSubmit={handleSearchSubmit} className="relative mb-2">
+          {/* Mobile Search Bar */}
+          <div className="md:hidden pb-2.5">
+            <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
-                placeholder="Search spare parts, horns, lights..."
+                placeholder="Search spare parts..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
@@ -431,8 +447,15 @@ export const Navbar: React.FC = () => {
                 </button>
               )}
             </form>
+          </div>
+        </div>
+      </header>
 
-            {/* Mobile Fast Collections Horizontal Rail */}
+      {/* Non-Sticky Filter / Quick Category Tabs Row (Scrolls naturally with page) */}
+      <div className="bg-white border-b border-slate-200/80 relative z-30 shadow-2xs">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          {/* Mobile Fast Collections Horizontal Rail */}
+          <div className="md:hidden py-1.5">
             <div className="bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 shadow-inner flex items-center gap-1 overflow-x-auto scrollbar-none py-1">
               <Link
                 to="/"
@@ -536,7 +559,7 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Desktop High-End Automotive Unified Segmented Tab Bar */}
-          <nav aria-label="Quick Category Tabs" className="hidden md:flex items-center justify-between py-2 border-t border-slate-200/70">
+          <nav aria-label="Quick Category Tabs" className="hidden md:flex items-center justify-between py-2">
             {/* The Unified Tab Track */}
             <div
               role="tablist"
@@ -726,7 +749,7 @@ export const Navbar: React.FC = () => {
             </Link>
           </nav>
         </div>
-      </header>
+      </div>
 
       {/* Minimalist iOS Frosted Bottom Navigation Bar (Apple Store / Airbnb Style) */}
       <nav

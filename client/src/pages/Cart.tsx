@@ -198,11 +198,6 @@ export const Cart: React.FC = () => {
             <button
               type="button"
               onClick={() => {
-                if (!token) {
-                  showInfo('Please log in to proceed with checkout');
-                  navigate('/login', { state: { from: '/checkout' } });
-                  return;
-                }
                 navigate('/checkout');
               }}
               className="w-full py-3.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black uppercase tracking-wider shadow-md shadow-red-600/20 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer"

@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const db = require('../config/db');
 const { supabase } = require('../config/supabase');
 const { JWT_SECRET } = require('../middleware/auth');
+const { sendRegistrationAckEmail, sendLoginAckEmail } = require('../services/emailService');
 
 // Helper for timing out slow external network requests
 const withTimeout = (promise, ms = 2000) =>
@@ -77,6 +78,14 @@ exports.register = async (req, res) => {
 
     const token = jwt.sign(userData, JWT_SECRET, { expiresIn: '7d' });
 
+    // Asynchronously send registration acknowledgment email (non-blocking)
+    sendRegistrationAckEmail({
+      email: normalizedEmail,
+      name: name.trim(),
+    }).catch((mailErr) => {
+      console.warn('Registration email trigger error:', mailErr.message);
+    });
+
     return res.status(201).json({
       success: true,
       message: 'Account created successfully',
@@ -131,6 +140,15 @@ exports.login = async (req, res) => {
       };
 
       const token = jwt.sign(demoUser, JWT_SECRET, { expiresIn: '7d' });
+
+      // Asynchronously trigger login acknowledgment email
+      sendLoginAckEmail({
+        email: normalizedEmail,
+        name: demoUser.name,
+      }).catch((mailErr) => {
+        console.warn('Login email trigger error:', mailErr.message);
+      });
+
       return res.json({
         success: true,
         message: 'Login successful',
@@ -199,6 +217,14 @@ exports.login = async (req, res) => {
     };
 
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+
+    // Asynchronously trigger login acknowledgment email
+    sendLoginAckEmail({
+      email: normalizedEmail,
+      name: payload.name,
+    }).catch((mailErr) => {
+      console.warn('Login email trigger error:', mailErr.message);
+    });
 
     return res.json({
       success: true,

@@ -162,28 +162,35 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
         {selectedGroup === 'LIGHTS' && (
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200 mb-2 shadow-2xs">
             <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
-            <span>High-Power LED Fog Lights & Bulbs</span>
+            <span>Lights & Bulbs</span>
           </div>
         )}
         {selectedGroup === 'HORN' && (
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200 mb-2 shadow-2xs">
             <Volume2 className="w-3.5 h-3.5 text-red-600" />
-            <span>German Tech Horns & Musical Air Systems (110–112dB)</span>
+            <span>Horns & Sound</span>
           </div>
         )}
         {selectedGroup === 'ACCESSORIES' && (
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200 mb-2 shadow-2xs">
             <Wrench className="w-3.5 h-3.5 text-blue-600" />
-            <span>Vehicle Styling, Grips & Number Plate Mounts</span>
+            <span>Accessories</span>
           </div>
         )}
 
         <h1 className="heading-xl tracking-tight">
           {pageTitle}
         </h1>
-        <p className="body-sm mt-1">
-          Showing {pagination.total} guaranteed genuine automotive components
-        </p>
+        {loading ? (
+          <div className="flex items-center gap-2 mt-1.5">
+            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+            <span className="text-xs text-slate-400 font-medium">Loading catalog...</span>
+          </div>
+        ) : (
+          <p className="body-sm mt-1">
+            Showing {pagination.total} {pagination.total === 1 ? 'part' : 'parts'}
+          </p>
+        )}
 
         {/* Active Vehicle Fitment Notice Banner */}
         {activeVehicle && (
@@ -218,6 +225,7 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
           <FilterSidebar
             categories={categories}
             brands={brands}
+            selectedGroup={selectedGroup}
             selectedCategory={selectedCategory}
             onCategoryChange={(slug) => updateQueryParam('category_slug', slug)}
             selectedBrand={selectedBrand}
@@ -247,7 +255,7 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
               </button>
 
               <span className="text-xs text-slate-500 hidden sm:inline">
-                Page {pagination.page} of {pagination.totalPages || 1} • {pagination.total} Spares
+                {loading ? 'Updating spares...' : `Page ${pagination.page} of ${pagination.totalPages || 1} • ${pagination.total} Spares`}
               </span>
 
               {/* Sorting Dropdown */}
@@ -418,6 +426,7 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
             <FilterSidebar
               categories={categories}
               brands={brands}
+              selectedGroup={selectedGroup}
               selectedCategory={selectedCategory}
               onCategoryChange={(slug) => {
                 updateQueryParam('category_slug', slug);

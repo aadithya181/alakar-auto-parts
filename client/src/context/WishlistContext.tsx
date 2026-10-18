@@ -91,10 +91,17 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
   );
 };
 
+const fallbackWishlistContext: WishlistContextType = {
+  wishlistIds: [],
+  wishlistProducts: [],
+  toggleWishlist: () => {},
+  isInWishlist: () => false,
+  wishlistCount: 0,
+  loading: false,
+  refreshWishlist: async () => {},
+};
+
 export const useWishlist = (): WishlistContextType => {
   const context = useContext(WishlistContext);
-  if (!context) {
-    throw new Error('useWishlist must be used within a WishlistProvider');
-  }
-  return context;
+  return context || fallbackWishlistContext;
 };

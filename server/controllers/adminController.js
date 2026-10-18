@@ -11,7 +11,7 @@ exports.getDashboardStats = (req, res, next) => {
 
     const totalOrders = db.prepare('SELECT COUNT(*) as count FROM orders').get().count;
     const todayOrders = db.prepare("SELECT COUNT(*) as count FROM orders WHERE date(created_at) = date('now')").get().count;
-    const pendingOrders = db.prepare("SELECT COUNT(*) as count FROM orders WHERE order_status IN ('pending', 'processing', 'packed')").get().count;
+    const pendingOrders = db.prepare("SELECT COUNT(*) as count FROM orders WHERE order_status IN ('confirmed', 'processing', 'packed')").get().count;
     const totalProducts = db.prepare("SELECT COUNT(*) as count FROM products WHERE status = 'active'").get().count;
     const totalCustomers = db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'customer'").get().count;
     const lowStockCount = db.prepare('SELECT COUNT(*) as count FROM products WHERE stock_quantity <= low_stock_threshold').get().count;

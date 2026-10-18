@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { VehicleProvider } from './context/VehicleContext';
@@ -34,14 +34,60 @@ import { AdminCoupons } from './pages/admin/AdminCoupons';
 
 import { ScrollToTopButton } from './components/ScrollToTopButton';
 
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  public props: ErrorBoundaryProps;
+  public state: ErrorBoundaryState = { hasError: false };
+
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.props = props;
+  }
+
+  static getDerivedStateFromError(_: Error): ErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error('App caught error:', error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center p-6 text-center bg-slate-50">
+          <div className="max-w-md p-6 bg-white rounded-2xl shadow-lg border border-slate-200">
+            <h2 className="text-lg font-bold text-slate-900 mb-2">Restoring session...</h2>
+            <p className="text-xs text-slate-500 mb-4">Please refresh to continue.</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold shadow-sm"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // Customer Layout with Header & Footer in White Theme
 const CustomerLayout: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-red-600 selection:text-white antialiased overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-red-600 selection:text-white antialiased">
       <Navbar />
-      <div className="flex-1 w-full max-w-full pb-24 md:pb-0">
+      <main className="flex-1 w-full max-w-full overflow-x-clip pb-24 md:pb-0">
         <Outlet />
-      </div>
+      </main>
       <Footer />
       <ScrollToTopButton />
     </div>
@@ -51,7 +97,8 @@ const CustomerLayout: React.FC = () => {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
+      <ErrorBoundary>
+        <AuthProvider>
         <VehicleProvider>
           <CartProvider>
             <WishlistProvider>
@@ -90,6 +137,7 @@ export default function App() {
           </CartProvider>
         </VehicleProvider>
       </AuthProvider>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }

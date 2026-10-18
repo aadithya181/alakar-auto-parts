@@ -1,9 +1,10 @@
+const path = require('path');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
-const key_id = process.env.RAZORPAY_KEY_ID || 'rzp_test_torqspares1234';
-const key_secret = process.env.RAZORPAY_KEY_SECRET || 'torq_sec_991823719827391';
+const key_id = process.env.RAZORPAY_KEY_ID || 'rzp_test_TXzx9rcvYMeNuq';
+const key_secret = process.env.RAZORPAY_KEY_SECRET || 'DNTjGNhdV6CDHg2sx2k2Bfgp';
 
 let razorpayInstance = null;
 

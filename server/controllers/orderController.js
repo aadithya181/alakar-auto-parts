@@ -88,3 +88,21 @@ exports.getUserOrders = (req, res, next) => {
     next(err);
   }
 };
+
+exports.cleanupDraftOrder = (req, res, next) => {
+  try {
+    const { order_id } = req.body;
+    if (!order_id) {
+      return res.status(400).json({ success: false, message: 'order_id is required' });
+    }
+    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(order_id);
+    if (order && order.payment_status === 'pending' && order.order_status === 'pending') {
+      db.prepare('DELETE FROM order_items WHERE order_id = ?').run(order_id);
+      db.prepare('DELETE FROM orders WHERE id = ?').run(order_id);
+    }
+    res.json({ success: true, message: 'Unconfirmed checkout draft cleaned up' });
+  } catch (err) {
+    next(err);
+  }
+};
+

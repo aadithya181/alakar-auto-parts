@@ -22,7 +22,7 @@ function getPasswordStrength(p: string): { score: number; label: string; color: 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { register } = useAuth();
+  const { user, register } = useAuth();
   const { showSuccess, showError } = useToast();
 
   const [formData, setFormData] = useState({ name: '', email: '', password: '', phone: '' });
@@ -35,6 +35,14 @@ export const Register: React.FC = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      const target = (location.state as any)?.from || '/';
+      navigate(target, { replace: true });
+    }
+  }, [user, navigate, location.state]);
 
   const strength = getPasswordStrength(formData.password);
   const strengthPct = formData.password ? (strength.score / 5) * 100 : 0;

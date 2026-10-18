@@ -12,6 +12,7 @@ interface FilterSidebarProps {
   categories?: Category[] | any[];
   brands?: Brand[] | any[];
   selectedCategory: string;
+  selectedGroup?: string;
   onCategoryChange: (catSlug: string) => void;
   selectedBrand: string;
   onBrandChange: (brandSlug: string) => void;
@@ -28,6 +29,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   categories = [],
   brands = [],
   selectedCategory,
+  selectedGroup,
   onCategoryChange,
   selectedBrand,
   onBrandChange,
@@ -40,6 +42,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onResetFilters,
 }) => {
   const { activeVehicle, clearActiveVehicle } = useVehicle();
+
+  const filteredCategories = React.useMemo(() => {
+    if (!selectedGroup) return categories;
+    const matched = categories.filter(
+      (cat: any) => cat.main_group && cat.main_group.toUpperCase() === selectedGroup.toUpperCase()
+    );
+    return matched.length > 0 ? matched : categories;
+  }, [categories, selectedGroup]);
 
   return (
     <div className="w-full space-y-6">
@@ -142,33 +152,48 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
       {/* Categories */}
       <div>
-        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-          Categories
-        </h4>
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+            Categories
+          </h4>
+          {selectedGroup && (
+            <span className="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded">
+              {selectedGroup}
+            </span>
+          )}
+        </div>
         <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
-          {categories.map((cat: any) => {
-            const isSelected = selectedCategory === cat.slug;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => onCategoryChange(isSelected ? '' : cat.slug)}
-                className={`w-full flex items-center justify-between p-2 rounded-lg text-xs font-medium transition-colors text-left ${
-                  isSelected
-                    ? 'bg-red-50 text-red-700 border border-red-200 font-semibold'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
-              >
-                <div className="flex items-center gap-2 truncate">
-                  {cat.main_group && (
-                    <span className="px-1 py-0.5 rounded text-[9px] font-bold uppercase bg-slate-100 text-slate-600">
-                      {cat.main_group}
-                    </span>
-                  )}
-                  <span className="truncate">{cat.name}</span>
-                </div>
-              </button>
-            );
-          })}
+          {filteredCategories.length === 0 ? (
+            <div className="space-y-1.5 py-1">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-7 rounded-lg bg-slate-100 animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            filteredCategories.map((cat: any) => {
+              const isSelected = selectedCategory === cat.slug;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => onCategoryChange(isSelected ? '' : cat.slug)}
+                  className={`w-full flex items-center justify-between p-2 rounded-lg text-xs font-medium transition-colors text-left ${
+                    isSelected
+                      ? 'bg-red-50 text-red-700 border border-red-200 font-semibold'
+                      : 'text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    {!selectedGroup && cat.main_group && (
+                      <span className="px-1 py-0.5 rounded text-[9px] font-bold uppercase bg-slate-100 text-slate-600">
+                        {cat.main_group}
+                      </span>
+                    )}
+                    <span className="truncate">{cat.name}</span>
+                  </div>
+                </button>
+              );
+            })
+          )}
         </div>
       </div>
 
@@ -178,25 +203,33 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           Brands
         </h4>
         <div className="space-y-1 max-h-52 overflow-y-auto pr-1">
-          {brands.map((brand: any) => {
-            const isSelected = selectedBrand === brand.slug;
-            return (
-              <button
-                key={brand.id}
-                onClick={() => onBrandChange(isSelected ? '' : brand.slug)}
-                className={`w-full flex items-center justify-between p-2 rounded-lg text-xs font-medium transition-colors text-left ${
-                  isSelected
-                    ? 'bg-red-50 text-red-700 border border-red-200 font-semibold'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
-              >
-                <span className="truncate">{brand.name}</span>
-                {brand.product_count !== undefined && (
-                  <span className="text-[10px] text-slate-400 shrink-0 ml-1">({brand.product_count})</span>
-                )}
-              </button>
-            );
-          })}
+          {brands.length === 0 ? (
+            <div className="space-y-1.5 py-1">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-7 rounded-lg bg-slate-100 animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            brands.map((brand: any) => {
+              const isSelected = selectedBrand === brand.slug;
+              return (
+                <button
+                  key={brand.id}
+                  onClick={() => onBrandChange(isSelected ? '' : brand.slug)}
+                  className={`w-full flex items-center justify-between p-2 rounded-lg text-xs font-medium transition-colors text-left ${
+                    isSelected
+                      ? 'bg-red-50 text-red-700 border border-red-200 font-semibold'
+                      : 'text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  <span className="truncate">{brand.name}</span>
+                  {brand.product_count !== undefined && (
+                    <span className="text-[10px] text-slate-400 shrink-0 ml-1">({brand.product_count})</span>
+                  )}
+                </button>
+              );
+            })
+          )}
         </div>
       </div>
 

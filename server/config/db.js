@@ -106,12 +106,13 @@ function loadState() {
     try {
       const data = JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
       state = { ...state, ...data };
-      // Strip any dummy sample data so only live orders and revenue are counted
+      // Strip any dummy sample data and unconfirmed pending checkouts so only confirmed orders and revenue are counted
       if (Array.isArray(state.orders)) {
-        state.orders = state.orders.filter(o => !o.id.includes('sample'));
+        state.orders = state.orders.filter(o => !o.id.includes('sample') && (o.payment_status === 'paid' || (o.order_status && o.order_status !== 'pending')));
       }
       if (Array.isArray(state.order_items)) {
-        state.order_items = state.order_items.filter(oi => !oi.order_id.includes('sample'));
+        const orderIds = new Set((state.orders || []).map(o => o.id));
+        state.order_items = state.order_items.filter(oi => orderIds.has(oi.order_id));
       }
     } catch (e) {
       console.error('Error reading db file, re-initializing...', e);
@@ -778,7 +779,7 @@ function executeQuery(sql, params, mode) {
           return { count: state.users.filter(u => u.role === 'customer').length };
         }
         const custs = state.users.filter(u => u.role === 'customer').map(u => {
-          const userOrders = state.orders.filter(o => o.user_id === u.id);
+          const userOrders = state.orders.filter(o => o.user_id === u.id && (o.payment_status === 'paid' || (o.order_status && o.order_status !== 'pending')));
           const totalSpent = userOrders.filter(o => o.payment_status === 'paid').reduce((sum, o) => sum + (o.total_amount || 0), 0);
           return {
             ...u,
@@ -1064,6 +1065,13 @@ function executeQuery(sql, params, mode) {
 
     // Orders
     if (/FROM orders/i.test(cleanSql)) {
+      const isConfirmedOrder = (o) => {
+        if (!o) return false;
+        if (o.payment_status === 'paid') return true;
+        if (o.order_status && o.order_status !== 'pending') return true;
+        return false;
+      };
+
       if (/^SELECT\s+SUM\(total_amount\)/i.test(cleanSql)) {
         let matchingOrders = state.orders.filter(o => o.payment_status === 'paid');
         if (/date\(created_at\)/i.test(cleanSql)) {
@@ -1082,14 +1090,15 @@ function executeQuery(sql, params, mode) {
           const todayIso = new Date().toISOString().slice(0, 10);
           const todayLocale = new Date().toLocaleDateString('en-CA');
           return { count: state.orders.filter(o => {
+            if (!isConfirmedOrder(o)) return false;
             const ordDate = (o.created_at || '').slice(0, 10);
             return ordDate === todayIso || ordDate === todayLocale;
           }).length };
         }
         if (/order_status IN/i.test(cleanSql)) {
-          return { count: state.orders.filter(o => ['pending', 'processing', 'packed'].includes(o.order_status)).length };
+          return { count: state.orders.filter(o => isConfirmedOrder(o) && ['confirmed', 'processing', 'packed'].includes(o.order_status)).length };
         }
-        return { count: state.orders.length };
+        return { count: state.orders.filter(isConfirmedOrder).length };
       }
       if (/WHERE razorpay_order_id = \?/i.test(cleanSql)) {
         const found = state.orders.find(o => o.razorpay_order_id === params[0]);
@@ -1101,30 +1110,48 @@ function executeQuery(sql, params, mode) {
       }
       if (/WHERE (o\.)?user_id = \?/i.test(cleanSql)) {
         return state.orders
-          .filter(o => o.user_id === params[0])
+          .filter(o => o.user_id === params[0] && isConfirmedOrder(o))
           .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
       }
-      // All orders (Admin) - newest first
-      let sortedOrders = [...state.orders].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+      // All orders (Admin) - confirmed orders only, newest first
+      let sortedOrders = state.orders
+        .filter(isConfirmedOrder)
+        .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
       if (/LIMIT\s+6/i.test(cleanSql)) {
         sortedOrders = sortedOrders.slice(0, 6);
       }
       return sortedOrders.map(o => {
         const user = state.users.find(u => u.id === o.user_id);
+        let custName = user ? user.name : null;
+        let custEmail = user ? user.email : null;
+        let custPhone = user ? user.phone : null;
+        if (o.shipping_address) {
+          try {
+            const addr = typeof o.shipping_address === 'string' ? JSON.parse(o.shipping_address) : o.shipping_address;
+            if (addr) {
+              if (!custName && addr.full_name) custName = addr.full_name;
+              if (!custEmail && addr.email) custEmail = addr.email;
+              if (!custPhone && addr.phone) custPhone = addr.phone;
+            }
+          } catch (e) {}
+        }
         return {
           ...o,
-          customer_name: user ? user.name : 'Guest User',
-          customer_email: user ? user.email : 'guest@alakarautoparts.com',
-          customer_phone: user ? user.phone : '',
+          customer_name: custName || 'Verified Customer',
+          customer_email: custEmail || 'customer@alakarautoparts.com',
+          customer_phone: custPhone || '',
         };
       });
     }
 
-    // Top Selling Products Aggregation
+    // Top Selling Products Aggregation (Confirmed orders only)
     if (/FROM order_items oi/i.test(cleanSql)) {
       const productSales = {};
+      const confirmedOrderIds = new Set(
+        state.orders.filter(o => o && (o.payment_status === 'paid' || (o.order_status && o.order_status !== 'pending'))).map(o => o.id)
+      );
       state.order_items.forEach((oi) => {
-        if (!oi.product_id) return;
+        if (!oi.product_id || !confirmedOrderIds.has(oi.order_id)) return;
         if (!productSales[oi.product_id]) {
           productSales[oi.product_id] = { units_sold: 0, total_revenue: 0 };
         }
@@ -1329,11 +1356,11 @@ function executeQuery(sql, params, mode) {
       return { changes: 1 };
     }
     if (/UPDATE orders/i.test(cleanSql)) {
-      if (/payment_status = 'paid'/i.test(cleanSql)) {
+      if (/order_status = 'confirmed'/i.test(cleanSql)) {
         const [razorpay_order_id, razorpay_payment_id, orderId] = params;
         const ord = state.orders.find(o => o.id === orderId);
         if (ord) {
-          ord.payment_status = 'paid';
+          ord.payment_status = /payment_status = 'paid'/i.test(cleanSql) ? 'paid' : 'pending';
           ord.order_status = 'confirmed';
           ord.razorpay_order_id = razorpay_order_id;
           ord.razorpay_payment_id = razorpay_payment_id;
@@ -1453,6 +1480,18 @@ function executeQuery(sql, params, mode) {
       state.product_compatibility = state.product_compatibility.filter(pc => pc.id !== params[0]);
       saveState();
       autoReplicateDelete('product_compatibility', 'id', params[0]);
+      return { changes: 1 };
+    }
+    if (/DELETE FROM order_items WHERE order_id = \?/i.test(cleanSql)) {
+      state.order_items = state.order_items.filter(oi => oi.order_id !== params[0]);
+      saveState();
+      autoReplicateDelete('order_items', 'order_id', params[0]);
+      return { changes: 1 };
+    }
+    if (/DELETE FROM orders WHERE id = \?/i.test(cleanSql)) {
+      state.orders = state.orders.filter(o => o.id !== params[0]);
+      saveState();
+      autoReplicateDelete('orders', 'id', params[0]);
       return { changes: 1 };
     }
   }

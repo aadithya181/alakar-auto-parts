@@ -12,26 +12,22 @@ class PaymentService {
 
     const amountInPaise = Math.round(order.total_amount * 100);
 
-    let razorpayOrderId = 'order_mock_' + Date.now();
-
-    if (razorpay) {
-      try {
-        const options = {
-          amount: amountInPaise,
-          currency: 'INR',
-          receipt: order.order_number,
-          notes: {
-            order_id: order.id,
-            user_id: order.user_id || 'guest',
-          },
-        };
-        const rzpOrder = await razorpay.orders.create(options);
-        razorpayOrderId = rzpOrder.id;
-      } catch (err) {
-        console.warn('Razorpay SDK create error (using simulated test ID for local demo):', err.message);
-        razorpayOrderId = 'order_test_' + Date.now();
-      }
+    if (!razorpay) {
+      throw new Error('Razorpay gateway is not configured on the server.');
     }
+
+    const options = {
+      amount: amountInPaise,
+      currency: 'INR',
+      receipt: order.order_number,
+      notes: {
+        order_id: order.id,
+        user_id: order.user_id || 'guest',
+      },
+    };
+
+    const rzpOrder = await razorpay.orders.create(options);
+    const razorpayOrderId = rzpOrder.id;
 
     // Save Razorpay order ID to our internal order
     db.prepare('UPDATE orders SET razorpay_order_id = ? WHERE id = ?').run(razorpayOrderId, orderId);
@@ -48,30 +44,23 @@ class PaymentService {
   }
 
   /**
-   * Verify signature and finalize order
+   * Verify cryptographic signature and finalize order
    */
   async verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorpaySignature) {
-    // Check if mock order or real razorpay signature
-    let isValid = false;
-
-    if (
-      razorpayOrderId.startsWith('order_mock_') ||
-      razorpayOrderId.startsWith('order_test_') ||
-      razorpayOrderId.startsWith('order_upi_') ||
-      (razorpayPaymentId && (razorpayPaymentId.startsWith('pay_simulated_') || razorpayPaymentId.startsWith('pay_upi_') || razorpayPaymentId.startsWith('pay_test_')))
-    ) {
-      isValid = true; // Authorized simulated test checkout or direct UPI verification
-    } else {
-      isValid = verifyRazorpaySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature);
+    if (!orderId || !razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
+      throw new Error('Missing payment verification parameters');
     }
+
+    // Cryptographic verification via HMAC SHA-256
+    const isValid = verifyRazorpaySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature);
 
     if (!isValid) {
-      // Mark as failed
+      // Mark payment failed in database
       db.prepare("UPDATE orders SET payment_status = 'failed' WHERE id = ?").run(orderId);
-      throw new Error('Invalid payment signature verification failed');
+      throw new Error('Payment signature verification failed: Transaction not authorized by bank');
     }
 
-    // Finalize order
+    // Finalize order (payment_status = paid, order_status = confirmed)
     const confirmedOrder = orderService.completeOrder(
       orderId,
       razorpayOrderId,
@@ -80,6 +69,13 @@ class PaymentService {
     );
 
     return confirmedOrder;
+  }
+
+  /**
+   * Confirm Cash on Delivery order
+   */
+  async confirmCodOrder(orderId) {
+    return orderService.confirmCodOrder(orderId);
   }
 
   /**

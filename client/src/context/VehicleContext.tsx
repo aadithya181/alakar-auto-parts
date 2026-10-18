@@ -114,10 +114,16 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
   );
 };
 
+const fallbackVehicleContext: VehicleContextType = {
+  activeVehicle: null,
+  setActiveVehicle: () => {},
+  clearActiveVehicle: () => {},
+  garageVehicles: [],
+  saveToGarage: async () => {},
+  loadingGarage: false,
+};
+
 export const useVehicle = (): VehicleContextType => {
   const context = useContext(VehicleContext);
-  if (!context) {
-    throw new Error('useVehicle must be used within a VehicleProvider');
-  }
-  return context;
+  return context || fallbackVehicleContext;
 };

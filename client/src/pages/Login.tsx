@@ -7,7 +7,7 @@ import { useToast } from '../context/ToastContext';
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const { showSuccess, showError } = useToast();
 
   const [email, setEmail] = useState<string>('');
@@ -20,6 +20,18 @@ export const Login: React.FC = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        const from = (location.state as any)?.from || '/';
+        navigate(from, { replace: true });
+      }
+    }
+  }, [user, navigate, location.state]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

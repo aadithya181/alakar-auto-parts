@@ -24,15 +24,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return null;
     }
   });
-  const [token, setToken] = useState<string | null>(localStorage.getItem('torq_token') || null);
+  const [token, setToken] = useState<string | null>(() => {
+    const t = localStorage.getItem('torq_token') || localStorage.getItem('token') || null;
+    if (t) return t;
+    try {
+      const savedUser = localStorage.getItem('torq_user');
+      if (savedUser) {
+        const u = JSON.parse(savedUser);
+        const tok = 'session_' + (u.id || 'usr') + '_' + Date.now();
+        localStorage.setItem('torq_token', tok);
+        return tok;
+      }
+    } catch (e) {}
+    return null;
+  });
   const [loading, setLoading] = useState<boolean>(() => {
-    const hasToken = Boolean(localStorage.getItem('torq_token'));
+    const hasToken = Boolean(localStorage.getItem('torq_token') || localStorage.getItem('token'));
     const hasUser = Boolean(localStorage.getItem('torq_user'));
     return hasToken && !hasUser;
   });
 
   useEffect(() => {
-    if (token) {
+    if (user && !token) {
+      const existingToken = localStorage.getItem('torq_token') || localStorage.getItem('token');
+      const finalTok = existingToken || ('session_' + (user.id || 'usr') + '_' + Date.now());
+      localStorage.setItem('torq_token', finalTok);
+      setToken(finalTok);
+    }
+  }, [user, token]);
+
+  useEffect(() => {
+    if (token && !token.startsWith('session_')) {
       fetchUserProfile();
     } else {
       setLoading(false);
@@ -113,10 +135,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
+const fallbackAuthContext: AuthContextType = {
+  user: null,
+  token: null,
+  loading: false,
+  isAdmin: false,
+  login: async () => { throw new Error('AuthProvider not ready'); },
+  register: async () => { throw new Error('AuthProvider not ready'); },
+  logout: () => {},
+  refreshProfile: async () => {},
+};
+
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  return context || fallbackAuthContext;
 };

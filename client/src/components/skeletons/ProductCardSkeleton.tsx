@@ -22,41 +22,34 @@ export const ProductCardSkeleton: React.FC<ProductCardSkeletonProps> = () => {
       </div>
 
       {/* Card Details Skeleton */}
-      <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between gap-3">
+      <div className="p-3 sm:p-3.5 flex-1 flex flex-col justify-between gap-2">
         <div>
-          {/* Brand & SKU */}
-          <div className="flex items-center justify-between gap-2 mb-2">
+          {/* Brand */}
+          <div className="flex items-center justify-between gap-2 mb-1.5">
             <Skeleton className="w-16 h-3 rounded" />
-            <Skeleton className="w-12 h-3 rounded" />
           </div>
 
           {/* Product Title (2 lines) */}
-          <div className="space-y-1.5 mb-2.5">
-            <Skeleton className="w-full h-3.5 sm:h-4 rounded" />
-            <Skeleton className="w-4/5 h-3.5 sm:h-4 rounded" />
-          </div>
-
-          {/* Compatibility Badge placeholder */}
-          <div className="mb-2.5">
-            <Skeleton className="w-full h-6 rounded-lg" />
+          <div className="space-y-1.5 mb-2">
+            <Skeleton className="w-full h-3.5 rounded" />
+            <Skeleton className="w-3/4 h-3.5 rounded" />
           </div>
 
           {/* Rating */}
-          <div className="flex items-center gap-1.5 mb-2">
+          <div className="flex items-center gap-1.5 mb-1">
             <Skeleton className="w-20 h-3 rounded" />
-            <Skeleton className="w-8 h-3 rounded" />
           </div>
         </div>
 
         {/* Price & Action Row */}
-        <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
-          <div>
-            <Skeleton className="w-16 h-5 rounded mb-1" />
-            <Skeleton className="w-12 h-2.5 rounded" />
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
+          <div className="flex items-baseline gap-1.5">
+            <Skeleton className="w-16 h-5 rounded" />
+            <Skeleton className="w-10 h-3 rounded" />
           </div>
 
           {/* Add to Cart Button Skeleton */}
-          <Skeleton className="w-16 sm:w-20 h-8 rounded-xl" />
+          <Skeleton className="w-16 h-7 rounded-xl" />
         </div>
       </div>
     </div>
