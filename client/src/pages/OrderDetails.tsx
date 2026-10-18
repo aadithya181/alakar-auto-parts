@@ -303,10 +303,6 @@ export const OrderDetails: React.FC = () => {
               <span>Shipping</span>
               <span>{order.shipping_charge === 0 || order.shipping_fee === 0 ? 'FREE' : `₹${order.shipping_charge || order.shipping_fee}`}</span>
             </div>
-            <div className="flex justify-between text-slate-400 text-[11px]">
-              <span>Tax (GST 18% inclusive)</span>
-              <span>₹{Number(order.tax || order.tax_amount || 0).toLocaleString('en-IN')}</span>
-            </div>
             <div className="pt-3 border-t border-slate-100 flex justify-between items-baseline font-bold">
               <span className="text-slate-900 text-sm">Total Paid</span>
               <span className="text-lg font-black text-slate-900">

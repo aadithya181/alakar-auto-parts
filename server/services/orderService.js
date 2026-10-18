@@ -46,11 +46,11 @@ class OrderService {
       });
     }
 
-    // Shipping rules: Free above ₹999, else ₹99
-    const shippingCharge = subtotal >= 999 ? 0.00 : 99.00;
+    // Shipping rules: 100% Free Shipping on all orders
+    const shippingCharge = 0.00;
 
-    // Tax calculation (inclusive in selling price for standard Indian retail display, but computed here)
-    const tax = +(subtotal * 0.18 / 1.18).toFixed(2);
+    // Tax calculation
+    const tax = 0.00;
 
     // Coupon calculation
     let discount = 0.00;

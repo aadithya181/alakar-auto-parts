@@ -20,8 +20,8 @@ export const Cart: React.FC = () => {
   const { token } = useAuth();
   const { showSuccess, showInfo } = useToast();
 
-  const shippingCharge = subtotal >= 999 || subtotal === 0 ? 0.00 : 99.00;
-  const grandTotal = Math.max(0, subtotal + shippingCharge);
+  const shippingCharge = 0.00;
+  const grandTotal = Math.max(0, subtotal);
 
   if (items.length === 0) {
     return (
@@ -181,10 +181,6 @@ export const Cart: React.FC = () => {
                 )}
               </div>
 
-              <div className="flex justify-between text-slate-400 text-[11px]">
-                <span>Estimated GST (18% inclusive)</span>
-                <span>₹{(subtotal * 0.18 / 1.18).toFixed(2)}</span>
-              </div>
 
               <div className="pt-3 border-t border-slate-100 flex justify-between items-baseline">
                 <span className="text-sm font-bold text-slate-900">Grand Total</span>

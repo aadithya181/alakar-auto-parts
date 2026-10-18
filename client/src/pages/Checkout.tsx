@@ -526,10 +526,8 @@ export const Checkout: React.FC = () => {
     }
   };
 
-  const shippingCharge = subtotal >= 999 ? 0 : 99;
-  const grandTotal = subtotal + shippingCharge;
-  const freeShippingThreshold = 999;
-  const diffForFreeShipping = freeShippingThreshold - subtotal;
+  const shippingCharge = 0;
+  const grandTotal = subtotal;
 
   if (items.length === 0) {
     return null;
@@ -1296,21 +1294,11 @@ export const Checkout: React.FC = () => {
               </span>
             </div>
 
-            {/* Free Shipping Alert/Progress */}
-            {diffForFreeShipping > 0 ? (
-              <div className="p-3 rounded-2xl bg-amber-50/80 border border-amber-200/60 text-xs text-amber-900 flex items-center gap-2">
-                <Truck className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>
-                  Add <strong className="font-bold">₹{diffForFreeShipping}</strong> more for{' '}
-                  <strong className="text-emerald-700 uppercase font-black">Free Delivery</strong>
-                </span>
-              </div>
-            ) : (
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span className="font-bold">You qualify for FREE Express Shipping!</span>
-              </div>
-            )}
+            {/* Free Shipping Alert */}
+            <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
+              <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span className="font-bold">✨ 100% FREE Store Express Delivery Applied!</span>
+            </div>
 
             {/* Items List */}
             <div className="space-y-3 max-h-52 overflow-y-auto pr-1 divide-y divide-slate-100">
@@ -1348,10 +1336,6 @@ export const Checkout: React.FC = () => {
                 )}
               </div>
 
-              <div className="flex justify-between text-slate-400 text-[11px]">
-                <span>Estimated GST (18% inclusive)</span>
-                <span>₹{((subtotal * 0.18) / 1.18).toFixed(2)}</span>
-              </div>
 
               <div className="pt-3 border-t border-slate-100 flex justify-between items-baseline">
                 <span className="text-sm font-bold text-slate-900">Grand Total</span>
