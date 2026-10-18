@@ -22,6 +22,8 @@ import {
 } from 'lucide-react';
 import api from '../../services/api';
 import { useToast } from '../../context/ToastContext';
+import { Skeleton } from '../../components/common/Skeleton';
+import { TableSkeleton } from '../../components/skeletons/TableSkeleton';
 
 export const AdminDashboard: React.FC = () => {
   const { showSuccess, showError } = useToast();
@@ -112,13 +114,33 @@ export const AdminDashboard: React.FC = () => {
 
   if (loading && !stats) {
     return (
-      <div className="space-y-6">
-        <div className="h-10 bg-slate-100 border border-slate-200 rounded-2xl w-1/3 animate-pulse" />
+      <div className="space-y-8 animate-fade-up">
+        {/* Header Skeleton */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+          <div className="space-y-2">
+            <Skeleton className="w-48 h-6 rounded-full" />
+            <Skeleton className="w-80 h-9 rounded-xl" />
+            <Skeleton className="w-60 h-4 rounded" />
+          </div>
+          <Skeleton className="w-40 h-10 rounded-2xl" />
+        </div>
+
+        {/* 4 Stat Cards Skeleton */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-36 bg-white border border-slate-200 rounded-3xl animate-pulse" />
+            <div key={i} className="p-6 bg-white border border-slate-200 rounded-3xl shadow-card space-y-3">
+              <div className="flex items-center justify-between">
+                <Skeleton className="w-24 h-4 rounded" />
+                <Skeleton className="w-10 h-10 rounded-2xl" />
+              </div>
+              <Skeleton className="w-32 h-8 rounded-xl" />
+              <Skeleton className="w-20 h-3 rounded" />
+            </div>
           ))}
         </div>
+
+        {/* Recent Orders Table Skeleton */}
+        <TableSkeleton rows={4} columns={5} />
       </div>
     );
   }

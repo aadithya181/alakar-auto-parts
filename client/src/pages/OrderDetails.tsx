@@ -11,6 +11,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
+import { Skeleton } from '../components/common/Skeleton';
 import api from '../services/api';
 import { Order } from '../types';
 
@@ -55,9 +56,54 @@ export const OrderDetails: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-16 text-center animate-pulse">
-        <div className="h-8 bg-slate-100 rounded-xl w-1/3 mx-auto mb-4" />
-        <div className="h-40 bg-slate-100 rounded-2xl mb-6" />
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6 sm:space-y-8 animate-fade-up">
+        {/* Breadcrumb Skeleton */}
+        <div className="flex items-center gap-2">
+          <Skeleton className="w-16 h-4 rounded" />
+          <span className="text-slate-300">/</span>
+          <Skeleton className="w-32 h-4 rounded" />
+        </div>
+
+        {/* Order Header Skeleton */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+          <div className="space-y-2">
+            <Skeleton className="w-24 h-3 rounded" />
+            <Skeleton className="w-64 h-8 rounded-xl" />
+            <Skeleton className="w-48 h-3 rounded" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="w-28 h-7 rounded-full" />
+            <Skeleton className="w-28 h-7 rounded-full" />
+          </div>
+        </div>
+
+        {/* Progress Tracker Skeleton */}
+        <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-card">
+          <Skeleton className="w-full h-16 rounded-2xl" />
+        </div>
+
+        {/* Items & Shipping Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 p-6 rounded-3xl bg-white border border-slate-200 shadow-card space-y-4">
+            <Skeleton className="w-32 h-6 rounded" />
+            <div className="space-y-3">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <Skeleton className="w-16 h-16 rounded-xl shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="w-3/4 h-4 rounded" />
+                    <Skeleton className="w-1/4 h-3 rounded" />
+                  </div>
+                  <Skeleton className="w-16 h-5 rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-card space-y-4">
+            <Skeleton className="w-36 h-6 rounded" />
+            <Skeleton className="w-full h-24 rounded-xl" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -107,11 +153,11 @@ export const OrderDetails: React.FC = () => {
       {/* Order Header Information */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
         <div>
-          <span className="text-xs font-bold text-red-600 uppercase tracking-wider">Automotive Order</span>
-          <h1 className="text-2xl sm:text-3xl font-black font-display text-slate-900 tracking-tight">
+          <span className="eyebrow-tag text-red-600">Automotive Order</span>
+          <h1 className="heading-xl tracking-tight">
             Order #{order.order_number}
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="body-sm text-slate-500 mt-0.5">
             Placed on {new Date(order.created_at).toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' })}
           </p>
         </div>

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { RatingStars } from '../components/RatingStars';
 import { Breadcrumbs } from '../components/Breadcrumbs';
+import { ProductDetailsSkeleton } from '../components/skeletons/ProductDetailsSkeleton';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
@@ -26,7 +27,7 @@ export const ProductDetails: React.FC = () => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { token } = useAuth();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
 
   const [product, setProduct] = useState<Product | any>(null);
   const [selectedImage, setSelectedImage] = useState<string>('');
@@ -112,19 +113,7 @@ export const ProductDetails: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 animate-pulse">
-          <div className="aspect-[4/3] bg-slate-100 rounded-2xl" />
-          <div className="space-y-4">
-            <div className="h-6 bg-slate-100 rounded w-1/4" />
-            <div className="h-8 bg-slate-100 rounded w-3/4" />
-            <div className="h-6 bg-slate-100 rounded w-1/3" />
-            <div className="h-32 bg-slate-100 rounded" />
-          </div>
-        </div>
-      </div>
-    );
+    return <ProductDetailsSkeleton />;
   }
 
   if (!product) {
@@ -206,7 +195,7 @@ export const ProductDetails: React.FC = () => {
         <div className="lg:col-span-6 flex flex-col space-y-5">
           {/* Brand Header */}
           <div className="flex items-center gap-2">
-            <span className="text-sm font-extrabold uppercase tracking-wide text-red-600">
+            <span className="eyebrow-tag text-red-600">
               {product.brand_name || 'Genuine OEM'}
             </span>
             {product.brand_logo_url && (
@@ -215,7 +204,7 @@ export const ProductDetails: React.FC = () => {
           </div>
 
           {/* Product Title */}
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black font-display text-slate-900 tracking-tight leading-snug">
+          <h1 className="heading-xl tracking-tight leading-snug">
             {product.name}
           </h1>
 

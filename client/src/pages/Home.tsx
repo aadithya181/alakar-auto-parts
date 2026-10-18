@@ -16,6 +16,7 @@ import {
   Search,
 } from 'lucide-react';
 import { ProductCard } from '../components/ProductCard';
+import { ProductCardSkeleton } from '../components/skeletons/ProductCardSkeleton';
 import api from '../services/api';
 import { Product, Category, Brand } from '../types';
 
@@ -24,7 +25,6 @@ export const Home: React.FC = () => {
   const [carProducts, setCarProducts] = useState<Product[]>([]);
   const [bikeProducts, setBikeProducts] = useState<Product[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
-  const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'lights' | 'horns' | 'accessories'>('all');
   const [productTab, setProductFilterTab] = useState<'all' | 'car' | 'bike'>('all');
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -55,9 +55,9 @@ export const Home: React.FC = () => {
 
   const vehicleQuickCards = [
     {
-      title: 'Bike / 2-Wheelers',
-      badge: 'Motorcycles & Scooters',
-      desc: 'High-power fog lights, 12V horns, LED headlight conversion bulbs & ProTaper grips',
+      title: 'Bikes (2W)',
+      badge: 'Two-Wheelers',
+      desc: 'LED conversion bulbs, fog lights & loud horns',
       link: '/products?type=bike',
       icon: Bike,
       iconColor: 'text-amber-600 bg-amber-50 border-amber-200',
@@ -65,9 +65,9 @@ export const Home: React.FC = () => {
       accentColor: 'text-amber-600',
     },
     {
-      title: 'Auto / 3-Wheelers',
-      badge: 'Bajaj RE, Ape, TVS',
-      desc: 'AC/DC loud disc horns, auxiliary driving lamps, 12V headlamp bulbs & fancy LEDs',
+      title: 'Auto (3W)',
+      badge: 'Three-Wheelers',
+      desc: 'Disc horns, driving lamps & electrical spares',
       link: '/products?type=auto',
       icon: Zap,
       iconColor: 'text-emerald-600 bg-emerald-50 border-emerald-200',
@@ -75,9 +75,9 @@ export const Home: React.FC = () => {
       accentColor: 'text-emerald-600',
     },
     {
-      title: 'Car / 4-Wheelers',
-      badge: 'Hatchbacks, Sedans & SUVs',
-      desc: '5M Windtone horn pairs, projector bumper fog lamps & HSRP number plate frames',
+      title: 'Cars (4W)',
+      badge: 'Passenger Cars',
+      desc: 'Windtone horns, projector lamps & accessories',
       link: '/products?type=car',
       icon: Car,
       iconColor: 'text-red-600 bg-red-50 border-red-200',
@@ -85,9 +85,9 @@ export const Home: React.FC = () => {
       accentColor: 'text-red-600',
     },
     {
-      title: 'Van & Commercial',
-      badge: 'Pickups, Vans & Buses',
-      desc: '5M 3-pipe musical air horns with compressor, coach lights & heavy mounting brackets',
+      title: 'Vans & Pickups',
+      badge: 'Commercial',
+      desc: 'Air horns, coach lights & mounting brackets',
       link: '/products?type=van',
       icon: Truck,
       iconColor: 'text-blue-600 bg-blue-50 border-blue-200',
@@ -95,101 +95,6 @@ export const Home: React.FC = () => {
       accentColor: 'text-blue-600',
     },
   ];
-
-  const curatedCategories = [
-    {
-      id: 'fog-lights',
-      tab: 'lights',
-      title: 'Fog Lights & Projector Pods',
-      desc: 'Dual beam yellow/white auxiliary lights, bumper projector pods for highway safety.',
-      vehicles: 'Bikes • Autos • Cars • Vans',
-      link: '/products?category_slug=bike-fog-lights',
-      tag: 'Lighting',
-      icon: Zap,
-      color: 'amber',
-    },
-    {
-      id: 'headlight-bulbs',
-      tab: 'lights',
-      title: 'Headlight Conversion Bulbs',
-      desc: 'Ultra-bright H4, HS1, and H7 pure-white LED and premium halogen headlamp bulbs.',
-      vehicles: 'Universal Fitment',
-      link: '/products?category_slug=car-head-light-bulbs',
-      tag: 'Lighting',
-      icon: Zap,
-      color: 'amber',
-    },
-    {
-      id: 'coach-lights',
-      tab: 'lights',
-      title: 'Coach & Heavy Duty Lights',
-      desc: 'Roof marker lights, side indicator pods, and cabin lights for vans and commercial buses.',
-      vehicles: 'Vans • Coaches • Pickups',
-      link: '/products?category_slug=coach-lights',
-      tag: 'Commercial',
-      icon: Truck,
-      color: 'blue',
-    },
-    {
-      id: 'windtone-horns',
-      tab: 'horns',
-      title: 'Windtone Trumpet Horns',
-      desc: 'German technology 112dB harmonic dual-tone car horn sets with heavy sound output.',
-      vehicles: 'Cars • SUVs • Vans',
-      link: '/products?category_slug=car-horns',
-      tag: 'Warning',
-      icon: Zap,
-      color: 'red',
-    },
-    {
-      id: 'disc-horns',
-      tab: 'horns',
-      title: 'High-Decibel Disc Horns',
-      desc: '12V compact disc horns engineered for loud city penetration on bikes and autos.',
-      vehicles: 'Bikes • Autos',
-      link: '/products?category_slug=bike-horns',
-      tag: 'Warning',
-      icon: Zap,
-      color: 'red',
-    },
-    {
-      id: 'musical-horns',
-      tab: 'horns',
-      title: '3-Pipe Musical Air Horns',
-      desc: 'Heavy duty 5M musical air horns complete with 12V high-output electric air compressor.',
-      vehicles: 'Vans • Heavy Commercial',
-      link: '/products?category_slug=van-horns',
-      tag: 'Commercial',
-      icon: Truck,
-      color: 'blue',
-    },
-    {
-      id: 'handlebar-grips',
-      tab: 'accessories',
-      title: 'Performance Handlebar Grips',
-      desc: 'ProTaper soft-compound dual-density grips offering superior vibration dampening.',
-      vehicles: 'All Motorcycles & Scooters',
-      link: '/products?category_slug=bike-accessories',
-      tag: 'Accessories',
-      icon: Wrench,
-      color: 'slate',
-    },
-    {
-      id: 'plate-frames',
-      tab: 'accessories',
-      title: 'HSRP Number Plate Frames',
-      desc: 'Anti-rattle ABS plastic license plate holders for Maruti, Hyundai, Tata & bikes.',
-      vehicles: 'Cars & Two-Wheelers',
-      link: '/products?category_slug=car-accessories',
-      tag: 'Accessories',
-      icon: Wrench,
-      color: 'slate',
-    },
-  ];
-
-  const filteredCategories = activeCategoryTab === 'all'
-    ? curatedCategories
-    : curatedCategories.filter((c) => c.tab === activeCategoryTab);
 
   const displayedProducts = useMemo(() => {
     if (productTab === 'car') {
@@ -215,7 +120,7 @@ export const Home: React.FC = () => {
               <Sparkles className="w-3.5 h-3.5 text-red-600 shrink-0" />
               <span className="truncate">100% Genuine Spare Parts • Pudukkottai Store</span>
             </div>
-            <h1 className="text-2xl sm:text-5xl md:text-6xl font-black font-display tracking-tight text-slate-900 leading-tight">
+            <h1 className="heading-display tracking-tight text-slate-900 leading-tight">
               Precision Auto Parts, <br className="hidden sm:inline" />
               <span className="text-red-600">Guaranteed to Fit.</span>
             </h1>
@@ -224,21 +129,21 @@ export const Home: React.FC = () => {
             <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-none mx-auto">
               <Link
                 to="/products"
-                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-xs sm:text-sm font-extrabold shadow-md shadow-red-600/25 flex items-center justify-center gap-2 transition-all active:scale-95"
+                className="btn-bounce w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-xs sm:text-sm font-extrabold shadow-md shadow-red-600/25 flex items-center justify-center gap-2 transition-all active:scale-95"
               >
                 <span>Browse All Spares →</span>
               </Link>
               <div className="grid grid-cols-2 gap-2.5 w-full sm:w-auto sm:flex sm:items-center">
                 <Link
                   to="/products?type=bike"
-                  className="px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
+                  className="btn-bounce px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
                 >
                   <Bike className="w-4 h-4 text-amber-600 shrink-0" />
                   <span>Bike Parts</span>
                 </Link>
                 <Link
                   to="/products?type=car"
-                  className="px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
+                  className="btn-bounce px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
                 >
                   <Car className="w-4 h-4 text-red-600 shrink-0" />
                   <span>Car Parts</span>
@@ -287,111 +192,17 @@ export const Home: React.FC = () => {
                     {card.desc}
                   </p>
                 </div>
-                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
-                  <span className={card.accentColor}>Browse Products</span>
-                  <ArrowRight className={`w-4 h-4 ${card.accentColor} group-hover:translate-x-1 transition-transform`} />
+                <div className="pt-3.5 mt-3.5 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
+                  <span className={card.accentColor}>Explore</span>
+                  <ArrowRight className={`w-3.5 h-3.5 ${card.accentColor} group-hover:translate-x-1 transition-transform`} />
                 </div>
               </Link>
             );
           })}
         </div>
       </section>
-
-      {/* 3. Curated Product Categories (User-Centric Redesign) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
-          <div>
-            <h2 className="text-lg sm:text-2xl font-black font-display text-slate-900 tracking-tight">
-              Popular Product Departments
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-              High-demand automotive lighting, horns, relays, and utility styling
-            </p>
-          </div>
-
-          {/* Clean Category Filter Tabs */}
-          <div className="flex items-center p-1 rounded-2xl bg-slate-100 border border-slate-200 self-start sm:self-auto gap-1 overflow-x-auto max-w-full scrollbar-none">
-            <button
-              onClick={() => setActiveCategoryTab('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                activeCategoryTab === 'all'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setActiveCategoryTab('lights')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                activeCategoryTab === 'lights'
-                  ? 'bg-amber-500 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Lighting
-            </button>
-            <button
-              onClick={() => setActiveCategoryTab('horns')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                activeCategoryTab === 'horns'
-                  ? 'bg-red-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Horns
-            </button>
-            <button
-              onClick={() => setActiveCategoryTab('accessories')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                activeCategoryTab === 'accessories'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Accessories
-            </button>
-          </div>
-        </div>
-
-        {/* Curated Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {filteredCategories.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.id}
-                to={item.link}
-                className="group p-5 rounded-3xl bg-white border border-slate-200 hover:border-red-400 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
-                      {item.tag}
-                    </span>
-                    <span className="text-[10px] text-slate-400 font-medium">
-                      {item.vehicles}
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-bold text-slate-900 group-hover:text-red-600 transition-colors">
-                    {item.title}
-                  </h4>
-                  <p className="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">
-                    {item.desc}
-                  </p>
-                </div>
-                <div className="pt-3.5 mt-3.5 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-red-600">
-                  <span>View Products</span>
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 4. Featured Spares & Bestsellers (Interactive Tabbed Showcase) */}
-      {featuredProducts.length > 0 && (
+      {/* 3. Featured Spares & Bestsellers (Interactive Tabbed Showcase) */}
+      {(loading || featuredProducts.length > 0) && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-2.5">
@@ -399,10 +210,10 @@ export const Home: React.FC = () => {
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg sm:text-2xl font-black font-display text-slate-900 tracking-tight">
+                <h2 className="heading-xl tracking-tight">
                   Featured Spares & Bestsellers
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-500">
+                <p className="body-sm text-slate-500">
                   Hand-picked, high-reliability parts ready for immediate dispatch
                 </p>
               </div>
@@ -413,7 +224,7 @@ export const Home: React.FC = () => {
               <div className="flex items-center p-1 rounded-2xl bg-slate-100 border border-slate-200">
                 <button
                   onClick={() => setProductFilterTab('all')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`btn-bounce px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                     productTab === 'all'
                       ? 'bg-white text-slate-900 shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
@@ -423,7 +234,7 @@ export const Home: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setProductFilterTab('car')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`btn-bounce px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                     productTab === 'car'
                       ? 'bg-red-600 text-white shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
@@ -433,7 +244,7 @@ export const Home: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setProductFilterTab('bike')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`btn-bounce px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                     productTab === 'bike'
                       ? 'bg-amber-600 text-white shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
@@ -453,11 +264,19 @@ export const Home: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
-            {displayedProducts.map((prod) => (
-              <ProductCard key={prod.id} product={prod} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 animate-fade-up">
+              {[...Array(4)].map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 animate-fade-up">
+              {displayedProducts.map((prod) => (
+                <ProductCard key={prod.id} product={prod} />
+              ))}
+            </div>
+          )}
 
           <div className="sm:hidden mt-4 text-center">
             <Link
@@ -472,14 +291,11 @@ export const Home: React.FC = () => {
 
       {/* 7. Featured Genuine Brands */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-          <span className="text-[11px] font-extrabold uppercase tracking-widest text-red-600">Authorized Partners</span>
-          <h2 className="text-2xl md:text-3xl font-black font-display text-slate-900 mt-1">
-            Shop by Trusted Automotive Brands
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-red-600">Authorized Brands</span>
+          <h2 className="text-xl sm:text-2xl font-black font-display text-slate-900 mt-1">
+            Trusted Partners
           </h2>
-          <p className="text-xs md:text-sm text-slate-500 mt-2">
-            Top tier automotive manufacturers certified for high durability, performance and authentic packaging.
-          </p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
@@ -507,40 +323,31 @@ export const Home: React.FC = () => {
 
       {/* 8. Local Pudukkottai Store & Phone Helpline Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="p-6 sm:p-8 md:p-10 rounded-3xl bg-slate-950 border border-slate-800 text-white shadow-card relative overflow-hidden">
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <span className="text-[10px] font-black uppercase tracking-wider text-red-400 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5" /> Pudukkottai Store & Parts Desk
+        <div className="p-6 sm:p-8 rounded-3xl bg-slate-950 border border-slate-800 text-white shadow-card relative overflow-hidden">
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+            <div className="space-y-1.5 max-w-2xl">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-red-400 flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5" /> Pudukkottai Store
               </span>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-black font-display text-white">
-                Visit Us or Call for Immediate Fitment Assistance
+              <h3 className="text-xl sm:text-2xl font-black font-display text-white">
+                Need Parts Advice? Talk to our Specialist
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                West Main Street, Old GH Road (Near Murugan Kovil), Pudukkottai, Tamil Nadu. Talk directly with Surendar for custom vehicle recommendations.
+              <p className="text-xs text-slate-300">
+                West Main Street, Old GH Road, Pudukkottai. Mon - Sat: 9:00 AM - 9:00 PM
               </p>
-              <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-1">
-                <span className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-amber-400" /> Mon - Sat: 9:00 AM - 9:00 PM
-                </span>
-                <span>•</span>
-                <span className="flex items-center gap-1.5">
-                  <Phone className="w-3.5 h-3.5 text-red-400" /> +91 85266 13000
-                </span>
-              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
               <a
                 href="tel:+918526613000"
-                className="px-6 py-3.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-black shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 transition-all active:scale-95 text-center"
+                className="px-5 py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-red-600/30 flex items-center justify-center gap-2 transition-all active:scale-95 text-center"
               >
                 <Phone className="w-4 h-4" />
                 <span>Call +91 85266 13000</span>
               </a>
               <Link
                 to="/products"
-                className="px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-bold border border-slate-700 flex items-center justify-center gap-2 transition-all text-center"
+                className="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold border border-slate-700 flex items-center justify-center gap-2 transition-all text-center"
               >
                 <span>Browse All Spares →</span>
               </Link>

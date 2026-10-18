@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Edit2, Trash2, Search, X, Upload, Check, Image as ImageIcon, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 import api from '../../services/api';
+import { TableSkeleton } from '../../components/skeletons/TableSkeleton';
 import { Product, Category, Brand } from '../../types';
 
 const SHOP_GALLERY_IMAGES = [
@@ -231,8 +232,11 @@ export const AdminProducts: React.FC = () => {
       </div>
 
       {/* Products Table */}
-      <div className="rounded-3xl bg-white border border-slate-200 overflow-hidden shadow-card">
-        <div className="overflow-x-auto">
+      {loading ? (
+        <TableSkeleton rows={6} columns={7} />
+      ) : (
+        <div className="rounded-3xl bg-white border border-slate-200 overflow-hidden shadow-card animate-fade-up">
+          <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
               <tr>
@@ -322,6 +326,7 @@ export const AdminProducts: React.FC = () => {
           </table>
         </div>
       </div>
+      )}
 
       {/* Add / Edit Product Modal */}
       {showModal && (

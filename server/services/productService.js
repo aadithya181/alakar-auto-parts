@@ -14,6 +14,7 @@ class ProductService {
       min_price,
       max_price,
       in_stock,
+      group,
       sort_by = 'relevance',
       page = 1,
       limit = 12,
@@ -85,6 +86,31 @@ class ProductService {
       if (cat) {
         matching = matching.filter((p) => p.category_id === cat.id);
       }
+    }
+
+    // 3b. Group Filter (LIGHTS, HORN, ACCESSORIES)
+    if (group) {
+      const gUpper = group.toUpperCase();
+      const validGroupCatIds = new Set(
+        state.categories
+          .filter((c) => {
+            if (c.main_group && c.main_group.toUpperCase() === gUpper) return true;
+            if (gUpper === 'LIGHTS' && (c.slug.includes('light') || c.slug.includes('led'))) return true;
+            if (gUpper === 'HORN' && c.slug.includes('horn')) return true;
+            if (gUpper === 'ACCESSORIES' && c.slug.includes('accessories')) return true;
+            return false;
+          })
+          .map((c) => c.id)
+      );
+
+      matching = matching.filter((p) => {
+        if (validGroupCatIds.has(p.category_id)) return true;
+        const nameUpper = (p.name || '').toUpperCase();
+        if (gUpper === 'HORN' && nameUpper.includes('HORN')) return true;
+        if (gUpper === 'LIGHTS' && (nameUpper.includes('LIGHT') || nameUpper.includes('LED') || nameUpper.includes('SPOTLIGHT') || nameUpper.includes('LAMP'))) return true;
+        if (gUpper === 'ACCESSORIES' && (nameUpper.includes('GRIP') || nameUpper.includes('PLATE') || nameUpper.includes('FRAME') || nameUpper.includes('WIPER'))) return true;
+        return false;
+      });
     }
 
     // 4. Brand Slug

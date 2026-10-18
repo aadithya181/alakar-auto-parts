@@ -39,7 +39,7 @@ const CustomerLayout: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-red-600 selection:text-white antialiased overflow-x-hidden">
       <Navbar />
-      <div className="flex-1 w-full max-w-full">
+      <div className="flex-1 w-full max-w-full pb-24 md:pb-0">
         <Outlet />
       </div>
       <Footer />

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useParams, Link } from 'react-router-dom';
-import { SlidersHorizontal, Car, Bike, Wrench, X, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { SlidersHorizontal, Car, Bike, Wrench, X, RefreshCw, ChevronLeft, ChevronRight, Sparkles, Volume2, Lightbulb } from 'lucide-react';
 import { ProductCard } from '../components/ProductCard';
+import { ProductCardSkeleton } from '../components/skeletons/ProductCardSkeleton';
 import { FilterSidebar } from '../components/FilterSidebar';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { useVehicle } from '../context/VehicleContext';
@@ -28,6 +29,7 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
   const selectedCategory = searchParams.get('category_slug') || categorySlug || '';
   const selectedBrand = searchParams.get('brand_slug') || '';
   const selectedType = searchParams.get('type') || defaultType || '';
+  const selectedGroup = searchParams.get('group') || '';
   const searchQuery = searchParams.get('search') || '';
   const sortBy = searchParams.get('sort_by') || 'relevance';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
@@ -68,6 +70,7 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
         if (selectedCategory) params.category_slug = selectedCategory;
         if (selectedBrand) params.brand_slug = selectedBrand;
         if (selectedType) params.vehicle_type = selectedType;
+        if (selectedGroup) params.group = selectedGroup;
         if (searchQuery) params.search = searchQuery;
         if (inStockOnly) params.in_stock = true;
         if (priceRange.min) params.min_price = priceRange.min;
@@ -128,6 +131,12 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
 
   const pageTitle = searchQuery
     ? `Search results for "${searchQuery}"`
+    : selectedGroup === 'LIGHTS'
+    ? 'Lights & Bulbs'
+    : selectedGroup === 'HORN'
+    ? 'Horns & Sound Alerts'
+    : selectedGroup === 'ACCESSORIES'
+    ? 'Automotive Accessories'
     : selectedCategory
     ? categories.find((c) => c.slug === selectedCategory)?.name || 'Category'
     : selectedType === 'car'
@@ -142,6 +151,7 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
       <Breadcrumbs
         items={[
           { label: 'Products', href: '/products' },
+          ...(selectedGroup ? [{ label: pageTitle }] : []),
           ...(selectedType ? [{ label: selectedType === 'car' ? 'Car Parts' : 'Bike Parts', href: `/${selectedType}-parts` }] : []),
           ...(selectedCategory ? [{ label: pageTitle }] : []),
         ]}
@@ -149,10 +159,29 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
 
       {/* Header Banner */}
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-black font-display text-slate-900 tracking-tight">
+        {selectedGroup === 'LIGHTS' && (
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200 mb-2 shadow-2xs">
+            <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+            <span>High-Power LED Fog Lights & Bulbs</span>
+          </div>
+        )}
+        {selectedGroup === 'HORN' && (
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200 mb-2 shadow-2xs">
+            <Volume2 className="w-3.5 h-3.5 text-red-600" />
+            <span>German Tech Horns & Musical Air Systems (110–112dB)</span>
+          </div>
+        )}
+        {selectedGroup === 'ACCESSORIES' && (
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200 mb-2 shadow-2xs">
+            <Wrench className="w-3.5 h-3.5 text-blue-600" />
+            <span>Vehicle Styling, Grips & Number Plate Mounts</span>
+          </div>
+        )}
+
+        <h1 className="heading-xl tracking-tight">
           {pageTitle}
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+        <p className="body-sm mt-1">
           Showing {pagination.total} guaranteed genuine automotive components
         </p>
 
@@ -205,55 +234,111 @@ export const Products: React.FC<ProductsProps> = ({ defaultType }) => {
 
         {/* Product Grid Area */}
         <main className="lg:col-span-3">
-          {/* Controls Bar (Mobile Filter trigger + Sorting) */}
-          <div className="flex items-center justify-between gap-3 p-3.5 mb-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-            {/* Mobile Filter Button */}
-            <button
-              onClick={() => setMobileFilterOpen(true)}
-              className="lg:hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold shadow-sm"
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-              <span>Filters</span>
-            </button>
-
-            <span className="text-xs text-slate-500 hidden sm:inline">
-              Page {pagination.page} of {pagination.totalPages || 1}
-            </span>
-
-            {/* Sorting Dropdown */}
-            <div className="flex items-center gap-2 ml-auto">
-              <label htmlFor="sort_select" className="text-xs font-bold text-slate-700 uppercase tracking-wider hidden sm:inline">
-                Sort By:
-              </label>
-              <select
-                id="sort_select"
-                value={sortBy}
-                onChange={(e) => updateQueryParam('sort_by', e.target.value)}
-                className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-red-500"
+          {/* Controls Bar (Mobile Filter trigger + Sorting + Active Pills) */}
+          <div className="p-3.5 mb-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              {/* Mobile Filter Button */}
+              <button
+                onClick={() => setMobileFilterOpen(true)}
+                className="lg:hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold shadow-sm"
               >
-                <option value="relevance">Relevance</option>
-                <option value="bestseller">Popularity & Bestsellers</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-                <option value="newest">Newest Arrivals</option>
-              </select>
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <span>Filters</span>
+              </button>
+
+              <span className="text-xs text-slate-500 hidden sm:inline">
+                Page {pagination.page} of {pagination.totalPages || 1} • {pagination.total} Spares
+              </span>
+
+              {/* Sorting Dropdown */}
+              <div className="flex items-center gap-2 ml-auto">
+                <label htmlFor="sort_select" className="text-xs font-bold text-slate-700 uppercase tracking-wider hidden sm:inline">
+                  Sort:
+                </label>
+                <select
+                  id="sort_select"
+                  value={sortBy}
+                  onChange={(e) => updateQueryParam('sort_by', e.target.value)}
+                  className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:outline-none focus:border-red-500 shadow-2xs"
+                >
+                  <option value="relevance">Relevance</option>
+                  <option value="bestseller">Popularity & Bestsellers</option>
+                  <option value="price_asc">Price: Low to High</option>
+                  <option value="price_desc">Price: High to Low</option>
+                  <option value="newest">Newest Arrivals</option>
+                </select>
+              </div>
             </div>
+
+            {/* Active Filters Pill Bar (When filters are selected) */}
+            {(selectedGroup || selectedType || selectedCategory || selectedBrand || searchQuery) && (
+              <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 flex-wrap text-xs">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active:</span>
+
+                {selectedGroup && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                    Collection: {selectedGroup === 'LIGHTS' ? 'Lights & Bulbs' : selectedGroup === 'HORN' ? 'Horns' : 'Accessories'}
+                    <button onClick={() => updateQueryParam('group', '')} className="hover:text-red-600 ml-0.5">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+
+                {selectedType && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 border border-slate-200">
+                    Type: {selectedType.toUpperCase()}
+                    <button onClick={() => updateQueryParam('type', '')} className="hover:text-red-600 ml-0.5">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+
+                {selectedBrand && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 border border-slate-200">
+                    Brand: {selectedBrand}
+                    <button onClick={() => updateQueryParam('brand_slug', '')} className="hover:text-red-600 ml-0.5">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+
+                {selectedCategory && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 border border-slate-200">
+                    Category: {categories.find((c) => c.slug === selectedCategory)?.name || selectedCategory}
+                    <button onClick={() => updateQueryParam('category_slug', '')} className="hover:text-red-600 ml-0.5">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+
+                {searchQuery && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-red-50 text-red-700 border border-red-200">
+                    "{searchQuery}"
+                    <button onClick={() => updateQueryParam('search', '')} className="hover:text-red-900 ml-0.5">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+
+                <button
+                  onClick={handleResetFilters}
+                  className="text-[11px] font-bold text-red-600 hover:text-red-700 underline ml-auto cursor-pointer"
+                >
+                  Clear All
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Products Grid */}
           {loading ? (
-            <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6 animate-fade-up">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-80 rounded-2xl bg-white border border-slate-200 animate-pulse p-4 shadow-sm">
-                  <div className="aspect-[4/3] bg-slate-100 rounded-xl mb-4" />
-                  <div className="h-4 bg-slate-100 rounded w-3/4 mb-2" />
-                  <div className="h-4 bg-slate-100 rounded w-1/2 mb-4" />
-                  <div className="h-6 bg-slate-100 rounded w-1/3" />
-                </div>
+                <ProductCardSkeleton key={i} />
               ))}
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6 animate-fade-up">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

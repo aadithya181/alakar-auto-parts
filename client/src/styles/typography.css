@@ -1,0 +1,176 @@
+/* ==========================================================================
+   New Alagar Auto Parts (TorqSpares) - Typography System
+   Standardized type scale, font weights, line heights, and letter spacing.
+   ========================================================================== */
+
+/* Font Family Declarations & Fallbacks */
+:root {
+  --font-family-display: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* --------------------------------------------------------------------------
+   Headings Hierarchy (.heading-*)
+   -------------------------------------------------------------------------- */
+
+/* Display / Hero: 30px on mobile -> 40px on desktop */
+.heading-display {
+  font-family: var(--font-family-display);
+  font-size: clamp(1.875rem, 4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+/* Heading XL / H1 & H2 Main Section Titles: 22px on mobile -> 28px on desktop */
+.heading-xl {
+  font-family: var(--font-family-display);
+  font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+}
+
+/* Heading LG / H3 Card & Drawer Titles: 18px on mobile -> 20px on desktop */
+.heading-lg {
+  font-family: var(--font-family-display);
+  font-size: clamp(1.125rem, 1.8vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+/* Heading MD / H4 Subsection & Filter Titles: 15px -> 16px */
+.heading-md {
+  font-family: var(--font-family-display);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: #0f172a;
+}
+
+/* Heading SM / H5 Minor Labels, Table Headers: 13px -> 14px */
+.heading-sm {
+  font-family: var(--font-family-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: #1e293b;
+}
+
+/* Heading XS / H6 Micro Headers & Section Eyebrows */
+.heading-xs {
+  font-family: var(--font-family-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+/* --------------------------------------------------------------------------
+   Body & Paragraphs Hierarchy (.body-*)
+   -------------------------------------------------------------------------- */
+
+/* Lead Paragraph / Subtitle: 15px -> 17px */
+.body-lead {
+  font-family: var(--font-family-sans);
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* Standard Body Paragraph: 14px */
+.body-base {
+  font-family: var(--font-family-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #334155;
+}
+
+/* Compact / Secondary Body: 13px */
+.body-sm {
+  font-family: var(--font-family-sans);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+/* Micro / Caption / Pill Label: 11px - 12px */
+.caption {
+  font-family: var(--font-family-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #64748b;
+}
+
+/* Uppercase Eyebrow / Badges */
+.eyebrow-tag {
+  font-family: var(--font-family-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+/* --------------------------------------------------------------------------
+   Technical & Automotive Codes (Part Numbers, SKUs, Engine Codes)
+   -------------------------------------------------------------------------- */
+.sku-code {
+  font-family: var(--font-family-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* --------------------------------------------------------------------------
+   Default Semantic Element Resets
+   -------------------------------------------------------------------------- */
+h1 {
+  font-family: var(--font-family-display);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+h2 {
+  font-family: var(--font-family-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+h3 {
+  font-family: var(--font-family-display);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+h4 {
+  font-family: var(--font-family-display);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+h5, h6 {
+  font-family: var(--font-family-display);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+p {
+  line-height: 1.55;
+}

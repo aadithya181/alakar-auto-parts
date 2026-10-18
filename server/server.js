@@ -14,5 +14,5 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`=======================================================`);
 });
 
-// Direct Supabase Live Mode Active (Razorpay keys configured): 2026-09-04
+// Direct Supabase Live Mode Active (Razorpay keys configured): 2026-09-04 - Group filters active
 module.exports = server;

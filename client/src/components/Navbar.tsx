@@ -18,7 +18,11 @@ import {
   Wrench,
   LayoutDashboard,
   Home,
-  Grid
+  Grid,
+  Lightbulb,
+  Volume2,
+  Sparkles,
+  Phone
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -97,8 +101,27 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
+      {/* Sleek High-End Automotive Top Announcement Strip */}
+      <div className="bg-slate-950 text-slate-300 border-b border-slate-800/80 text-[11px] py-1.5 px-3 sm:px-6 relative z-40">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span className="text-white font-extrabold tracking-wide">NEW ALAGAR AUTO PARTS</span>
+            <span className="text-slate-600 hidden sm:inline">•</span>
+            <span className="text-slate-400 hidden sm:inline">100% Genuine Spare Parts • Pudukkottai Store</span>
+          </div>
+          <div className="flex items-center gap-4 text-[10px] sm:text-[11px] font-bold">
+            <span className="text-amber-400 font-mono hidden md:inline">⚡ Direct Dispatch from Store</span>
+            <a href="tel:8526613000" className="flex items-center gap-1.5 text-slate-200 hover:text-red-400 transition-colors">
+              <Phone className="w-3 h-3 text-red-500 shrink-0" />
+              <span>Call / WhatsApp: <span className="font-mono text-white">8526613000</span></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Main Sticky Navbar */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-20 gap-2 sm:gap-6">
             
@@ -361,6 +384,20 @@ export const Navbar: React.FC = () => {
                 )}
               </div>
 
+              {/* Mobile Quick Cart Button */}
+              <Link
+                to="/cart"
+                aria-label="Cart"
+                className="md:hidden relative p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 active:scale-95 transition-all shrink-0"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-red-600 text-white text-[9px] font-black font-mono flex items-center justify-center shadow-sm">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+
               {/* Mobile Drawer Menu Toggle */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -372,176 +409,501 @@ export const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Mobile Search Bar on Small Screens */}
-          <div className="md:hidden pb-3">
-            <form onSubmit={handleSearchSubmit} className="relative">
+          {/* Mobile Search Bar & Fast Collections Bar */}
+          <div className="md:hidden pb-2" ref={searchRef}>
+            <form onSubmit={handleSearchSubmit} className="relative mb-2">
               <input
                 type="text"
                 placeholder="Search spare parts, horns, lights..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-9 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-red-500"
+                onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+                className="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-100/90 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-red-500 shadow-inner"
               />
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-700"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
             </form>
-          </div>
 
-          {/* Desktop Clean Category Sub-Nav Bar */}
-          <nav className="hidden md:flex items-center justify-between py-2 border-t border-slate-100 text-xs font-bold overflow-x-auto scrollbar-none">
-            <div className="flex items-center gap-1 lg:gap-2">
+            {/* Mobile Fast Collections Horizontal Rail */}
+            <div className="bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 shadow-inner flex items-center gap-1 overflow-x-auto scrollbar-none py-1">
               <Link
                 to="/"
-                className={`px-3 py-1.5 rounded-xl transition-all ${
-                  location.pathname === '/'
-                    ? 'bg-slate-900 text-white shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all ${
+                  location.pathname === '/' && !location.search
+                    ? 'bg-white text-slate-950 shadow-sm border border-slate-200/80'
+                    : 'text-slate-600 hover:text-slate-950'
                 }`}
               >
-                Home
-                
+                <span>Home</span>
               </Link>
 
               <Link
                 to="/products?type=bike"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all ${
                   location.search.includes('type=bike')
-                    ? 'bg-amber-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:text-amber-700 hover:bg-amber-50'
+                    ? 'bg-white text-slate-950 shadow-sm border border-amber-300'
+                    : 'text-slate-600 hover:text-slate-950'
                 }`}
               >
-                <Bike className="w-3.5 h-3.5" />
-                <span>Bikes / 2-Wheelers</span>
+                <Bike className="w-3 h-3 text-amber-600" />
+                <span>Bikes</span>
               </Link>
 
               <Link
                 to="/products?type=auto"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all ${
                   location.search.includes('type=auto')
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:text-emerald-700 hover:bg-emerald-50'
+                    ? 'bg-white text-slate-900 shadow-sm border border-emerald-300'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                <Zap className="w-3.5 h-3.5" />
-                <span>Auto / 3-Wheelers</span>
+                <Zap className="w-3 h-3 text-emerald-600" />
+                <span>Auto</span>
               </Link>
 
               <Link
                 to="/products?type=car"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all ${
                   location.search.includes('type=car')
-                    ? 'bg-red-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:text-red-700 hover:bg-red-50'
+                    ? 'bg-white text-slate-900 shadow-sm border border-red-300'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                <Car className="w-3.5 h-3.5" />
-                <span>Cars / 4-Wheelers</span>
+                <Car className="w-3 h-3 text-red-600" />
+                <span>Cars</span>
               </Link>
 
               <Link
                 to="/products?type=van"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all ${
                   location.search.includes('type=van')
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:text-blue-700 hover:bg-blue-50'
+                    ? 'bg-white text-slate-900 shadow-sm border border-blue-300'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                <Truck className="w-3.5 h-3.5" />
-                <span>Vans / Commercial</span>
+                <Truck className="w-3 h-3 text-blue-600" />
+                <span>Vans</span>
+              </Link>
+
+              <div className="w-px h-4 bg-slate-300 mx-0.5 shrink-0" />
+
+              <Link
+                to="/products?group=LIGHTS"
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all ${
+                  location.search.includes('group=LIGHTS')
+                    ? 'bg-white text-slate-900 shadow-sm border border-amber-300'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Lightbulb className="w-3 h-3 text-amber-600" />
+                <span>Lights</span>
+                <span className="text-[9px] px-1 rounded bg-amber-100 text-amber-800 font-black">LED</span>
+              </Link>
+
+              <Link
+                to="/products?group=HORN"
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all ${
+                  location.search.includes('group=HORN')
+                    ? 'bg-white text-slate-900 shadow-sm border border-red-300'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Volume2 className="w-3 h-3 text-red-600" />
+                <span>Horns</span>
+                <span className="text-[9px] px-1 rounded bg-red-100 text-red-800 font-black">112dB</span>
+              </Link>
+
+              <Link
+                to="/products?group=ACCESSORIES"
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all ${
+                  location.search.includes('group=ACCESSORIES')
+                    ? 'bg-white text-slate-900 shadow-sm border border-blue-300'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Wrench className="w-3 h-3 text-blue-600" />
+                <span>Accessories</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Desktop High-End Automotive Unified Segmented Tab Bar */}
+          <nav aria-label="Quick Category Tabs" className="hidden md:flex items-center justify-between py-2 border-t border-slate-200/70">
+            {/* The Unified Tab Track */}
+            <div
+              role="tablist"
+              className="bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 shadow-inner inline-flex items-center gap-1 max-w-full overflow-x-auto scrollbar-none"
+            >
+              {/* Home Tab */}
+              <Link
+                to="/"
+                role="tab"
+                aria-selected={location.pathname === '/' && !location.search}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all ${
+                  location.pathname === '/' && !location.search
+                    ? 'bg-white text-slate-950 font-black shadow-sm border border-slate-200/80'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'
+                }`}
+              >
+                <span>Home</span>
+              </Link>
+
+              {/* Bikes Tab */}
+              <Link
+                to="/products?type=bike"
+                role="tab"
+                aria-selected={location.search.includes('type=bike')}
+                className={`group flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all ${
+                  location.search.includes('type=bike')
+                    ? 'bg-white text-slate-950 font-black shadow-sm border border-amber-300/80 ring-1 ring-amber-400/30'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'
+                }`}
+              >
+                <Bike
+                  className={`w-3.5 h-3.5 transition-colors ${
+                    location.search.includes('type=bike')
+                      ? 'text-amber-600'
+                      : 'text-amber-500/80 group-hover:text-amber-600'
+                  }`}
+                />
+                <span>Bikes (2W)</span>
+              </Link>
+
+              {/* Auto Tab */}
+              <Link
+                to="/products?type=auto"
+                role="tab"
+                aria-selected={location.search.includes('type=auto')}
+                className={`group flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all ${
+                  location.search.includes('type=auto')
+                    ? 'bg-white text-slate-950 font-black shadow-sm border border-emerald-300/80 ring-1 ring-emerald-400/30'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'
+                }`}
+              >
+                <Zap
+                  className={`w-3.5 h-3.5 transition-colors ${
+                    location.search.includes('type=auto')
+                      ? 'text-emerald-600'
+                      : 'text-emerald-500/80 group-hover:text-emerald-600'
+                  }`}
+                />
+                <span>Auto (3W)</span>
+              </Link>
+
+              {/* Cars Tab */}
+              <Link
+                to="/products?type=car"
+                role="tab"
+                aria-selected={location.search.includes('type=car')}
+                className={`group flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all ${
+                  location.search.includes('type=car')
+                    ? 'bg-white text-slate-950 font-black shadow-sm border border-red-300/80 ring-1 ring-red-400/30'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'
+                }`}
+              >
+                <Car
+                  className={`w-3.5 h-3.5 transition-colors ${
+                    location.search.includes('type=car')
+                      ? 'text-red-600'
+                      : 'text-red-500/80 group-hover:text-red-600'
+                  }`}
+                />
+                <span>Cars (4W)</span>
+              </Link>
+
+              {/* Vans Tab */}
+              <Link
+                to="/products?type=van"
+                role="tab"
+                aria-selected={location.search.includes('type=van')}
+                className={`group flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all ${
+                  location.search.includes('type=van')
+                    ? 'bg-white text-slate-950 font-black shadow-sm border border-blue-300/80 ring-1 ring-blue-400/30'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'
+                }`}
+              >
+                <Truck
+                  className={`w-3.5 h-3.5 transition-colors ${
+                    location.search.includes('type=van')
+                      ? 'text-blue-600'
+                      : 'text-blue-500/80 group-hover:text-blue-600'
+                  }`}
+                />
+                <span>Vans / Pickups</span>
+              </Link>
+
+              {/* In-Track Divider */}
+              <div className="w-px h-5 bg-slate-300/80 mx-1 shrink-0" />
+
+              {/* Lights & Bulbs Tab */}
+              <Link
+                to="/products?group=LIGHTS"
+                role="tab"
+                aria-selected={location.search.includes('group=LIGHTS')}
+                className={`group flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all ${
+                  location.search.includes('group=LIGHTS')
+                    ? 'bg-white text-slate-950 font-black shadow-sm border border-amber-400/90 ring-1 ring-amber-400/30'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'
+                }`}
+              >
+                <Lightbulb
+                  className={`w-3.5 h-3.5 transition-colors ${
+                    location.search.includes('group=LIGHTS')
+                      ? 'text-amber-500 fill-amber-500/20'
+                      : 'text-amber-600/70 group-hover:text-amber-600'
+                  }`}
+                />
+                <span>Lights</span>
+                <span className="px-1.5 py-0.2 rounded-md text-[9px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-300/60">
+                  LED
+                </span>
+              </Link>
+
+              {/* Horns Tab */}
+              <Link
+                to="/products?group=HORN"
+                role="tab"
+                aria-selected={location.search.includes('group=HORN')}
+                className={`group flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all ${
+                  location.search.includes('group=HORN')
+                    ? 'bg-white text-slate-950 font-black shadow-sm border border-red-400/90 ring-1 ring-red-400/30'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'
+                }`}
+              >
+                <Volume2
+                  className={`w-3.5 h-3.5 transition-colors ${
+                    location.search.includes('group=HORN')
+                      ? 'text-red-600 fill-red-500/20'
+                      : 'text-red-500/70 group-hover:text-red-600'
+                  }`}
+                />
+                <span>Horns</span>
+                <span className="px-1.5 py-0.2 rounded-md text-[9px] font-black uppercase tracking-wider bg-red-100 text-red-800 border border-red-300/60">
+                  112dB
+                </span>
+              </Link>
+
+              {/* Accessories Tab */}
+              <Link
+                to="/products?group=ACCESSORIES"
+                role="tab"
+                aria-selected={location.search.includes('group=ACCESSORIES')}
+                className={`group flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all ${
+                  location.search.includes('group=ACCESSORIES')
+                    ? 'bg-white text-slate-950 font-black shadow-sm border border-blue-400/90 ring-1 ring-blue-400/30'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'
+                }`}
+              >
+                <Wrench
+                  className={`w-3.5 h-3.5 transition-colors ${
+                    location.search.includes('group=ACCESSORIES')
+                      ? 'text-blue-600'
+                      : 'text-blue-500/70 group-hover:text-blue-600'
+                  }`}
+                />
+                <span>Accessories</span>
+                <span className="px-1.5 py-0.2 rounded-md text-[9px] font-black uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-300/60">
+                  OEM
+                </span>
               </Link>
             </div>
 
-            <div className="flex items-center gap-1 lg:gap-2">
-              <Link
-                to="/products?group=LIGHTS"
-                className="px-2.5 py-1.5 rounded-xl text-slate-600 hover:text-amber-600 hover:bg-slate-100 transition-colors"
-              >
-                Lights & Bulbs
-              </Link>
-              <Link
-                to="/products?group=HORN"
-                className="px-2.5 py-1.5 rounded-xl text-slate-600 hover:text-red-600 hover:bg-slate-100 transition-colors"
-              >
-                Horns
-              </Link>
-              <Link
-                to="/products?group=ACCESSORIES"
-                className="px-2.5 py-1.5 rounded-xl text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-colors"
-              >
-                Accessories
-              </Link>
-              <Link
-                to="/products"
-                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold transition-colors"
-              >
-                All Spares →
-              </Link>
-            </div>
+            {/* Right: All Spares Link */}
+            <Link
+              to="/products"
+              className="btn-bounce ml-3 px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs transition-all shadow-sm flex items-center gap-1.5 shrink-0"
+            >
+              <span>Explore All Spares</span>
+              <span className="text-red-400 font-black">→</span>
+            </Link>
           </nav>
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar (Fixed on small screens) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-xl flex items-center justify-around py-1.5 px-2">
-        <Link
-          to="/"
-          className={`flex flex-col items-center py-1 px-2 text-[10px] font-bold ${
-            location.pathname === '/' ? 'text-red-600' : 'text-slate-500 hover:text-slate-900'
-          }`}
-        >
-          <Home className="w-5 h-5 mb-0.5" />
-          <span>Home</span>
-        </Link>
-        <Link
-          to="/products"
-          className={`flex flex-col items-center py-1 px-2 text-[10px] font-bold ${
-            location.pathname === '/products' ? 'text-red-600' : 'text-slate-500 hover:text-slate-900'
-          }`}
-        >
-          <Grid className="w-5 h-5 mb-0.5" />
-          <span>Products</span>
-        </Link>
-        <Link
-          to="/wishlist"
-          className={`relative flex flex-col items-center py-1 px-2 text-[10px] font-bold ${
-            location.pathname === '/wishlist' ? 'text-red-600' : 'text-slate-500 hover:text-slate-900'
-          }`}
-        >
-          <div className="relative">
-            <Heart className="w-5 h-5 mb-0.5" />
-            {wishlistCount > 0 && (
-              <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold flex items-center justify-center">
-                {wishlistCount}
-              </span>
-            )}
-          </div>
-          <span>Wishlist</span>
-        </Link>
-        <Link
-          to="/cart"
-          className={`relative flex flex-col items-center py-1 px-2 text-[10px] font-bold ${
-            location.pathname === '/cart' ? 'text-red-600' : 'text-slate-500 hover:text-slate-900'
-          }`}
-        >
-          <div className="relative">
-            <ShoppingCart className="w-5 h-5 mb-0.5" />
-            {totalItems > 0 && (
-              <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </div>
-          <span>Cart</span>
-        </Link>
-        <Link
-          to="/account"
-          className={`flex flex-col items-center py-1 px-2 text-[10px] font-bold ${
-            location.pathname.startsWith('/account') ? 'text-red-600' : 'text-slate-500 hover:text-slate-900'
-          }`}
-        >
-          <User className="w-5 h-5 mb-0.5" />
-          <span>Account</span>
-        </Link>
-      </div>
+      {/* Minimalist iOS Frosted Bottom Navigation Bar (Apple Store / Airbnb Style) */}
+      <nav
+        aria-label="Mobile Navigation"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-xl border-t border-slate-200/75 shadow-[0_-4px_20px_rgba(0,0,0,0.04)] px-2 pt-1 pb-safe"
+      >
+        <div className="max-w-md mx-auto flex items-center justify-around">
+          {/* Home */}
+          <Link
+            to="/"
+            className="group relative flex-1 flex flex-col items-center justify-center py-1 transition-all duration-150 active:scale-95"
+          >
+            {/* Top Indicator Bar */}
+            <span
+              className={`w-6 h-0.5 rounded-full mb-1 transition-all duration-200 ${
+                location.pathname === '/' && !location.search
+                  ? 'bg-red-600 opacity-100 scale-100'
+                  : 'bg-transparent opacity-0 scale-75'
+              }`}
+            />
+            <Home
+              className={`w-5 h-5 transition-colors ${
+                location.pathname === '/' && !location.search
+                  ? 'text-red-600 fill-red-600/15'
+                  : 'text-slate-400 group-hover:text-slate-600'
+              }`}
+            />
+            <span
+              className={`text-[10px] tracking-tight leading-tight mt-0.5 transition-colors ${
+                location.pathname === '/' && !location.search
+                  ? 'font-bold text-red-600'
+                  : 'font-medium text-slate-500 group-hover:text-slate-700'
+              }`}
+            >
+              Home
+            </span>
+          </Link>
+
+          {/* Products */}
+          <Link
+            to="/products"
+            className="group relative flex-1 flex flex-col items-center justify-center py-1 transition-all duration-150 active:scale-95"
+          >
+            {/* Top Indicator Bar */}
+            <span
+              className={`w-6 h-0.5 rounded-full mb-1 transition-all duration-200 ${
+                location.pathname === '/products' || location.pathname.startsWith('/category')
+                  ? 'bg-red-600 opacity-100 scale-100'
+                  : 'bg-transparent opacity-0 scale-75'
+              }`}
+            />
+            <Grid
+              className={`w-5 h-5 transition-colors ${
+                location.pathname === '/products' || location.pathname.startsWith('/category')
+                  ? 'text-red-600 fill-red-600/15'
+                  : 'text-slate-400 group-hover:text-slate-600'
+              }`}
+            />
+            <span
+              className={`text-[10px] tracking-tight leading-tight mt-0.5 transition-colors ${
+                location.pathname === '/products' || location.pathname.startsWith('/category')
+                  ? 'font-bold text-red-600'
+                  : 'font-medium text-slate-500 group-hover:text-slate-700'
+              }`}
+            >
+              Products
+            </span>
+          </Link>
+
+          {/* Wishlist */}
+          <Link
+            to="/wishlist"
+            className="group relative flex-1 flex flex-col items-center justify-center py-1 transition-all duration-150 active:scale-95"
+          >
+            {/* Top Indicator Bar */}
+            <span
+              className={`w-6 h-0.5 rounded-full mb-1 transition-all duration-200 ${
+                location.pathname === '/wishlist'
+                  ? 'bg-red-600 opacity-100 scale-100'
+                  : 'bg-transparent opacity-0 scale-75'
+              }`}
+            />
+            <div className="relative">
+              <Heart
+                className={`w-5 h-5 transition-colors ${
+                  location.pathname === '/wishlist'
+                    ? 'text-red-600 fill-red-600/15'
+                    : 'text-slate-400 group-hover:text-slate-600'
+                }`}
+              />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1.5 -right-2 min-w-[15px] h-3.5 px-1 rounded-full bg-red-600 text-white text-[9px] font-mono font-black flex items-center justify-center shadow-sm">
+                  {wishlistCount}
+                </span>
+              )}
+            </div>
+            <span
+              className={`text-[10px] tracking-tight leading-tight mt-0.5 transition-colors ${
+                location.pathname === '/wishlist'
+                  ? 'font-bold text-red-600'
+                  : 'font-medium text-slate-500 group-hover:text-slate-700'
+              }`}
+            >
+              Wishlist
+            </span>
+          </Link>
+
+          {/* Cart */}
+          <Link
+            to="/cart"
+            className="group relative flex-1 flex flex-col items-center justify-center py-1 transition-all duration-150 active:scale-95"
+          >
+            {/* Top Indicator Bar */}
+            <span
+              className={`w-6 h-0.5 rounded-full mb-1 transition-all duration-200 ${
+                location.pathname === '/cart'
+                  ? 'bg-red-600 opacity-100 scale-100'
+                  : 'bg-transparent opacity-0 scale-75'
+              }`}
+            />
+            <div className="relative">
+              <ShoppingCart
+                className={`w-5 h-5 transition-colors ${
+                  location.pathname === '/cart'
+                    ? 'text-red-600 fill-red-600/15'
+                    : 'text-slate-400 group-hover:text-slate-600'
+                }`}
+              />
+              {totalItems > 0 && (
+                <span className="absolute -top-1.5 -right-2 min-w-[15px] h-3.5 px-1 rounded-full bg-red-600 text-white text-[9px] font-mono font-black flex items-center justify-center shadow-sm">
+                  {totalItems}
+                </span>
+              )}
+            </div>
+            <span
+              className={`text-[10px] tracking-tight leading-tight mt-0.5 transition-colors ${
+                location.pathname === '/cart'
+                  ? 'font-bold text-red-600'
+                  : 'font-medium text-slate-500 group-hover:text-slate-700'
+              }`}
+            >
+              Cart
+            </span>
+          </Link>
+
+          {/* Account */}
+          <Link
+            to={user ? "/account" : "/login"}
+            className="group relative flex-1 flex flex-col items-center justify-center py-1 transition-all duration-150 active:scale-95"
+          >
+            {/* Top Indicator Bar */}
+            <span
+              className={`w-6 h-0.5 rounded-full mb-1 transition-all duration-200 ${
+                location.pathname.startsWith('/account') || location.pathname === '/login' || location.pathname === '/register'
+                  ? 'bg-red-600 opacity-100 scale-100'
+                  : 'bg-transparent opacity-0 scale-75'
+              }`}
+            />
+            <User
+              className={`w-5 h-5 transition-colors ${
+                location.pathname.startsWith('/account') || location.pathname === '/login'
+                  ? 'text-red-600 fill-red-600/15'
+                  : 'text-slate-400 group-hover:text-slate-600'
+              }`}
+            />
+            <span
+              className={`text-[10px] tracking-tight leading-tight mt-0.5 transition-colors truncate max-w-[56px] ${
+                location.pathname.startsWith('/account') || location.pathname === '/login'
+                  ? 'font-bold text-red-600'
+                  : 'font-medium text-slate-500 group-hover:text-slate-700'
+              }`}
+            >
+              Account
+            </span>
+          </Link>
+        </div>
+      </nav>
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
@@ -608,6 +970,30 @@ export const Navbar: React.FC = () => {
                 >
                   🚐 Van & Commercial Spares
                 </Link>
+                <div className="pt-2 pb-1 border-t border-slate-100 my-1">
+                  <p className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Featured Collections</p>
+                  <Link
+                    to="/products?group=LIGHTS"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition-colors"
+                  >
+                    💡 Lights & Bulbs
+                  </Link>
+                  <Link
+                    to="/products?group=HORN"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+                  >
+                    📢 Horns & Sound Alerts
+                  </Link>
+                  <Link
+                    to="/products?group=ACCESSORIES"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+                  >
+                    🔧 Automotive Accessories
+                  </Link>
+                </div>
                 <Link
                   to="/products"
                   onClick={() => setMobileMenuOpen(false)}
